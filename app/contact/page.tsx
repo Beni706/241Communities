@@ -34,34 +34,38 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
-      // Ici, vous pourriez appeler votre API pour envoyer le message
-      // Par exemple: await post('/contact', formData)
+  const res = await fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData),
+  })
 
-      // Simuler un délai pour l'exemple
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+  const data = await res.json()
 
-      toast({
-        title: "Message envoyé",
-        description: "Nous avons bien reçu votre message et vous répondrons dans les plus brefs délais.",
-      })
+  if (!res.ok) throw new Error(data.message)
 
-      // Réinitialiser le formulaire
-      setFormData({
-        nom: "",
-        prenom: "",
-        dateNaissance: "",
-        email: "",
-        telephone: "",
-        message: "",
-      })
-    } catch (error) {
-      console.error("Erreur lors de l'envoi du message:", error)
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer.",
-      })
-    } finally {
+  toast({
+    title: "Message envoyé",
+    description: data.message,
+  })
+
+  setFormData({
+    nom: "",
+    prenom: "",
+    dateNaissance: "",
+    email: "",
+    telephone: "",
+    message: "",
+  })
+} catch (error: any) {
+  toast({
+    variant: "destructive",
+    title: "Erreur",
+    description: error.message || "Une erreur est survenue",
+  })
+}
+
+     finally {
       setIsSubmitting(false)
     }
   }
