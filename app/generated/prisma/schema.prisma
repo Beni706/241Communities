@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Referentiel {
+  DEVELOPPEUR
+  DIGITAL_CREATOR
+  REFERENT_DIGITAL
+}
+
+model formateur {
+  id_formateur Int         @id @default(autoincrement())
+  nom          String
+  prenom       String
+  email        String      @unique
+  password     String      @default("Formateur")
+  referentiel  Referentiel
+
+  cours  cours[]
+  veille veille[]
+}
+
+model administrateur {
+  id_administrateur Int    @id @default(autoincrement())
+  nom               String
+  prenom            String
+  email             String @unique
+  password          String
+}
+
+model apprenant {
+  id_apprenant Int         @id @default(autoincrement())
+  nom          String
+  prenom       String
+  email        String      @unique
+  password     String      @default("1234")
+  referentiel  Referentiel
+  photoProfil  String?
+
+  veille     veille[]
+  suiviCours suiviCours[]
+}
+
+model suiviCours {
+  id_suiviCours Int       @id @default(autoincrement())
+  dateDebut     DateTime
+  dateFin       DateTime?
+  pourcentage   Decimal
+
+  // Foreign keys
+  id_apprenant Int
+  id_cours     Int
+
+  // Relations
+  apprenant apprenant @relation(fields: [id_apprenant], references: [id_apprenant])
+  cours     cours     @relation(fields: [id_cours], references: [id_cours])
+}
+
+model cours {
+  id_cours     Int          @id @default(autoincrement())
+  categorie    String
+  titre        String
+  description  String
+  photoCours   String?
+  dateCreation DateTime
+  // Foreign keys
+  id_formateur Int
+  formateur    formateur    @relation(fields: [id_formateur], references: [id_formateur])
+  suiviCours   suiviCours[]
+  chapitre     chapitre[]
+}
+
+model chapitre {
+  id_chapitre Int    @id @default(autoincrement())
+  titre       String
+  numeroOrdre Int
+
+  // Foreign keys
+  id_cours Int
+  cours    cours   @relation(fields: [id_cours], references: [id_cours])
+  lecon    lecon[]
+}
+
+model lecon {
+  id_lecon       Int     @id @default(autoincrement())
+  titre          String
+  contenuTextuel String?
+  contenuVideo   String?
+  numeroOrdre    Int
+
+  // Foreign keys
+  id_chapitre Int
+  chapitre    chapitre @relation(fields: [id_chapitre], references: [id_chapitre])
+}
+
+model veille {
+  id_veille      Int      @id @default(autoincrement())
+  titre          String
+  lien_docDonnee String
+  lien_docRendu  String?
+  date_creation  DateTime
+  date_fin       DateTime
+
+  id_apprenant Int?
+  id_formateur Int
+  formateur    formateur  @relation(fields: [id_formateur], references: [id_formateur])
+  apprenant    apprenant? @relation(fields: [id_apprenant], references: [id_apprenant])
+}
