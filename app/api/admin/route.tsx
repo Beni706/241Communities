@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
 
 // Création (POST)
-// (POST) http://localhost:3000/api/utilisateurs
+// (POST) http://localhost:3000/api/admin
 
 
 
