@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -21,6 +21,23 @@ export default function LoginAdminPage() {
   const { toast } = useToast()
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+  // Vérifier si l'utilisateur est déjà connecté
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken")
+    const user = localStorage.getItem("user")
+
+    if (token && user) {
+      try {
+        const userData = JSON.parse(user)
+        if (userData.role === "administrateur") {
+          router.push("/admin/dashboard")
+        }
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error)
+      }
+    }
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,19 +58,19 @@ export default function LoginAdminPage() {
       const data = await response.json()
 
       // Stocker le token administrateur
+      localStorage.setItem("token", data.token)
       localStorage.setItem("adminToken", data.token)
 
-      // Stocker les informations de base de l'administrateur
-      // Pas besoin de stocker un rôle explicite puisque c'est un administrateur
-      localStorage.setItem(
-        "adminInfo",
-        JSON.stringify({
-          id: data.id || 0,
-          nom: data.nom || "",
-          prenom: data.prenom || "",
-          email: email,
-        }),
-      )
+      // Stocker les informations utilisateur dans un format cohérent
+      const userData = {
+        id: data.id || 0,
+        nom: data.nom || "",
+        prenom: data.prenom || "",
+        email: email,
+        role: "administrateur",
+      }
+
+      localStorage.setItem("user", JSON.stringify(userData))
 
       toast({
         title: "Connexion réussie",
@@ -62,6 +79,11 @@ export default function LoginAdminPage() {
 
       // Redirection vers le tableau de bord administrateur
       router.push("/admin/dashboard")
+
+      // Redirection forcée après un court délai si la navigation Next.js échoue
+      setTimeout(() => {
+        window.location.href = "/admin/dashboard"
+      }, 500)
     } catch (err: any) {
       setError(err.message || "Une erreur est survenue. Veuillez réessayer.")
 

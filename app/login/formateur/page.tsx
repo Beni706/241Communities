@@ -2,14 +2,13 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { useAuth } from "@/components/auth-provider"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
@@ -17,36 +16,70 @@ export default function LoginFormateurPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const { login } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+  // Vérifier si l'utilisateur est déjà connecté
+  useEffect(() => {
+    // Nettoyer le localStorage pour éviter les conflits
+    localStorage.removeItem("token")
+    localStorage.removeItem("formateurToken")
+    localStorage.removeItem("adminToken")
+    localStorage.removeItem("apprenantToken")
+    localStorage.removeItem("user")
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError(null)
 
     try {
-      const success = await login(email, password, "formateur")
+      const response = await fetch(`${API_URL}/formateur/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
 
-      if (success) {
-        toast({
-          title: "Connexion réussie",
-          description: "Vous êtes maintenant connecté.",
-        })
-        router.push("/formateur/dashboard")
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Erreur de connexion",
-          description: "Identifiants incorrects. Veuillez réessayer.",
-        })
+      if (!response.ok) {
+        throw new Error("Email ou mot de passe incorrect")
       }
-    } catch (error) {
+
+      const data = await response.json()
+
+      // Stocker le token formateur
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("formateurToken", data.token)
+
+      // Stocker les informations utilisateur dans un format cohérent
+      const userData = {
+        id: data.id || 0,
+        nom: data.nom || "",
+        prenom: data.prenom || "",
+        email: email,
+        role: "formateur",
+        referentiel: data.referentiel || "",
+      }
+
+      localStorage.setItem("user", JSON.stringify(userData))
+
+      toast({
+        title: "Connexion réussie",
+        description: "Vous êtes maintenant connecté en tant que formateur.",
+      })
+
+      // Redirection forcée vers le dashboard formateur
+      window.location.href = "/formateur/dashboard"
+    } catch (err: any) {
+      setError(err.message || "Une erreur est survenue. Veuillez réessayer.")
+
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        description: err.message || "Identifiants incorrects. Veuillez réessayer.",
       })
     } finally {
       setIsLoading(false)
@@ -103,6 +136,8 @@ export default function LoginFormateurPage() {
                   required
                 />
               </div>
+
+              {error && <div className="text-red-500 text-sm">{error}</div>}
             </CardContent>
             <CardFooter className="flex-col space-y-4">
               <Button type="submit" className="w-full" disabled={isLoading}>

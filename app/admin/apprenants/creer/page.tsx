@@ -40,7 +40,7 @@ export default function CreerApprenant() {
     setIsLoading(true)
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("adminToken")
 
       if (!token) {
         throw new Error("Non authentifié")

@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -22,6 +22,23 @@ export default function LoginApprenantPage() {
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+  // Vérifier si l'utilisateur est déjà connecté
+  useEffect(() => {
+    const token = localStorage.getItem("apprenantToken")
+    const user = localStorage.getItem("user")
+
+    if (token && user) {
+      try {
+        const userData = JSON.parse(user)
+        if (userData.role === "apprenant") {
+          router.push("/apprenant/dashboard")
+        }
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error)
+      }
+    }
+  }, [router])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -39,14 +56,35 @@ export default function LoginApprenantPage() {
       }
 
       const data = await response.json()
+
+      // Stocker le token apprenant
+      localStorage.setItem("token", data.token)
       localStorage.setItem("apprenantToken", data.token)
+
+      // Stocker les informations utilisateur dans un format cohérent
+      const userData = {
+        id: data.id || 0,
+        nom: data.nom || "",
+        prenom: data.prenom || "",
+        email: email,
+        role: "apprenant",
+        referentiel: data.referentiel || "",
+      }
+
+      localStorage.setItem("user", JSON.stringify(userData))
 
       toast({
         title: "Connexion réussie",
-        description: "Vous êtes maintenant connecté.",
+        description: "Vous êtes maintenant connecté en tant qu'apprenant.",
       })
 
+      // Redirection vers le tableau de bord apprenant
       router.push("/apprenant/dashboard")
+
+      // Redirection forcée après un court délai si la navigation Next.js échoue
+      setTimeout(() => {
+        window.location.href = "/apprenant/dashboard"
+      }, 500)
     } catch (err: any) {
       setError(err.message || "Une erreur est survenue. Veuillez réessayer.")
 
