@@ -1,86 +1,60 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from "next/link"
+import Image from "next/image"
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react"
 
-const Footer = () => {
+export function Footer() {
   return (
-    <div><footer className="border-t py-12">
-        <div className="container">
-          <div className="grid gap-8 md:grid-cols-4">
-            <div>
-              <div className="mb-4 flex items-center gap-2">
-                <span className="font-bold">école {241} communities</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Une plateforme éducative moderne pour apprendre, enseigner et grandir ensemble.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-bold">Formations</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground">
-                    Développement Web
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground">
-                    Référent Digital
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground">
-                    Digital Creator
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-bold">Liens utiles</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/login/apprenant" className="text-muted-foreground hover:text-foreground">
-                    Connexion Apprenant
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/login/formateur" className="text-muted-foreground hover:text-foreground">
-                    Connexion Formateur
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/login/administrateur" className="text-muted-foreground hover:text-foreground">
-                    Connexion Admin
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="text-muted-foreground hover:text-foreground">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-bold">Contact</h4>
-              <address className="not-italic text-sm text-muted-foreground">
-                <p>123 Rue de l'Innovation</p>
-                <p>Libreville, Gabon</p>
-                <p className="mt-2">contact@ecole241.com</p>
-                <p>+241 12 34 56 78</p>
-              </address>
-            </div>
-          </div>
-
-          <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>
-              &copy; {new Date().getFullYear()} école {241} communities. Tous droits réservés.
+    <footer className="w-full border-t bg-black">
+      <div className="container max-w-screen-2xl mx-auto py-6 md:py-8 px-4 md:px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+            <Link href="/" className="flex items-center">
+              <Image src="/logo.png" alt="École {241} Communities" width={100} height={30} className="h-7 w-auto border rounded-sm border-transparent" />
+            </Link>
+            <p className="text-center text-sm leading-loose md:text-left text-gray-200">
+              &copy; {new Date().getFullYear()} École {241} Communities. Tous droits réservés.
             </p>
           </div>
+          <div className="flex gap-4 mt-4 md:mt-0">
+            <Link
+              href="https://facebook.com"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-opacity hover:opacity-80"
+            >
+              <Facebook className="h-5 w-5 text-gray-200" />
+              <span className="sr-only">Facebook</span>
+            </Link>
+            <Link
+              href="https://twitter.com"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-opacity hover:opacity-80"
+            >
+              <Twitter className="h-5 w-5 text-gray-200" />
+              <span className="sr-only">Twitter</span>
+            </Link>
+            <Link
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-opacity hover:opacity-80"
+            >
+              <Instagram className="h-5 w-5 text-gray-200" />
+              <span className="sr-only">Instagram</span>
+            </Link>
+            <Link
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-opacity hover:opacity-80"
+            >
+              <Linkedin className="h-5 w-5 text-gray-200" />
+              <span className="sr-only">LinkedIn</span>
+            </Link>
+          </div>
         </div>
-      </footer></div>
+      </div>
+    </footer>
   )
 }
-
-export default Footer

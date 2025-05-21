@@ -10,13 +10,13 @@ const Hero = () => {
         <section className="bg-slate-50 relative overflow-hidden py-20 md:py-32">
             {/* Decorative shapes */}
             <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 transform">
-                <div className="shape-blob h-64 w-64 bg-secondary/20"></div>
+                <div className="shape-blob h-64 w-64 bg-purple-600"></div>
             </div>
             <div className="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 transform">
-                <div className="shape-blob-2 h-80 w-80 bg-primary/20"></div>
+                <div className="shape-blob-2 h-80 w-80 bg-purple-600"></div>
             </div>
             <div className="absolute right-1/4 top-1/4">
-                <div className="shape-blob-3 h-40 w-40 bg-secondary/30"></div>
+                <div className="shape-blob-3 h-40 w-40 bg-purple-600"></div>
             </div>
 
             <div className="container relative z-10">
@@ -30,7 +30,7 @@ const Hero = () => {
                     </p>
                     <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                         <Link href="/login/apprenant">
-                            <Button size="lg" className="bg-orange-500 gap-2">
+                            <Button size="lg" className="bg-red-500 hover:bg-red-200 gap-2">
                                 Commencer <ArrowRight className="h-4 w-4" />
                             </Button>
                         </Link>
