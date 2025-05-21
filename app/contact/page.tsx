@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import Header from "@/components/header"
 
 export default function ContactPage() {
   const { toast } = useToast()
@@ -72,24 +73,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-muted/10 flex flex-col">
-      <header className="border-b bg-white">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold">école {241} communities</span>
-            </Link>
-          </div>
-          <nav className="flex items-center gap-4">
-            <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-              Accueil
-            </Link>
-            <Link href="/login/apprenant" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-              Connexion
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+      <Header />
       <main className="flex-1 container py-12">
         <div className="max-w-2xl mx-auto">
           <Link
@@ -183,14 +167,6 @@ export default function ContactPage() {
           </Card>
         </div>
       </main>
-
-      <footer className="border-t py-6 bg-white">
-        <div className="container text-center text-sm text-muted-foreground">
-          <p>
-            &copy; {new Date().getFullYear()} école {241} communities. Tous droits réservés.
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }

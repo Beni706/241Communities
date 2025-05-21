@@ -1,40 +1,29 @@
 import { Button } from "@/components/ui/button"
+import { MainNav } from "@/components/main-nav"
 import Link from "next/link"
 
-
 const Header = () => {
-    return (
-        <div> <header className="border-b bg-white">
-            <div className="container flex h-16 items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold">école {241} communities</span>
-                </div>
-                <nav className="flex items-center gap-4">
-                    <div className="flex gap-2">
-                        <Link href="/login/apprenant" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                            Apprenant
-                        </Link>
-                        <Link href="/login/formateur" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                            Formateur
-                        </Link>
-                        <Link
-                            href="/login/administrateur"
-                            className="text-sm font-medium text-muted-foreground hover:text-foreground"
-                        >
-                            Admin
-                        </Link>
-                    </div>
-                    <Link href="/contact">
-                        <Button className="bg-orange-500" variant="default">Nous contacter</Button>
-                    </Link>
-                </nav>
-            </div>
-        </header>
+  return (
+    <div>
+      <header className="sticky top-0 z-50 w-full backdrop-blur">
+        <div className="container max-w-screen-2xl mx-auto flex h-24 items-center px-4 md:px-6">
+          <MainNav />
+          <div className="ml-auto flex items-center space-x-4 md:space-x-6">
+            <Link href="/connexion">
+              <Button variant="outline" size="sm" className="h-9 bg-white text-black">
+                Connexion
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button className="bg-red-500 hover:bg-red-300 h-9" size="sm">
+                Nous contacter
+              </Button>
+            </Link>
+          </div>
         </div>
-    )
+      </header>
+    </div>
+  )
 }
 
 export default Header
-
-
-
