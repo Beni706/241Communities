@@ -17,6 +17,8 @@ import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL 
+
 export default function CreerVeille() {
   const { user } = useAuth()
   const router = useRouter()
@@ -48,7 +50,7 @@ export default function CreerVeille() {
         throw new Error("Non authentifié")
       }
 
-      const response = await fetch("/api/veille", {
+      const response = await fetch(`${API_URL}/veille`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

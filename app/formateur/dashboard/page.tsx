@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -39,27 +40,42 @@ type UserInfo = {
   referentiel: string
 }
 
-export default function FormateurDashboard() {
+export default function FormateurDashboardPage() {
+  const router = useRouter()
   const [user, setUser] = useState<UserInfo | null>(null)
   const [cours, setCours] = useState<Cours[]>([])
   const [veilles, setVeilles] = useState<Veille[]>([])
   const [apprenants, setApprenants] = useState<Apprenant[]>([])
-  const [loading, setLoading] = useState(true)
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+  const [isLoading, setIsLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
-    // Récupérer les informations de l'utilisateur depuis le localStorage
-    const storedUser = localStorage.getItem("user")
+    // Vérifier si l'utilisateur est connecté en tant que formateur
     const token = localStorage.getItem("formateurToken")
+    const storedUser = localStorage.getItem("user")
 
-    if (!token) {
+    if (!token || !storedUser) {
+      // Rediriger vers la page de connexion si aucun token ou utilisateur n'est trouvé
       window.location.href = "/login/formateur"
       return
     }
 
-    if (storedUser) {
+    try {
       const userInfo = JSON.parse(storedUser)
-      setUser(userInfo)
+      // Vérifier que l'utilisateur est bien un formateur
+      if (userInfo && userInfo.role === "formateur") {
+        setUser(userInfo)
+        setIsAuthenticated(true)
+      } else {
+        // Si l'utilisateur n'est pas un formateur, rediriger vers la page de connexion appropriée
+        window.location.href = `/login/${userInfo.role}`
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'authentification:", error)
+      window.location.href = "/login/formateur"
+    } finally {
+      setIsLoading(false)
     }
   }, [])
 
@@ -67,19 +83,19 @@ export default function FormateurDashboard() {
     const fetchData = async () => {
       try {
         if (!user) return
-        const token = localStorage.getItem("formateurToken")
+        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
 
         if (!token) return
 
         // Fetch courses created by the formateur
-        const coursResponse = await fetch(`${API_BASE_URL}/cours?id_formateur=${user.id}`, {
+        const coursResponse = await fetch(`${API_BASE_URL}/cours`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
         // Fetch veilles created by the formateur
-        const veillesResponse = await fetch(`${API_BASE_URL}/veille?id_formateur=${user.id}`, {
+        const veillesResponse = await fetch(`${API_BASE_URL}/veille`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -117,14 +133,14 @@ export default function FormateurDashboard() {
       } catch (error) {
         console.error("Error fetching data:", error)
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     }
 
-    if (user) {
+    if (user && isAuthenticated) {
       fetchData()
     }
-  }, [user, API_BASE_URL])
+  }, [user, isAuthenticated, API_BASE_URL])
 
   // Get recent courses
   const recentCours = [...cours].sort((a, b) => b.id_cours - a.id_cours).slice(0, 3)
@@ -136,6 +152,18 @@ export default function FormateurDashboard() {
 
   // Get recent apprenants
   const recentApprenants = [...apprenants].slice(0, 5)
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return null // Ne rien afficher pendant la redirection
+  }
 
   return (
     <DashboardLayout>
@@ -163,7 +191,7 @@ export default function FormateurDashboard() {
           </div>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="grid gap-4 md:grid-cols-3">
             {[...Array(3)].map((_, i) => (
               <Card key={i} className="animate-pulse">
