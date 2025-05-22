@@ -30,7 +30,7 @@ export default function ApprenantsPage() {
   useEffect(() => {
     const fetchApprenants = async () => {
       try {
-        const token = localStorage.getItem("formateurToken")
+        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
         if (!token) {
           router.push("/login/formateur")
           return
@@ -80,7 +80,7 @@ export default function ApprenantsPage() {
   }, [searchTerm, apprenants])
 
   return (
-    <DashboardLayout>
+    
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Mes Apprenants</h1>
@@ -163,6 +163,6 @@ export default function ApprenantsPage() {
           </>
         )}
       </div>
-    </DashboardLayout>
+    
   )
 }

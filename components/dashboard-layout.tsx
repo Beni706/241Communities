@@ -18,10 +18,10 @@ type UserInfo = {
 
 interface DashboardLayoutProps {
   children: ReactNode
-  userRole?: "admin" | "formateur" | "apprenant"
+  userRole?: "administrateur" | "formateur" | "apprenant"
 }
 
-export default function DashboardLayout({ children, userRole = "admin" }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, userRole = "administrateur" }: DashboardLayoutProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<UserInfo | null>(null)
@@ -32,7 +32,7 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
     // Vérifier l'authentification
     let token: string | null = null
 
-    if (userRole === "admin") {
+    if (userRole === "administrateur") {
       token = localStorage.getItem("adminToken")
     } else if (userRole === "formateur") {
       token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
@@ -90,7 +90,7 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
         const storedUser = localStorage.getItem("user")
         let token = null
 
-        if (userRole === "admin") {
+        if (userRole === "administrateur") {
           token = localStorage.getItem("adminToken")
         } else if (userRole === "formateur") {
           token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
@@ -143,7 +143,7 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
 
   // Définir les liens de navigation en fonction du rôle
   const getNavLinks = () => {
-    if (userRole === "admin") {
+    if (userRole === "administrateur") {
       return [
         { href: "/admin/dashboard", label: "Tableau de bord", icon: <Home className="h-4 w-4" /> },
         { href: "/admin/apprenants", label: "Apprenants", icon: <Users className="h-4 w-4" /> },
@@ -172,7 +172,7 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
 
   // Définir le titre et la couleur en fonction du rôle
   const getRoleInfo = () => {
-    if (userRole === "admin") {
+    if (userRole === "administrateur") {
       return { title: "Administration", color: "text-purple-600 bg-purple-100" }
     } else if (userRole === "formateur") {
       return { title: "Espace Formateur", color: "text-secondary bg-secondary/10" }
@@ -225,7 +225,7 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
                   href={link.href}
                   className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm ${
                     link.href.includes("/dashboard")
-                      ? userRole === "admin"
+                      ? userRole === "administrateur"
                         ? "bg-purple-600 text-white"
                         : userRole === "formateur"
                           ? "bg-secondary text-white"

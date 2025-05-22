@@ -51,7 +51,7 @@ export default function CoursDetailPage() {
   useEffect(() => {
     const fetchCours = async () => {
       try {
-        const token = localStorage.getItem("formateurToken")
+        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
         if (!token) {
           router.push("/login/formateur")
           return
@@ -99,7 +99,7 @@ export default function CoursDetailPage() {
 
   const handleDelete = async () => {
     try {
-      const token = localStorage.getItem("formateurToken")
+      const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
       if (!token) {
         router.push("/login/formateur")
         return
@@ -133,7 +133,7 @@ export default function CoursDetailPage() {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <DashboardLayout userRole="formateur">
         <div className="space-y-6 animate-pulse">
           <div className="h-8 bg-muted rounded w-64"></div>
           <div className="h-4 bg-muted rounded w-96"></div>
@@ -145,7 +145,7 @@ export default function CoursDetailPage() {
 
   if (!cours) {
     return (
-      <DashboardLayout>
+      <DashboardLayout userRole="formateur">
         <div className="space-y-6">
           <div className="flex items-center gap-2">
             <Link href="/formateur/cours">
@@ -172,7 +172,7 @@ export default function CoursDetailPage() {
   }
 
   return (
-    <DashboardLayout>
+    <DashboardLayout userRole="formateur">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-2">

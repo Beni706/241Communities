@@ -59,7 +59,7 @@ export default function ApprenantDetailPage() {
   useEffect(() => {
     const fetchApprenant = async () => {
       try {
-        const token = localStorage.getItem("formateurToken")
+        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
         if (!token) {
           router.push("/login/formateur")
           return
@@ -139,7 +139,7 @@ export default function ApprenantDetailPage() {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <DashboardLayout userRole="formateur">
         <div className="space-y-6 animate-pulse">
           <div className="h-8 bg-muted rounded w-64"></div>
           <div className="h-4 bg-muted rounded w-96"></div>
@@ -151,7 +151,7 @@ export default function ApprenantDetailPage() {
 
   if (!apprenant) {
     return (
-      <DashboardLayout>
+      <DashboardLayout userRole="formateur">
         <div className="space-y-6">
           <div className="flex items-center gap-2">
             <Link href="/formateur/apprenants">
@@ -178,7 +178,7 @@ export default function ApprenantDetailPage() {
   }
 
   return (
-    <DashboardLayout>
+    <DashboardLayout userRole="formateur">
       <div className="space-y-6">
         <div className="flex items-center gap-2">
           <Link href="/formateur/apprenants">

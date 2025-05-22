@@ -10,30 +10,28 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { ArrowLeft, Calendar } from "lucide-react"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { ArrowLeft } from "lucide-react"
 
-export default function CreerVeillePage() {
+export default function CreerCoursPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Formulaire
   const [titre, setTitre] = useState("")
-  const [lienDoc, setLienDoc] = useState("")
-  const [dateFin, setDateFin] = useState<Date | undefined>(undefined)
+  const [categorie, setCategorie] = useState("")
+  const [description, setDescription] = useState("")
+  const [lienCours, setLienCours] = useState("")
   const [referentiel, setReferentiel] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validation
-    if (!titre || !lienDoc || !dateFin || !referentiel) {
+    if (!titre || !categorie || !description || !lienCours || !referentiel) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -54,7 +52,7 @@ export default function CreerVeillePage() {
 
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
-      const response = await fetch(`${API_BASE_URL}/veille`, {
+      const response = await fetch(`${API_BASE_URL}/cours`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,30 +60,31 @@ export default function CreerVeillePage() {
         },
         body: JSON.stringify({
           titre,
-          lien_docDonnee: lienDoc,
+          categorie,
+          description,
+          lien_cours: lienCours,
           date_creation: new Date().toISOString(),
-          date_fin: dateFin.toISOString(),
           referentiel: referentiel || user.referentiel,
           id_formateur: user.id,
         }),
       })
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la création de la veille")
+        throw new Error("Erreur lors de la création du cours")
       }
 
       toast({
-        title: "Veille créée",
-        description: "La veille a été créée avec succès.",
+        title: "Cours créé",
+        description: "Le cours a été créé avec succès.",
       })
 
-      router.push("/formateur/veilles")
+      router.push("/formateur/cours")
     } catch (error) {
       console.error("Erreur:", error)
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création de la veille.",
+        description: "Une erreur est survenue lors de la création du cours.",
       })
     } finally {
       setIsSubmitting(false)
@@ -97,12 +96,10 @@ export default function CreerVeillePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Créer une nouvelle veille</h1>
-            <p className="text-muted-foreground">
-              Remplissez le formulaire ci-dessous pour créer une nouvelle veille technologique.
-            </p>
+            <h1 className="text-2xl font-bold tracking-tight">Créer un nouveau cours</h1>
+            <p className="text-muted-foreground">Remplissez le formulaire ci-dessous pour créer un nouveau cours.</p>
           </div>
-          <Link href="/formateur/veilles">
+          <Link href="/formateur/cours">
             <Button variant="outline" size="sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Retour
@@ -113,54 +110,63 @@ export default function CreerVeillePage() {
         <form onSubmit={handleSubmit}>
           <Card className="border-0 shadow-sm">
             <CardHeader>
-              <CardTitle>Informations de la veille</CardTitle>
-              <CardDescription>Entrez les détails de la veille que vous souhaitez créer.</CardDescription>
+              <CardTitle>Informations du cours</CardTitle>
+              <CardDescription>Entrez les détails du cours que vous souhaitez créer.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="titre">Titre de la veille *</Label>
+                <Label htmlFor="titre">Titre du cours *</Label>
                 <Input
                   id="titre"
                   value={titre}
                   onChange={(e) => setTitre(e.target.value)}
-                  placeholder="Ex: Veille sur les frameworks JavaScript modernes"
+                  placeholder="Ex: Développement web avec React"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lienDoc">Lien vers le document *</Label>
+                <Label htmlFor="categorie">Catégorie *</Label>
+                <Select value={categorie} onValueChange={setCategorie}>
+                  <SelectTrigger id="categorie">
+                    <SelectValue placeholder="Sélectionner une catégorie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Développement Web">Développement Web</SelectItem>
+                    <SelectItem value="Développement Mobile">Développement Mobile</SelectItem>
+                    <SelectItem value="Base de données">Base de données</SelectItem>
+                    <SelectItem value="DevOps">DevOps</SelectItem>
+                    <SelectItem value="Intelligence Artificielle">Intelligence Artificielle</SelectItem>
+                    <SelectItem value="Cybersécurité">Cybersécurité</SelectItem>
+                    <SelectItem value="Réseau">Réseau</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description *</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Décrivez le contenu et les objectifs du cours..."
+                  rows={4}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="lienCours">Lien du cours *</Label>
                 <Input
-                  id="lienDoc"
-                  value={lienDoc}
-                  onChange={(e) => setLienDoc(e.target.value)}
-                  placeholder="https://docs.google.com/document/d/..."
+                  id="lienCours"
+                  value={lienCours}
+                  onChange={(e) => setLienCours(e.target.value)}
+                  placeholder="https://example.com/cours"
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  Lien vers un document contenant les instructions de la veille (Google Docs, Notion, etc.)
+                  Lien vers le contenu du cours (Google Docs, Notion, site web, etc.)
                 </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="dateFin">Date limite de rendu *</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal" id="dateFin">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      {dateFin ? format(dateFin, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <CalendarComponent
-                      mode="single"
-                      selected={dateFin}
-                      onSelect={setDateFin}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
               </div>
 
               <div className="space-y-2">
@@ -182,13 +188,13 @@ export default function CreerVeillePage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push("/formateur/veilles")}
+                onClick={() => router.push("/formateur/cours")}
                 disabled={isSubmitting}
               >
                 Annuler
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Création en cours..." : "Créer la veille"}
+                {isSubmitting ? "Création en cours..." : "Créer le cours"}
               </Button>
             </CardFooter>
           </Card>
@@ -196,7 +202,6 @@ export default function CreerVeillePage() {
 
         <div className="text-sm text-muted-foreground">
           <p>* Champs obligatoires</p>
-          <p>Les apprenants pourront soumettre leur travail jusqu'à la date limite.</p>
         </div>
       </div>
     </DashboardLayout>

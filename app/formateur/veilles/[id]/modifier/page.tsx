@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Button } from "@/components/ui/button"
@@ -18,9 +18,20 @@ import { fr } from "date-fns/locale"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 
-export default function CreerVeillePage() {
+type Veille = {
+  id_veille: number
+  titre: string
+  lien_docDonnee: string
+  date_creation: string
+  date_fin: string
+  referentiel: string
+}
+
+export default function ModifierVeillePage() {
+  const params = useParams()
   const router = useRouter()
   const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Formulaire
@@ -28,6 +39,50 @@ export default function CreerVeillePage() {
   const [lienDoc, setLienDoc] = useState("")
   const [dateFin, setDateFin] = useState<Date | undefined>(undefined)
   const [referentiel, setReferentiel] = useState("")
+
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+
+  useEffect(() => {
+    const fetchVeille = async () => {
+      try {
+        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+
+        if (!token) {
+          router.push("/login/formateur")
+          return
+        }
+
+        const response = await fetch(`${API_BASE_URL}/veille/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error("Veille non trouvée")
+        }
+
+        const veilleData: Veille = await response.json()
+
+        setTitre(veilleData.titre)
+        setLienDoc(veilleData.lien_docDonnee)
+        setDateFin(new Date(veilleData.date_fin))
+        setReferentiel(veilleData.referentiel)
+      } catch (error) {
+        console.error("Erreur lors de la récupération de la veille:", error)
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible de récupérer les informations de la veille.",
+        })
+        router.push("/formateur/veilles")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchVeille()
+  }, [params.id, router, toast, API_BASE_URL])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,16 +101,13 @@ export default function CreerVeillePage() {
 
     try {
       const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
-      const user = JSON.parse(localStorage.getItem("user") || "{}")
 
       if (!token) {
         throw new Error("Non authentifié")
       }
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
-
-      const response = await fetch(`${API_BASE_URL}/veille`, {
-        method: "POST",
+      const response = await fetch(`${API_BASE_URL}/veille/${params.id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -63,33 +115,41 @@ export default function CreerVeillePage() {
         body: JSON.stringify({
           titre,
           lien_docDonnee: lienDoc,
-          date_creation: new Date().toISOString(),
           date_fin: dateFin.toISOString(),
-          referentiel: referentiel || user.referentiel,
-          id_formateur: user.id,
+          referentiel,
         }),
       })
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la création de la veille")
+        throw new Error("Erreur lors de la modification de la veille")
       }
 
       toast({
-        title: "Veille créée",
-        description: "La veille a été créée avec succès.",
+        title: "Veille modifiée",
+        description: "La veille a été modifiée avec succès.",
       })
 
-      router.push("/formateur/veilles")
+      router.push(`/formateur/veilles/${params.id}`)
     } catch (error) {
       console.error("Erreur:", error)
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création de la veille.",
+        description: "Une erreur est survenue lors de la modification de la veille.",
       })
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <DashboardLayout userRole="formateur">
+        <div className="flex items-center justify-center h-[500px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </DashboardLayout>
+    )
   }
 
   return (
@@ -97,12 +157,10 @@ export default function CreerVeillePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Créer une nouvelle veille</h1>
-            <p className="text-muted-foreground">
-              Remplissez le formulaire ci-dessous pour créer une nouvelle veille technologique.
-            </p>
+            <h1 className="text-2xl font-bold tracking-tight">Modifier la veille</h1>
+            <p className="text-muted-foreground">Modifiez les informations de la veille.</p>
           </div>
-          <Link href="/formateur/veilles">
+          <Link href={`/formateur/veilles/${params.id}`}>
             <Button variant="outline" size="sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Retour
@@ -114,7 +172,7 @@ export default function CreerVeillePage() {
           <Card className="border-0 shadow-sm">
             <CardHeader>
               <CardTitle>Informations de la veille</CardTitle>
-              <CardDescription>Entrez les détails de la veille que vous souhaitez créer.</CardDescription>
+              <CardDescription>Modifiez les détails de la veille.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -152,13 +210,7 @@ export default function CreerVeillePage() {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <CalendarComponent
-                      mode="single"
-                      selected={dateFin}
-                      onSelect={setDateFin}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
+                    <CalendarComponent mode="single" selected={dateFin} onSelect={setDateFin} initialFocus />
                   </PopoverContent>
                 </Popover>
               </div>
@@ -182,13 +234,13 @@ export default function CreerVeillePage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push("/formateur/veilles")}
+                onClick={() => router.push(`/formateur/veilles/${params.id}`)}
                 disabled={isSubmitting}
               >
                 Annuler
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Création en cours..." : "Créer la veille"}
+                {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}
               </Button>
             </CardFooter>
           </Card>
@@ -196,7 +248,6 @@ export default function CreerVeillePage() {
 
         <div className="text-sm text-muted-foreground">
           <p>* Champs obligatoires</p>
-          <p>Les apprenants pourront soumettre leur travail jusqu'à la date limite.</p>
         </div>
       </div>
     </DashboardLayout>
