@@ -57,16 +57,32 @@ export default function ApprenantDashboard() {
   useEffect(() => {
     // Récupérer les informations de l'utilisateur depuis le localStorage
     const storedUser = localStorage.getItem("user")
-    const token = localStorage.getItem("apprenantToken")
+    const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token")
 
     if (!token) {
+      console.log("Aucun token trouvé, redirection vers la page de connexion")
       window.location.href = "/login/apprenant"
       return
     }
 
     if (storedUser) {
-      const userInfo = JSON.parse(storedUser)
-      setUser(userInfo)
+      try {
+        const userInfo = JSON.parse(storedUser)
+        if (userInfo.role !== "apprenant") {
+          console.log("L'utilisateur n'est pas un apprenant, redirection vers la page de connexion appropriée")
+          window.location.href = `/login/${userInfo.role}`
+          return
+        }
+        setUser(userInfo)
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error)
+        window.location.href = "/login/apprenant"
+        return
+      }
+    } else {
+      console.log("Aucune information utilisateur trouvée, redirection vers la page de connexion")
+      window.location.href = "/login/apprenant"
+      return
     }
   }, [])
 
@@ -74,7 +90,7 @@ export default function ApprenantDashboard() {
     const fetchData = async () => {
       try {
         if (!user) return
-        const token = localStorage.getItem("apprenantToken")
+        const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token")
 
         if (!token) return
 
@@ -147,7 +163,7 @@ export default function ApprenantDashboard() {
   const recentCours = suiviCours.sort((a, b) => b.id_suiviCours - a.id_suiviCours).slice(0, 3)
 
   return (
-    <DashboardLayout>
+    <DashboardLayout userRole="apprenant">
       <div className="space-y-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Tableau de bord</h1>

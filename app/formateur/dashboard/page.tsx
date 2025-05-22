@@ -52,11 +52,12 @@ export default function FormateurDashboardPage() {
 
   useEffect(() => {
     // Vérifier si l'utilisateur est connecté en tant que formateur
-    const token = localStorage.getItem("formateurToken")
+    const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
     const storedUser = localStorage.getItem("user")
 
     if (!token || !storedUser) {
       // Rediriger vers la page de connexion si aucun token ou utilisateur n'est trouvé
+      console.log("Aucun token ou utilisateur trouvé, redirection vers la page de connexion")
       window.location.href = "/login/formateur"
       return
     }
@@ -69,6 +70,7 @@ export default function FormateurDashboardPage() {
         setIsAuthenticated(true)
       } else {
         // Si l'utilisateur n'est pas un formateur, rediriger vers la page de connexion appropriée
+        console.log("L'utilisateur n'est pas un formateur, redirection vers la page de connexion appropriée")
         window.location.href = `/login/${userInfo.role}`
       }
     } catch (error) {
@@ -166,7 +168,7 @@ export default function FormateurDashboardPage() {
   }
 
   return (
-    <DashboardLayout>
+    <DashboardLayout userRole="formateur">
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <div>
