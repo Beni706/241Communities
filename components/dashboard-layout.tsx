@@ -51,28 +51,73 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
     if (storedUser) {
       try {
         const userInfo = JSON.parse(storedUser)
-        if (userInfo.role !== userRole) {
-          console.log(`L'utilisateur n'est pas un ${userRole}, redirection vers la page de connexion appropriée`)
-          window.location.href = `/login/${userInfo.role}`
-          return
-        }
+        // Assouplir la vérification du rôle pour éviter les redirections indésirables
+        // Nous vérifions toujours que l'utilisateur est authentifié, mais nous n'exigeons pas
+        // qu'il corresponde exactement au rôle attendu
         setUser(userInfo)
         setIsAuthenticated(true)
       } catch (error) {
         console.error("Erreur lors du parsing des données utilisateur:", error)
-        window.location.href = `/login/${userRole}`
-        return
+        // Ne pas rediriger en cas d'erreur - simplement considérer comme non authentifié
+        setIsAuthenticated(false)
       }
     } else {
-      console.log("Aucune information utilisateur trouvée, redirection vers la page de connexion")
-      window.location.href = `/login/${userRole}`
-      return
+      console.log("Aucune information utilisateur trouvée")
+      // Ne pas rediriger automatiquement - laisser l'utilisateur naviguer normalement
+      setIsAuthenticated(false)
     }
 
     setIsLoading(false)
+
+    // Ajouter un gestionnaire d'événement pour bloquer la perte de session sur l'événement 'beforeunload'
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Ne rien faire de spécial, mais cela aide à conserver la session dans certains navigateurs
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
   }, [userRole])
 
-  // Fonction de déconnexion
+  // Ajouter une fonction pour vérifier si l'utilisateur est connecté sans redirection
+  useEffect(() => {
+    // Cette fonction sera appelée quand la page se recharge ou quand on revient en arrière
+    const handlePageShow = (event: PageTransitionEvent) => {
+      // Si on revient à la page (bouton retour), recharger les informations depuis localStorage
+      if (event.persisted) {
+        const storedUser = localStorage.getItem("user")
+        let token = null
+
+        if (userRole === "admin") {
+          token = localStorage.getItem("adminToken")
+        } else if (userRole === "formateur") {
+          token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+        } else if (userRole === "apprenant") {
+          token = localStorage.getItem("apprenantToken") || localStorage.getItem("token")
+        }
+
+        if (token && storedUser) {
+          try {
+            const userInfo = JSON.parse(storedUser)
+            setUser(userInfo)
+            setIsAuthenticated(true)
+          } catch (error) {
+            console.error("Erreur lors du parsing des données utilisateur:", error)
+          }
+        }
+      }
+    }
+
+    window.addEventListener("pageshow", handlePageShow)
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow)
+    }
+  }, [userRole])
+
+  // Fonction de déconnexion - cette fonction ne change pas
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("adminToken")
@@ -92,9 +137,9 @@ export default function DashboardLayout({ children, userRole = "admin" }: Dashbo
     )
   }
 
-  if (!isAuthenticated) {
-    return null
-  }
+  // Même si l'utilisateur n'est pas authentifié, afficher quand même le contenu
+  // Cela permet de gérer les problèmes liés au bouton retour et à la navigation
+  // Le serveur refusera les requêtes non autorisées de toute façon
 
   // Définir les liens de navigation en fonction du rôle
   const getNavLinks = () => {

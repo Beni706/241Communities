@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import { setupSessionPersistence } from "../lib/session-persistence"
 
 type User = {
   id: number
@@ -15,7 +16,7 @@ type User = {
 type AuthContextType = {
   user: User | null
   loading: boolean
-  login: (email: string, password: string, role: string) => Promise<void> // Changement: retourne Promise<void>, lève une erreur en cas d'échec
+  login: (email: string, password: string, role: string) => Promise<void>
   logout: () => void
 }
 
@@ -25,7 +26,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+
+  // Mettre en place la persistance de session
+  useEffect(() => {
+    setupSessionPersistence()
+  }, [])
 
   useEffect(() => {
     // Check if user is logged in
@@ -46,23 +52,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(parsedUser as User)
         } else {
           console.warn("Données utilisateur stockées invalides:", parsedUser)
-          localStorage.removeItem("token")
-          localStorage.removeItem("user")
+          // Ne pas supprimer les tokens/user pour éviter les déconnexions indésirables
           setUser(null)
         }
       } catch (error) {
         console.error("Erreur lors du parsing de l'utilisateur depuis localStorage:", error)
-        localStorage.removeItem("token")
-        localStorage.removeItem("user")
-        setUser(null) // S'assurer que user est null si le parsing échoue
+        // Ne pas supprimer les tokens/user pour éviter les déconnexions indésirables
+        setUser(null)
       }
     } else {
       setUser(null)
     }
     setLoading(false)
   }, [])
-
-  // Modifier la fonction login pour s'assurer que le token est correctement stocké pour les formateurs
 
   const login = async (email: string, password: string, role: string): Promise<void> => {
     setLoading(true)
@@ -124,7 +126,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // Créer l'objet userInfo directement à partir des données de la réponse
-      // Correction : récupérer les infos du formateur depuis l'API pour remplir nom, prenom, referentiel
       let userInfo: User = {
         id: data.id,
         nom: "",
@@ -133,6 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role: role as User["role"],
         referentiel: undefined,
       }
+
       if (role === "formateur") {
         try {
           const userResponse = await fetch(`${API_BASE_URL}/formateur/${data.id}`, {
@@ -152,7 +154,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (e) {
           // fallback: garder userInfo minimal
         }
+      } else if (role === "apprenant") {
+        try {
+          const userResponse = await fetch(`${API_BASE_URL}/apprenant/${data.id}`, {
+            headers: { Authorization: `Bearer ${data.token}` },
+          })
+          if (userResponse.ok) {
+            const userData = await userResponse.json()
+            userInfo = {
+              id: userData.id_apprenant,
+              nom: userData.nom,
+              prenom: userData.prenom,
+              email: userData.email,
+              role: "apprenant",
+              referentiel: userData.referentiel,
+            }
+          }
+        } catch (e) {
+          // fallback: garder userInfo minimal
+        }
       }
+
       // Stockage des informations utilisateur
       localStorage.setItem("user", JSON.stringify(userInfo))
 
@@ -161,7 +183,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Redirection basée sur le rôle
       if (role === "formateur") {
-        // Utiliser window.location.href pour une redirection forcée
         window.location.href = "/formateur/dashboard"
       } else if (role === "administrateur") {
         window.location.href = "/admin/dashboard"
@@ -186,7 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Modifier la fonction logout pour supprimer tous les tokens
   const logout = () => {
     // Récupérer le rôle de l'utilisateur avant de supprimer les données
-    const userRole = user?.role || "apprenant"
+    const userRole = user?.role === "administrateur" ? "administrateur" : user?.role || "apprenant"
 
     localStorage.removeItem("token")
     localStorage.removeItem("formateurToken")
@@ -196,7 +217,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
 
     // Rediriger vers la page de connexion spécifique au rôle
-    window.location.href = `/login/${userRole}`
+    const redirectPath = userRole === "administrateur" ? "/login/administrateur" : `/login/${userRole}`
+    window.location.href = redirectPath
   }
 
   return <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>
