@@ -93,7 +93,7 @@ export default function CreerVeillePage() {
   }
 
   return (
-    <DashboardLayout userRole="formateur">
+
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -199,6 +199,6 @@ export default function CreerVeillePage() {
           <p>Les apprenants pourront soumettre leur travail jusqu'à la date limite.</p>
         </div>
       </div>
-    </DashboardLayout>
+  
   )
 }
