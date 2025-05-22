@@ -27,6 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
+    <>
     <html lang="fr">
       <body className={`${poppins.variable} font-sans antialiased`}>
         <AuthProvider>
@@ -34,7 +35,8 @@ export default function RootLayout({
           <Toaster />
         </AuthProvider>
       </body>
-      <Footer />
     </html>
+    <Footer />
+    </>
   )
 }
