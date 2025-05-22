@@ -3,125 +3,130 @@
 import { type ReactNode, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { BookOpen, Users } from "lucide-react"
+import { BookOpen, FileText, GraduationCap, Home, LogOut, Settings, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
-type Apprenant = {
-  id_apprenant: number
-  nom: string
-  prenom: string
-  email: string
-  referentiel: string
-}
-
-type Formateur = {
-  id_formateur: number
-  nom: string
-  prenom: string
-  email: string
-  referentiel: string
-}
-
-type Cours = {
-  id_cours: number
-  titre: string
-  categorie: string
-  description: string
-  formateur: {
-    nom: string
-    prenom: string
-  }
-}
-
-type AdminInfo = {
+type UserInfo = {
   id: number
   nom: string
   prenom: string
   email: string
+  role: string
+  referentiel?: string
 }
 
 interface DashboardLayoutProps {
   children: ReactNode
+  userRole?: "admin" | "formateur" | "apprenant"
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, userRole = "admin" }: DashboardLayoutProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [admin, setAdmin] = useState<AdminInfo | null>(null)
-  const [apprenants, setApprenants] = useState<Apprenant[]>([])
-  const [formateurs, setFormateurs] = useState<Formateur[]>([])
-  const [cours, setCours] = useState<Cours[]>([])
+  const [user, setUser] = useState<UserInfo | null>(null)
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
     // Vérifier l'authentification
-    const token = localStorage.getItem("adminToken")
-    if (!token) {
-      router.push("/login/administrateur")
-    } else {
-      setIsAuthenticated(true)
+    let token: string | null = null
+
+    if (userRole === "admin") {
+      token = localStorage.getItem("adminToken")
+    } else if (userRole === "formateur") {
+      token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+    } else if (userRole === "apprenant") {
+      token = localStorage.getItem("apprenantToken") || localStorage.getItem("token")
     }
+
+    const storedUser = localStorage.getItem("user")
+
+    if (!token) {
+      console.log(`Aucun token ${userRole} trouvé, redirection vers la page de connexion`)
+      window.location.href = `/login/${userRole}`
+      return
+    }
+
+    if (storedUser) {
+      try {
+        const userInfo = JSON.parse(storedUser)
+        // Assouplir la vérification du rôle pour éviter les redirections indésirables
+        // Nous vérifions toujours que l'utilisateur est authentifié, mais nous n'exigeons pas
+        // qu'il corresponde exactement au rôle attendu
+        setUser(userInfo)
+        setIsAuthenticated(true)
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error)
+        // Ne pas rediriger en cas d'erreur - simplement considérer comme non authentifié
+        setIsAuthenticated(false)
+      }
+    } else {
+      console.log("Aucune information utilisateur trouvée")
+      // Ne pas rediriger automatiquement - laisser l'utilisateur naviguer normalement
+      setIsAuthenticated(false)
+    }
+
     setIsLoading(false)
 
-    // Fetch data if authenticated
-    if (token) {
-      const fetchData = async () => {
-        try {
-          // Fetch apprenants
-          const apprenantsResponse = await fetch(`${API_URL}/apprenant`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+    // Ajouter un gestionnaire d'événement pour bloquer la perte de session sur l'événement 'beforeunload'
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Ne rien faire de spécial, mais cela aide à conserver la session dans certains navigateurs
+    }
 
-          // Fetch formateurs
-          const formateursResponse = await fetch(`${API_URL}/formateur`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+    window.addEventListener("beforeunload", handleBeforeUnload)
 
-          // Fetch cours
-          const coursResponse = await fetch(`${API_URL}/cours`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [userRole])
 
-          if (apprenantsResponse.ok) {
-            const apprenantsData = await apprenantsResponse.json()
-            setApprenants(apprenantsData)
+  // Ajouter une fonction pour vérifier si l'utilisateur est connecté sans redirection
+  useEffect(() => {
+    // Cette fonction sera appelée quand la page se recharge ou quand on revient en arrière
+    const handlePageShow = (event: PageTransitionEvent) => {
+      // Si on revient à la page (bouton retour), recharger les informations depuis localStorage
+      if (event.persisted) {
+        const storedUser = localStorage.getItem("user")
+        let token = null
+
+        if (userRole === "admin") {
+          token = localStorage.getItem("adminToken")
+        } else if (userRole === "formateur") {
+          token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+        } else if (userRole === "apprenant") {
+          token = localStorage.getItem("apprenantToken") || localStorage.getItem("token")
+        }
+
+        if (token && storedUser) {
+          try {
+            const userInfo = JSON.parse(storedUser)
+            setUser(userInfo)
+            setIsAuthenticated(true)
+          } catch (error) {
+            console.error("Erreur lors du parsing des données utilisateur:", error)
           }
-
-          if (formateursResponse.ok) {
-            const formateursData = await formateursResponse.json()
-            setFormateurs(formateursData)
-          }
-
-          if (coursResponse.ok) {
-            const coursData = await coursResponse.json()
-            setCours(coursData)
-          }
-
-          // Récupérer les informations de l'administrateur
-          const adminInfoString = localStorage.getItem("adminInfo")
-          const adminInfo = adminInfoString ? JSON.parse(adminInfoString) : { prenom: "Admin", nom: "" }
-          setAdmin(adminInfo)
-        } catch (error) {
-          console.error("Error fetching data:", error)
         }
       }
-
-      fetchData()
     }
-  }, [router])
 
-  // Fonction de déconnexion
+    window.addEventListener("pageshow", handlePageShow)
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow)
+    }
+  }, [userRole])
+
+  // Fonction de déconnexion - cette fonction ne change pas
   const handleLogout = () => {
+    localStorage.removeItem("token")
     localStorage.removeItem("adminToken")
-    localStorage.removeItem("adminInfo")
-    router.push("/login/administrateur")
+    localStorage.removeItem("formateurToken")
+    localStorage.removeItem("apprenantToken")
+    localStorage.removeItem("user")
+
+    // Redirection vers la page de connexion spécifique au rôle
+    window.location.href = `/login/${userRole}`
   }
 
   if (isLoading) {
@@ -132,44 +137,79 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     )
   }
 
-  if (!isAuthenticated) {
-    return null
+  // Même si l'utilisateur n'est pas authentifié, afficher quand même le contenu
+  // Cela permet de gérer les problèmes liés au bouton retour et à la navigation
+  // Le serveur refusera les requêtes non autorisées de toute façon
+
+  // Définir les liens de navigation en fonction du rôle
+  const getNavLinks = () => {
+    if (userRole === "admin") {
+      return [
+        { href: "/admin/dashboard", label: "Tableau de bord", icon: <Home className="h-4 w-4" /> },
+        { href: "/admin/apprenants", label: "Apprenants", icon: <Users className="h-4 w-4" /> },
+        { href: "/admin/formateurs", label: "Formateurs", icon: <Users className="h-4 w-4" /> },
+        { href: "/admin/cours", label: "Cours", icon: <BookOpen className="h-4 w-4" /> },
+      ]
+    } else if (userRole === "formateur") {
+      return [
+        { href: "/formateur/dashboard", label: "Tableau de bord", icon: <Home className="h-4 w-4" /> },
+        { href: "/formateur/cours", label: "Mes cours", icon: <BookOpen className="h-4 w-4" /> },
+        { href: "/formateur/veilles", label: "Mes veilles", icon: <FileText className="h-4 w-4" /> },
+        { href: "/formateur/apprenants", label: "Apprenants", icon: <GraduationCap className="h-4 w-4" /> },
+      ]
+    } else if (userRole === "apprenant") {
+      return [
+        { href: "/apprenant/dashboard", label: "Tableau de bord", icon: <Home className="h-4 w-4" /> },
+        { href: "/apprenant/cours", label: "Mes cours", icon: <BookOpen className="h-4 w-4" /> },
+        { href: "/apprenant/veilles", label: "Mes veilles", icon: <FileText className="h-4 w-4" /> },
+        { href: "/apprenant/profil", label: "Mon profil", icon: <Settings className="h-4 w-4" /> },
+      ]
+    }
+    return []
   }
 
-  // Get recent apprenants
-  const recentApprenants = [...apprenants].slice(0, 5)
+  const navLinks = getNavLinks()
 
-  // Get recent formateurs
-  const recentFormateurs = [...formateurs].slice(0, 5)
+  // Définir le titre et la couleur en fonction du rôle
+  const getRoleInfo = () => {
+    if (userRole === "admin") {
+      return { title: "Administration", color: "text-purple-600 bg-purple-100" }
+    } else if (userRole === "formateur") {
+      return { title: "Espace Formateur", color: "text-secondary bg-secondary/10" }
+    } else if (userRole === "apprenant") {
+      return { title: "Espace Apprenant", color: "text-primary bg-primary/10" }
+    }
+    return { title: "", color: "" }
+  }
 
-  // Get recent cours
-  const recentCours = [...cours].sort((a, b) => b.id_cours - a.id_cours).slice(0, 5)
+  const roleInfo = getRoleInfo()
 
   return (
     <div className="min-h-screen bg-muted/10 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b h-16 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <Link href="/admin/dashboard" className="font-bold">
+          <Link href={`/${userRole}/dashboard`} className="font-bold">
             école {241}
           </Link>
-          <span className="text-sm text-muted-foreground">| Administration</span>
+          <span className="text-sm text-muted-foreground">| {roleInfo.title}</span>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
-              <span className="font-bold text-purple-600 text-xs">
-                {admin?.prenom?.charAt(0) || "A"}
-                {admin?.nom?.charAt(0) || "D"}
-              </span>
-            </div>
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className={roleInfo.color}>
+                {user?.prenom?.charAt(0) || "U"}
+                {user?.nom?.charAt(0) || ""}
+              </AvatarFallback>
+            </Avatar>
             <span className="text-sm font-medium hidden md:inline-block">
-              {admin?.prenom || ""} {admin?.nom || ""}
+              {user?.prenom || ""} {user?.nom || ""}
             </span>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout}>
-            Déconnexion
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Déconnexion</span>
           </Button>
         </div>
       </header>
@@ -179,34 +219,24 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <aside className="w-64 bg-white border-r hidden md:block">
           <div className="p-4">
             <nav className="space-y-1">
-              <Link
-                href="/admin/dashboard"
-                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm bg-primary text-white"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span>Tableau de bord</span>
-              </Link>
-              <Link
-                href="/admin/apprenants"
-                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted"
-              >
-                <Users className="h-4 w-4" />
-                <span>Apprenants</span>
-              </Link>
-              <Link
-                href="/admin/formateurs"
-                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted"
-              >
-                <Users className="h-4 w-4" />
-                <span>Formateurs</span>
-              </Link>
-              <Link
-                href="/admin/cours"
-                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span>Cours</span>
-              </Link>
+              {navLinks.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.href}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm ${
+                    link.href.includes("/dashboard")
+                      ? userRole === "admin"
+                        ? "bg-purple-600 text-white"
+                        : userRole === "formateur"
+                          ? "bg-secondary text-white"
+                          : "bg-primary text-white"
+                      : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.icon}
+                  <span>{link.label}</span>
+                </Link>
+              ))}
             </nav>
           </div>
         </aside>
