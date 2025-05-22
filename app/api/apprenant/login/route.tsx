@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 
-const prisma = new PrismaClient(); // Instance de PrismaClient pour interagir avec la base de données
+const prisma = new PrismaClient() // Instance de PrismaClient pour interagir avec la base de données
 
 
 

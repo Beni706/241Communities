@@ -55,32 +55,6 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <section className="relative w-full overflow-hidden py-20 md:py-32 lg:py-40 bg-white">
-          {/* Formes géométriques décoratives */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ duration: 1 }}
-            className="absolute top-20 left-10 w-32 h-32 rounded-full bg-purple-600"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="absolute top-10 right-10 w-24 h-24 rounded-md rotate-45 bg-tertiary"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="absolute bottom-20 right-1/4 w-40 h-40 rounded-full bg-white"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="absolute -bottom-10 -left-10 w-40 h-40 rounded-md rotate-12 bg-white"
-          />
-
           <div className="container relative z-10 px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <motion.h1
@@ -139,7 +113,7 @@ export default function Home() {
                     frameworks populaires.
                   </p>
                   <div className="mt-4 flex items-center">
-                    <Code className="mr-2 h-5 w-5 text-primary-red" />
+                    <Code className="mr-2 h-5 w-5" />
                     <span className="text-sm font-medium text-black">12 cours disponibles</span>
                   </div>
                 </div>
@@ -154,7 +128,7 @@ export default function Home() {
                     Devenez expert en stratégie digitale, marketing numérique, SEO et analyse de données.
                   </p>
                   <div className="mt-4 flex items-center">
-                    <Laptop className="mr-2 h-5 w-5 text-primary-red" />
+                    <Laptop className="mr-2 h-5 w-5 text-red-500" />
                     <span className="text-sm font-medium text-black">10 cours disponibles</span>
                   </div>
                 </div>
@@ -207,7 +181,7 @@ export default function Home() {
                 <Card className="h-full border-2 border-blue-500 hover:border-primary-blue transition-colors duration-300 bg-white">
                   <CardHeader>
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500 text-white">
-                      <Code className="h-6 w-6" />
+                      <Code className="h-6 w-6 text-black" />
                     </div>
                     <CardTitle className="text-black mt-4">Développement Web</CardTitle>
                     <CardDescription>Apprenez à créer des sites web et des applications web modernes.</CardDescription>
@@ -215,15 +189,15 @@ export default function Home() {
                   <CardContent>
                     <ul className="space-y-2 text-sm text-black">
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-primary-red" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>HTML, CSS et JavaScript</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-primary-red" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>React et Next.js</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-primary-red" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>Développement backend</span>
                       </li>
                     </ul>
@@ -252,15 +226,15 @@ export default function Home() {
                   <CardContent>
                     <ul className="space-y-2 text-sm text-black">
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-primary-red" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>Marketing digital</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-primary-red" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>SEO et SEM</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-primary-red" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>Analyse de données</span>
                       </li>
                     </ul>
@@ -289,15 +263,15 @@ export default function Home() {
                   <CardContent>
                     <ul className="space-y-2 text-sm text-black">
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-tertiary" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>Création de contenu</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-tertiary" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>Montage vidéo</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Star className="h-4 w-4 text-tertiary" />
+                        <Star className="h-4 w-4 text-red-500" />
                         <span>Stratégie de contenu</span>
                       </li>
                     </ul>

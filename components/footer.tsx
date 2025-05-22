@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
             <Link href="/" className="flex items-center">
-              <Image src="/logo.png" alt="École {241} Communities" width={100} height={30} className="h-7 w-auto border rounded-sm border-transparent" />
+              <Image src="/logo.png" alt="École {241} Communities" width={120} height={120} className="h-16 w-auto border rounded-sm border-transparent" />
             </Link>
             <p className="text-center text-sm leading-loose md:text-left text-gray-200">
               &copy; {new Date().getFullYear()} École {241} Communities. Tous droits réservés.
