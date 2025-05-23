@@ -1,56 +1,88 @@
-import { PrismaClient } from "@/generated/prisma";
-import { verifyJWT } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { PrismaClient } from "@/generated/prisma"
+import { verifyJWT } from "@/lib/auth"
+import { NextResponse } from "next/server"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 // Recuperer toutes les veilles
 export async function GET(request: Request) {
-  const isAuthorized = await verifyJWT(request); // Vérifie l'authentification
+  console.log("GET /api/veille - Début de la requête")
+
+  const isAuthorized = await verifyJWT(request) // Vérifie l'authentification
   if (!isAuthorized) {
-    return NextResponse.json({ message: `Accès refusé !` }, { status: 401 }); // Retourne une erreur 401 si non autorisé
+    console.log("GET /api/veille - Accès refusé")
+    return NextResponse.json({ message: `Accès refusé !` }, { status: 401 }) // Retourne une erreur 401 si non autorisé
   }
 
   try {
-    const veilles = await prisma.veille.findMany();
-    return NextResponse.json(veilles);
+    console.log("GET /api/veille - Récupération des veilles")
+    const veilles = await prisma.veille.findMany()
+    console.log("GET /api/veille - Veilles récupérées:", veilles.length)
+    return NextResponse.json(veilles)
   } catch (error) {
-    console.log(`Erreur du serveur`, error);
-    return NextResponse.json({ message: `Erreur serveur` }, { status: 500 });
-  };
-};
-
+    console.log(`GET /api/veille - Erreur du serveur`, error)
+    return NextResponse.json({ message: `Erreur serveur` }, { status: 500 })
+  }
+}
 
 // Creer une veille
 export async function POST(request: Request) {
-  const isAuthorized = await verifyJWT(request); // Vérifie l'authentification
+  console.log("POST /api/veille - Début de la requête")
+
+  const isAuthorized = await verifyJWT(request) // Vérifie l'authentification
   if (!isAuthorized) {
-    return NextResponse.json({ message: `Accès refusé !` }, { status: 401 }); // Retourne une erreur 401 si non autorisé
+    console.log("POST /api/veille - Accès refusé")
+    return NextResponse.json({ message: `Accès refusé !` }, { status: 401 }) // Retourne une erreur 401 si non autorisé
   }
 
   try {
-    const { titre, lien_docDonnee, lien_docRendu, date_creation, date_fin, id_apprenant, id_formateur } = await request.json();
+    const body = await request.json()
+    console.log("POST /api/veille - Données reçues:", body)
 
-    if (!titre || !lien_docDonnee  || !date_creation || !date_fin || !id_formateur) {
-      return NextResponse.json({ message: `Tous les champs sont obligatoires` }, { status: 400 });
-    };
+    const { titre, lien_docDonnee, lien_docRendu, date_fin, id_apprenant, id_formateur, referentiel } = body
+
+    if (!titre || !lien_docDonnee || !date_fin || !id_formateur) {
+      console.log("POST /api/veille - Champs manquants")
+      return NextResponse.json({ message: `Tous les champs obligatoires sont requis` }, { status: 400 })
+    }
+
+    // Créer un objet Date à partir de la chaîne de date
+    let dateFin
+    try {
+      // Accepter soit un objet Date ISO, soit une chaîne de date
+      dateFin = new Date(date_fin)
+      console.log("Date fin parsée:", dateFin)
+
+      // Vérifier si la date est valide
+      if (isNaN(dateFin.getTime())) {
+        throw new Error("Date invalide")
+      }
+    } catch (error) {
+      console.error("Erreur lors du parsing de la date:", error)
+      return NextResponse.json({ message: `Format de date invalide` }, { status: 400 })
+    }
+
+    const veilleData = {
+      titre,
+      lien_docDonnee,
+      lien_docRendu: lien_docRendu || null,
+      date_creation: new Date(), // Toujours la date actuelle pour la création
+      date_fin: dateFin,
+      id_apprenant: id_apprenant ? Number(id_apprenant) : null,
+      id_formateur: Number(id_formateur),
+      referentiel: referentiel || undefined,
+    }
+
+    console.log("POST /api/veille - Données à enregistrer:", veilleData)
 
     const veille = await prisma.veille.create({
-      data: {
-        titre,
-        lien_docDonnee,
-        lien_docRendu,
-        date_creation: new Date(),
-        date_fin,
-        id_apprenant: parseInt(id_apprenant),
-        id_formateur: parseInt(id_formateur)
-      },
-    });
+      data: veilleData,
+    })
 
-    return NextResponse.json(veille);
-
+    console.log("POST /api/veille - Veille créée avec succès:", veille)
+    return NextResponse.json({ message: "Veille créée avec succès", veille }, { status: 201 })
   } catch (error) {
-    console.log(`Erreur du serveur`, error);
-    return NextResponse.json({ message: `Erreur serveur` }, { status: 500 });
-  };
-};
+    console.error(`POST /api/veille - Erreur du serveur:`, error)
+    return NextResponse.json({ message: `Erreur serveur: ${error}` }, { status: 500 })
+  }
+}

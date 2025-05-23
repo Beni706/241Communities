@@ -10,18 +10,23 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { GooglePicker } from "@/components/google-picker"
+import { CustomCalendar } from "@/components/custom-calendar"
+import { TimePicker } from "@/components/time-picker"
 
 type Veille = {
   id_veille: number
   titre: string
+  description?: string
   lien_docDonnee: string
+  nom_document?: string
   date_creation: string
   date_fin: string
   referentiel: string
@@ -33,66 +38,135 @@ export default function ModifierVeillePage() {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [userId, setUserId] = useState<number | null>(null)
 
   // Formulaire
   const [titre, setTitre] = useState("")
-  const [lienDoc, setLienDoc] = useState("")
+  const [description, setDescription] = useState("")
+  const [lienDocument, setLienDocument] = useState("")
+  const [nomDocument, setNomDocument] = useState("")
   const [dateFin, setDateFin] = useState<Date | undefined>(undefined)
   const [referentiel, setReferentiel] = useState("")
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+  // Vérifier l'authentification de l'utilisateur dès le chargement
   useEffect(() => {
-    const fetchVeille = async () => {
-      try {
-        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+    // Récupérer les informations utilisateur depuis diverses sources possibles
+    const userStr = localStorage.getItem("user") || localStorage.getItem("userData")
+    const token = localStorage.getItem("token") || localStorage.getItem("formateurToken")
 
-        if (!token) {
-          router.push("/login/formateur")
-          return
-        }
+    console.log("Token trouvé:", !!token)
 
-        const response = await fetch(`${API_BASE_URL}/veille/${params.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error("Veille non trouvée")
-        }
-
-        const veilleData: Veille = await response.json()
-
-        setTitre(veilleData.titre)
-        setLienDoc(veilleData.lien_docDonnee)
-        setDateFin(new Date(veilleData.date_fin))
-        setReferentiel(veilleData.referentiel)
-      } catch (error) {
-        console.error("Erreur lors de la récupération de la veille:", error)
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: "Impossible de récupérer les informations de la veille.",
-        })
-        router.push("/formateur/veilles")
-      } finally {
-        setIsLoading(false)
-      }
+    if (!token) {
+      toast({
+        variant: "destructive",
+        title: "Erreur d'authentification",
+        description: "Vous n'êtes pas connecté. Veuillez vous connecter pour modifier une veille.",
+      })
+      router.push("/login/formateur")
+      return
     }
 
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr)
+        console.log("Données utilisateur:", userData)
+
+        // Récupérer l'ID selon différentes structures possibles
+        const id = userData.id || userData.id_formateur
+
+        if (id) {
+          setUserId(id)
+          console.log("ID formateur trouvé:", id)
+        } else {
+          console.error("ID formateur non trouvé dans les données utilisateur")
+        }
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error)
+      }
+    } else {
+      console.error("Aucune donnée utilisateur trouvée")
+    }
+
+    // Récupérer les données de la veille
     fetchVeille()
-  }, [params.id, router, toast, API_BASE_URL])
+  }, [])
+
+  const fetchVeille = async () => {
+    try {
+      const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+
+      if (!token) {
+        router.push("/login/formateur")
+        return
+      }
+
+      const response = await fetch(`${API_URL}/veille/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Veille non trouvée")
+      }
+
+      const veilleData: Veille = await response.json()
+      console.log("Données de la veille récupérées:", veilleData)
+
+      setTitre(veilleData.titre)
+      setDescription(veilleData.description || "")
+      setLienDocument(veilleData.lien_docDonnee)
+      setNomDocument(veilleData.nom_document || "")
+      setDateFin(new Date(veilleData.date_fin))
+      setReferentiel(veilleData.referentiel)
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la veille:", error)
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible de récupérer les informations de la veille.",
+      })
+      router.push("/formateur/veilles")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleDocumentSelect = (url: string, name: string) => {
+    setLienDocument(url)
+    setNomDocument(name)
+  }
+
+  // Gérer la sélection de date en préservant l'heure
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date && dateFin) {
+      const newDate = new Date(date)
+      // Conserver l'heure précédemment définie
+      newDate.setHours(dateFin.getHours())
+      newDate.setMinutes(dateFin.getMinutes())
+      setDateFin(newDate)
+    } else if (date) {
+      // Si pas de date précédente, définir l'heure par défaut à 23:59
+      const newDate = new Date(date)
+      newDate.setHours(23)
+      newDate.setMinutes(59)
+      setDateFin(newDate)
+    } else {
+      setDateFin(undefined)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validation
-    if (!titre || !lienDoc || !dateFin || !referentiel) {
+    // Validation minimale - au moins un champ doit être modifié
+    if (!titre && !lienDocument && !dateFin && !referentiel && !description) {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Veuillez remplir tous les champs obligatoires.",
+        description: "Veuillez modifier au moins un champ.",
       })
       return
     }
@@ -106,23 +180,41 @@ export default function ModifierVeillePage() {
         throw new Error("Non authentifié")
       }
 
-      const response = await fetch(`${API_BASE_URL}/veille/${params.id}`, {
+      // Construire les données à envoyer seulement avec les champs qui ont des valeurs
+      const requestData: any = {}
+
+      if (titre) requestData.titre = titre
+      if (description) requestData.description = description
+      if (lienDocument) {
+        requestData.lien_docDonnee = lienDocument
+        requestData.nom_document = nomDocument || "Document externe"
+      }
+      if (dateFin) requestData.date_fin = dateFin.toISOString()
+      if (referentiel) requestData.referentiel = referentiel
+
+      console.log("Données à envoyer:", requestData)
+
+      const response = await fetch(`${API_URL}/veille/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          titre,
-          lien_docDonnee: lienDoc,
-          date_fin: dateFin.toISOString(),
-          referentiel,
-        }),
+        body: JSON.stringify(requestData),
       })
 
+      // Log de la réponse
+      console.log("Statut de la réponse:", response.status)
+      console.log("URL de la requête:", response.url)
+
       if (!response.ok) {
-        throw new Error("Erreur lors de la modification de la veille")
+        const errorText = await response.text()
+        console.error("Erreur API:", errorText)
+        throw new Error(`Erreur ${response.status}: ${errorText}`)
       }
+
+      const result = await response.json()
+      console.log("Réponse API:", result)
 
       toast({
         title: "Veille modifiée",
@@ -135,7 +227,8 @@ export default function ModifierVeillePage() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Une erreur est survenue lors de la modification de la veille.",
+        description:
+          error instanceof Error ? error.message : "Une erreur est survenue lors de la modification de la veille.",
       })
     } finally {
       setIsSubmitting(false)
@@ -144,32 +237,29 @@ export default function ModifierVeillePage() {
 
   if (isLoading) {
     return (
-      <DashboardLayout userRole="formateur">
         <div className="flex items-center justify-center h-[500px]">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
-      </DashboardLayout>
     )
   }
 
   return (
-    <DashboardLayout userRole="formateur">
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-6 w-full px-2 sm:px-4 md:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Modifier la veille</h1>
             <p className="text-muted-foreground">Modifiez les informations de la veille.</p>
           </div>
           <Link href={`/formateur/veilles/${params.id}`}>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="self-start sm:self-auto">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Retour
             </Button>
           </Link>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <Card className="border-0 shadow-sm">
+        <form onSubmit={handleSubmit} className="w-full">
+          <Card className="border-0 shadow-sm w-full">
             <CardHeader>
               <CardTitle>Informations de la veille</CardTitle>
               <CardDescription>Modifiez les détails de la veille.</CardDescription>
@@ -187,32 +277,75 @@ export default function ModifierVeillePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lienDoc">Lien vers le document *</Label>
-                <Input
-                  id="lienDoc"
-                  value={lienDoc}
-                  onChange={(e) => setLienDoc(e.target.value)}
-                  placeholder="https://docs.google.com/document/d/..."
-                  required
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Description détaillée de la veille"
+                  rows={3}
                 />
-                <p className="text-xs text-muted-foreground">
-                  Lien vers un document contenant les instructions de la veille (Google Docs, Notion, etc.)
-                </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dateFin">Date limite de rendu *</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal" id="dateFin">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      {dateFin ? format(dateFin, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <CalendarComponent mode="single" selected={dateFin} onSelect={setDateFin} initialFocus />
-                  </PopoverContent>
-                </Popover>
+                <Label htmlFor="lienDoc">Lien vers le document *</Label>
+                <div className="space-y-2">
+                  <GooglePicker
+                    onSelect={handleDocumentSelect}
+                    buttonText={lienDocument ? "Modifier le document" : "Ajouter un document"}
+                    initialUrl={lienDocument}
+                    initialName={nomDocument}
+                  />
+
+                  {lienDocument && (
+                    <div className="mt-2 p-3 bg-gray-50 rounded-md flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                      <div className="truncate flex-1 w-full">
+                        <p className="font-medium truncate">{nomDocument || "Document externe"}</p>
+                        <p className="text-xs text-gray-500 truncate">{lienDocument}</p>
+                      </div>
+                      <div className="flex space-x-2 self-end sm:self-auto">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(lienDocument, "_blank")}
+                        >
+                          Ouvrir
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setLienDocument("")
+                            setNomDocument("")
+                          }}
+                        >
+                          Supprimer
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dateFin">Date limite de rendu *</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal" id="dateFin">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {dateFin ? format(dateFin, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CustomCalendar selected={dateFin} onSelect={handleDateSelect} />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <TimePicker date={dateFin} setDate={setDateFin} label="Heure limite de rendu *" className="space-y-2" />
               </div>
 
               <div className="space-y-2">
@@ -230,16 +363,17 @@ export default function ModifierVeillePage() {
                 </Select>
               </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.push(`/formateur/veilles/${params.id}`)}
                 disabled={isSubmitting}
+                className="w-full sm:w-auto"
               >
                 Annuler
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
                 {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}
               </Button>
             </CardFooter>
@@ -248,8 +382,8 @@ export default function ModifierVeillePage() {
 
         <div className="text-sm text-muted-foreground">
           <p>* Champs obligatoires</p>
+          <p>Les apprenants pourront soumettre leur travail jusqu'à la date et l'heure limite.</p>
         </div>
       </div>
-    </DashboardLayout>
   )
 }

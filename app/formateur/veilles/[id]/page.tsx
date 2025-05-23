@@ -164,19 +164,19 @@ export default function VeilleDetailPage() {
 
   if (loading) {
     return (
-      <DashboardLayout userRole="formateur">
+
         <div className="space-y-6 animate-pulse">
           <div className="h-8 bg-muted rounded w-64"></div>
           <div className="h-4 bg-muted rounded w-96"></div>
           <div className="h-64 bg-muted rounded"></div>
         </div>
-      </DashboardLayout>
+
     )
   }
 
   if (!veille) {
     return (
-      <DashboardLayout userRole="formateur">
+
         <div className="space-y-6">
           <div className="flex items-center gap-2">
             <Link href="/formateur/veilles">
@@ -198,12 +198,10 @@ export default function VeilleDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
     )
   }
 
   return (
-    <DashboardLayout userRole="formateur">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -401,6 +399,5 @@ export default function VeilleDetailPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   )
 }

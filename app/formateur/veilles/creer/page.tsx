@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import DashboardLayout from "@/components/dashboard-layout"
@@ -10,30 +10,108 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
+import { GooglePicker } from "@/components/google-picker"
 import { ArrowLeft, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { CustomCalendar } from "@/components/custom-calendar"
+import { TimePicker } from "@/components/time-picker"
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function CreerVeillePage() {
   const router = useRouter()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [userId, setUserId] = useState<number | null>(null)
 
   // Formulaire
   const [titre, setTitre] = useState("")
-  const [lienDoc, setLienDoc] = useState("")
+  const [description, setDescription] = useState("")
+  const [lienDocument, setLienDocument] = useState("")
+  const [nomDocument, setNomDocument] = useState("")
   const [dateFin, setDateFin] = useState<Date | undefined>(undefined)
   const [referentiel, setReferentiel] = useState("")
+
+  // Vérifier l'authentification de l'utilisateur dès le chargement
+  useEffect(() => {
+    // Récupérer les informations utilisateur depuis diverses sources possibles
+    const userStr = localStorage.getItem("user") || localStorage.getItem("userData")
+    const token = localStorage.getItem("token") || localStorage.getItem("formateurToken")
+
+    console.log("Token trouvé:", !!token)
+    console.log("URL API Base:", process.env.NEXT_PUBLIC_API_URL)
+
+    if (!token) {
+      toast({
+        variant: "destructive",
+        title: "Erreur d'authentification",
+        description: "Vous n'êtes pas connecté. Veuillez vous connecter pour créer une veille.",
+      })
+      router.push("/login/formateur")
+      return
+    }
+
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr)
+        console.log("Données utilisateur:", userData)
+
+        // Récupérer l'ID selon différentes structures possibles
+        const id = userData.id || userData.id_formateur
+
+        if (id) {
+          setUserId(id)
+          console.log("ID formateur trouvé:", id)
+
+          // Initialiser le référentiel si disponible
+          if (userData.referentiel) {
+            setReferentiel(userData.referentiel)
+          }
+        } else {
+          console.error("ID formateur non trouvé dans les données utilisateur")
+        }
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error)
+      }
+    } else {
+      console.error("Aucune donnée utilisateur trouvée")
+    }
+  }, [router, toast])
+
+  const handleDocumentSelect = (url: string, name: string) => {
+    setLienDocument(url)
+    setNomDocument(name)
+  }
+
+  // Initialiser la date avec l'heure par défaut (23:59)
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      const newDate = new Date(date)
+      // Si c'est une nouvelle date (pas déjà définie), définir l'heure par défaut à 23:59
+      if (!dateFin) {
+        newDate.setHours(23)
+        newDate.setMinutes(59)
+      } else {
+        // Conserver l'heure précédemment définie
+        newDate.setHours(dateFin.getHours())
+        newDate.setMinutes(dateFin.getMinutes())
+      }
+      setDateFin(newDate)
+    } else {
+      setDateFin(undefined)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validation
-    if (!titre || !lienDoc || !dateFin || !referentiel) {
+    if (!titre || !lienDocument || !dateFin || !referentiel) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -42,37 +120,67 @@ export default function CreerVeillePage() {
       return
     }
 
+    if (!userId) {
+      toast({
+        variant: "destructive",
+        title: "Erreur d'authentification",
+        description: "ID formateur non trouvé. Veuillez vous reconnecter.",
+      })
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
       const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
-      const user = JSON.parse(localStorage.getItem("user") || "{}")
 
       if (!token) {
         throw new Error("Non authentifié")
       }
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+    
 
-      const response = await fetch(`${API_BASE_URL}/veille`, {
+
+      // Utiliser directement toISOString() pour envoyer la date au format ISO standard
+      const requestData = {
+        titre,
+        description: description || titre,
+        lien_docDonnee: lienDocument,
+        nom_document: nomDocument || "Document externe",
+        date_fin: dateFin.toISOString(), // Format ISO standard
+        referentiel,
+        id_formateur: userId,
+      }
+
+      console.log("Données à envoyer:", requestData)
+
+      const response = await fetch(`${API_URL}/veille`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          titre,
-          lien_docDonnee: lienDoc,
-          date_creation: new Date().toISOString(),
-          date_fin: dateFin.toISOString(),
-          referentiel: referentiel || user.referentiel,
-          id_formateur: user.id,
-        }),
+        body: JSON.stringify(requestData),
       })
 
+      // Log de la réponse
+      console.log("Statut de la réponse:", response.status)
+      console.log("URL de la requête:", response.url)
+
       if (!response.ok) {
-        throw new Error("Erreur lors de la création de la veille")
+        const errorText = await response.text()
+        console.error("Erreur API:", errorText)
+
+        // Vérifier si c'est une erreur 404
+        if (response.status === 404) {
+          throw new Error("Route API non trouvée. Vérifiez que l'API /api/veille existe.")
+        }
+
+        throw new Error(`Erreur ${response.status}: ${errorText}`)
       }
+
+      const result = await response.json()
+      console.log("Réponse API:", result)
 
       toast({
         title: "Veille créée",
@@ -85,7 +193,8 @@ export default function CreerVeillePage() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création de la veille.",
+        description:
+          error instanceof Error ? error.message : "Une erreur est survenue lors de la création de la veille.",
       })
     } finally {
       setIsSubmitting(false)
@@ -93,9 +202,8 @@ export default function CreerVeillePage() {
   }
 
   return (
-
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-6 w-full px-2 sm:px-4 md:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Créer une nouvelle veille</h1>
             <p className="text-muted-foreground">
@@ -103,15 +211,15 @@ export default function CreerVeillePage() {
             </p>
           </div>
           <Link href="/formateur/veilles">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="self-start sm:self-auto">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Retour
             </Button>
           </Link>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <Card className="border-0 shadow-sm">
+        <form onSubmit={handleSubmit} className="w-full">
+          <Card className="border-0 shadow-sm w-full">
             <CardHeader>
               <CardTitle>Informations de la veille</CardTitle>
               <CardDescription>Entrez les détails de la veille que vous souhaitez créer.</CardDescription>
@@ -129,38 +237,79 @@ export default function CreerVeillePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lienDoc">Lien vers le document *</Label>
-                <Input
-                  id="lienDoc"
-                  value={lienDoc}
-                  onChange={(e) => setLienDoc(e.target.value)}
-                  placeholder="https://docs.google.com/document/d/..."
-                  required
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Description détaillée de la veille"
+                  rows={3}
                 />
-                <p className="text-xs text-muted-foreground">
-                  Lien vers un document contenant les instructions de la veille (Google Docs, Notion, etc.)
-                </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dateFin">Date limite de rendu *</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal" id="dateFin">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      {dateFin ? format(dateFin, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <CalendarComponent
-                      mode="single"
-                      selected={dateFin}
-                      onSelect={setDateFin}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Label htmlFor="lienDoc">Lien vers le document *</Label>
+                <div className="space-y-2">
+                  <GooglePicker
+                    onSelect={handleDocumentSelect}
+                    buttonText={lienDocument ? "Modifier le document" : "Ajouter un document"}
+                    initialUrl={lienDocument}
+                    initialName={nomDocument}
+                  />
+
+                  {lienDocument && (
+                    <div className="mt-2 p-3 bg-gray-50 rounded-md flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                      <div className="truncate flex-1 w-full">
+                        <p className="font-medium truncate">{nomDocument || "Document externe"}</p>
+                        <p className="text-xs text-gray-500 truncate">{lienDocument}</p>
+                      </div>
+                      <div className="flex space-x-2 self-end sm:self-auto">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(lienDocument, "_blank")}
+                        >
+                          Ouvrir
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setLienDocument("")
+                            setNomDocument("")
+                          }}
+                        >
+                          Supprimer
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dateFin">Date limite de rendu *</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal" id="dateFin">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {dateFin ? format(dateFin, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CustomCalendar
+                        selected={dateFin}
+                        onSelect={handleDateSelect}
+                        disabled={(date) => date < new Date()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <TimePicker date={dateFin} setDate={setDateFin} label="Heure limite de rendu *" className="space-y-2" />
               </div>
 
               <div className="space-y-2">
@@ -178,16 +327,17 @@ export default function CreerVeillePage() {
                 </Select>
               </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.push("/formateur/veilles")}
                 disabled={isSubmitting}
+                className="w-full sm:w-auto"
               >
                 Annuler
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
                 {isSubmitting ? "Création en cours..." : "Créer la veille"}
               </Button>
             </CardFooter>
@@ -196,9 +346,8 @@ export default function CreerVeillePage() {
 
         <div className="text-sm text-muted-foreground">
           <p>* Champs obligatoires</p>
-          <p>Les apprenants pourront soumettre leur travail jusqu'à la date limite.</p>
+          <p>Les apprenants pourront soumettre leur travail jusqu'à la date et l'heure limite.</p>
         </div>
       </div>
-  
   )
 }
