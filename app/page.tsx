@@ -317,7 +317,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="/connexion">
+                <Link href="/login/apprenant">
                   <Button size="lg" className="bg-red-500 gap-1.5">
                     Commencer maintenant
                     <ChevronRight className="h-4 w-4" />

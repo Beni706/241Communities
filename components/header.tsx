@@ -9,7 +9,7 @@ const Header = () => {
         <div className="container max-w-screen-2xl mx-auto flex h-24 items-center px-4 md:px-6">
           <MainNav />
           <div className="ml-auto flex items-center space-x-4 md:space-x-6">
-            <Link href="/login">
+            <Link href="/login/apprenant">
               <Button variant="outline" size="sm" className="h-9 bg-white text-black">
                 Connexion
               </Button>

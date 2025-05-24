@@ -3,65 +3,139 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { BookOpen, Plus, Search } from "lucide-react"
 import { useAuth } from "@/components/auth-provider"
+import { useToast } from "@/hooks/use-toast"
 
 type Cours = {
   id_cours: number
   titre: string
   categorie: string
   description: string
-  referentiel: string
+  referentiel?: string
+  id_formateur: number
+  photoCours?: string
 }
 
 export default function CoursPage() {
   const { user } = useAuth()
   const router = useRouter()
+  const { toast } = useToast()
   const [cours, setCours] = useState<Cours[]>([])
   const [filteredCours, setFilteredCours] = useState<Cours[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true)
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
 
   useEffect(() => {
     const fetchCours = async () => {
       try {
-        const token = localStorage.getItem("formateurToken")
+        console.log("Tentative de récupération des cours...")
+
+        // Récupérer le token
+        const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
+
         if (!token) {
+          console.error("Aucun token trouvé")
+          toast({
+            variant: "destructive",
+            title: "Erreur d'authentification",
+            description: "Veuillez vous reconnecter.",
+          })
           router.push("/login/formateur")
           return
         }
 
+        console.log("Token trouvé, envoi de la requête API")
+
+        // Faire la requête API
         const response = await fetch(`${API_BASE_URL}/cours`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
+        console.log("Réponse API reçue:", response.status)
+
         if (response.ok) {
           const coursData = await response.json()
-          // Filtrer les cours par référentiel du formateur
-          const filteredData = coursData.filter((cours: Cours) => cours.referentiel === user?.referentiel)
+          console.log("Cours reçus:", coursData)
+
+          // Récupérer l'ID du formateur connecté
+          let formateurId
+          if (user) {
+            // @ts-ignore - Accepte différentes structures possibles
+            formateurId = user.id_formateur || user.id
+            console.log("ID du formateur connecté:", formateurId)
+          } else {
+            // Si pas d'utilisateur dans le contexte, essayer de le récupérer du localStorage
+            const storedUser = localStorage.getItem("user")
+            if (storedUser) {
+              try {
+                const userData = JSON.parse(storedUser)
+                // @ts-ignore - Accepte différentes structures possibles
+                formateurId = userData.id_formateur || userData.id
+                console.log("ID du formateur récupéré du localStorage:", formateurId)
+              } catch (error) {
+                console.error("Erreur lors du parsing des données utilisateur:", error)
+              }
+            }
+          }
+
+          if (!formateurId) {
+            console.error("Impossible de déterminer l'ID du formateur")
+            toast({
+              variant: "destructive",
+              title: "Erreur d'identification",
+              description: "Impossible de déterminer votre identifiant de formateur.",
+            })
+            return
+          }
+
+          // Convertir l'ID en nombre pour la comparaison
+          const formateurIdNum = Number(formateurId)
+
+          // Afficher tous les cours pour le débogage
+          console.log("Tous les cours disponibles:", coursData)
+
+          // Filtrer les cours par formateur
+          // IMPORTANT: Ne pas filtrer par referentiel pour l'instant pour voir tous les cours
+          const filteredData = coursData.filter((cours: Cours) => Number(cours.id_formateur) === formateurIdNum)
+
+          console.log("Cours filtrés pour ce formateur:", filteredData)
+
           setCours(filteredData)
           setFilteredCours(filteredData)
         } else {
-          console.error("Failed to fetch courses")
+          console.error("Échec de la récupération des cours:", response.statusText)
+          const errorText = await response.text()
+          console.error("Détails de l'erreur:", errorText)
+
+          toast({
+            variant: "destructive",
+            title: "Erreur de chargement",
+            description: "Impossible de charger vos cours. Veuillez réessayer.",
+          })
         }
       } catch (error) {
-        console.error("Error fetching courses:", error)
+        console.error("Erreur lors de la récupération des cours:", error)
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Une erreur est survenue lors du chargement des cours.",
+        })
       } finally {
         setLoading(false)
       }
     }
 
-    if (user) {
-      fetchCours()
-    }
-  }, [user, router, API_BASE_URL])
+    fetchCours()
+  }, [router, toast, user, API_BASE_URL])
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -78,13 +152,13 @@ export default function CoursPage() {
   }, [searchTerm, cours])
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Mes Cours</h1>
             <p className="text-muted-foreground">
-              Gérez les cours que vous avez créés pour le référentiel {user?.referentiel}.
+              Gérez les cours que vous avez créés
+              {user?.referentiel && ` pour le référentiel ${user.referentiel}`}.
             </p>
           </div>
           <Link href="/formateur/cours/creer">
@@ -127,7 +201,18 @@ export default function CoursPage() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {filteredCours.map((cours) => (
                   <Card key={cours.id_cours} className="border-0 shadow-sm overflow-hidden">
-                    <div className="h-2 bg-primary"></div>
+                    {cours.photoCours ? (
+                      <div className="relative w-full h-40">
+                        <Image
+                          src={cours.photoCours || "/placeholder.svg"}
+                          alt={cours.titre}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-2 bg-primary"></div>
+                    )}
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">{cours.titre}</CardTitle>
@@ -136,7 +221,8 @@ export default function CoursPage() {
                         </div>
                       </div>
                       <CardDescription>
-                        {cours.categorie} - {cours.referentiel}
+                        {cours.categorie}
+                        {cours.referentiel && ` - ${cours.referentiel}`}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -158,7 +244,7 @@ export default function CoursPage() {
                   <CardDescription>
                     {searchTerm
                       ? "Aucun cours ne correspond à votre recherche."
-                      : "Vous n'avez pas encore créé de cours pour ce référentiel."}
+                      : "Vous n'avez pas encore créé de cours."}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -171,6 +257,6 @@ export default function CoursPage() {
           </>
         )}
       </div>
-    </DashboardLayout>
+   
   )
 }

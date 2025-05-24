@@ -80,7 +80,7 @@ export default function FormateursList() {
             <h1 className="text-2xl font-bold tracking-tight">Gestion des formateurs</h1>
             <p className="text-muted-foreground">Consultez et gérez tous les formateurs inscrits sur la plateforme.</p>
           </div>
-          <Link href="/formateurs/creer">
+          <Link href="/admin/formateurs/creer">
             <Button className="gap-2">
               <Plus className="h-4 w-4" />
               Nouveau formateur

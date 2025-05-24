@@ -261,6 +261,7 @@ export default function AdminDashboard() {
                 </Card>
               </TabsContent>
 
+              {/* Section Formateurs */}
               <TabsContent value="formateurs">
                 <Card className="border-0 shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between">
@@ -316,7 +317,8 @@ export default function AdminDashboard() {
                   </CardContent>
                 </Card>
               </TabsContent>
-
+              
+              {/* Section Cours */}
               <TabsContent value="cours">
                 <Card className="border-0 shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between">
