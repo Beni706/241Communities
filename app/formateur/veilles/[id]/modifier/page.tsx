@@ -1,199 +1,262 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
-import DashboardLayout from "@/components/dashboard-layout"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useToast } from "@/hooks/use-toast"
-import { ArrowLeft, Calendar } from "lucide-react"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { GooglePicker } from "@/components/google-picker"
-import { CustomCalendar } from "@/components/custom-calendar"
-import { TimePicker } from "@/components/time-picker"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import DashboardLayout from "@/components/dashboard-layout";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Calendar } from "lucide-react";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { GooglePicker } from "@/components/google-picker";
+import { CustomCalendar } from "@/components/custom-calendar";
+import { TimePicker } from "@/components/time-picker";
 
 type Veille = {
-  id_veille: number
-  titre: string
-  description?: string
-  lien_docDonnee: string
-  nom_document?: string
-  date_creation: string
-  date_fin: string
-  referentiel: string
-}
+  id_veille: number;
+  titre: string;
+  description?: string;
+  lien_docDonnee: string;
+  nom_document?: string;
+  date_creation: string;
+  date_fin: string;
+  referentiel: string;
+};
 
 export default function ModifierVeillePage() {
-  const params = useParams()
-  const router = useRouter()
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [userId, setUserId] = useState<number | null>(null)
+  const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
 
   // Formulaire
-  const [titre, setTitre] = useState("")
-  const [description, setDescription] = useState("")
-  const [lienDocument, setLienDocument] = useState("")
-  const [nomDocument, setNomDocument] = useState("")
-  const [dateFin, setDateFin] = useState<Date | undefined>(undefined)
-  const [referentiel, setReferentiel] = useState("")
+  const [titre, setTitre] = useState("");
+  const [description, setDescription] = useState("");
+  const [lienDocument, setLienDocument] = useState("");
+  const [nomDocument, setNomDocument] = useState("");
+  const [dateFin, setDateFin] = useState<Date | undefined>(undefined);
+  const [referentiel, setReferentiel] = useState("");
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  // Ajout d'un mode de sélection : lien ou fichier
+  const [modeDocument, setModeDocument] = useState<"lien" | "fichier">("lien");
+  const [fichier, setFichier] = useState<File | null>(null);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   // Vérifier l'authentification de l'utilisateur dès le chargement
   useEffect(() => {
     // Récupérer les informations utilisateur depuis diverses sources possibles
-    const userStr = localStorage.getItem("user") || localStorage.getItem("userData")
-    const token = localStorage.getItem("token") || localStorage.getItem("formateurToken")
+    const userStr =
+      localStorage.getItem("user") || localStorage.getItem("userData");
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("formateurToken");
 
-    console.log("Token trouvé:", !!token)
+    console.log("Token trouvé:", !!token);
 
     if (!token) {
       toast({
         variant: "destructive",
         title: "Erreur d'authentification",
-        description: "Vous n'êtes pas connecté. Veuillez vous connecter pour modifier une veille.",
-      })
-      router.push("/login/formateur")
-      return
+        description:
+          "Vous n'êtes pas connecté. Veuillez vous connecter pour modifier une veille.",
+      });
+      router.push("/login/formateur");
+      return;
     }
 
     if (userStr) {
       try {
-        const userData = JSON.parse(userStr)
-        console.log("Données utilisateur:", userData)
+        const userData = JSON.parse(userStr);
+        console.log("Données utilisateur:", userData);
 
         // Récupérer l'ID selon différentes structures possibles
-        const id = userData.id || userData.id_formateur
+        const id = userData.id || userData.id_formateur;
 
         if (id) {
-          setUserId(id)
-          console.log("ID formateur trouvé:", id)
+          setUserId(id);
+          console.log("ID formateur trouvé:", id);
         } else {
-          console.error("ID formateur non trouvé dans les données utilisateur")
+          console.error("ID formateur non trouvé dans les données utilisateur");
         }
       } catch (error) {
-        console.error("Erreur lors du parsing des données utilisateur:", error)
+        console.error("Erreur lors du parsing des données utilisateur:", error);
       }
     } else {
-      console.error("Aucune donnée utilisateur trouvée")
+      console.error("Aucune donnée utilisateur trouvée");
     }
 
     // Récupérer les données de la veille
-    fetchVeille()
-  }, [])
+    fetchVeille();
+  }, []);
 
   const fetchVeille = async () => {
     try {
-      const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
-
+      const token =
+        localStorage.getItem("formateurToken") || localStorage.getItem("token");
       if (!token) {
-        router.push("/login/formateur")
-        return
+        router.push("/login/formateur");
+        return;
       }
-
       const response = await fetch(`${API_URL}/veille/${params.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-
+      });
       if (!response.ok) {
-        throw new Error("Veille non trouvée")
+        throw new Error("Veille non trouvée");
       }
-
-      const veilleData: Veille = await response.json()
-      console.log("Données de la veille récupérées:", veilleData)
-
-      setTitre(veilleData.titre)
-      setDescription(veilleData.description || "")
-      setLienDocument(veilleData.lien_docDonnee)
-      setNomDocument(veilleData.nom_document || "")
-      setDateFin(new Date(veilleData.date_fin))
-      setReferentiel(veilleData.referentiel)
+      const veilleData: Veille = await response.json();
+      setTitre(veilleData.titre);
+      setDescription(veilleData.description || "");
+      setLienDocument(veilleData.lien_docDonnee);
+      setNomDocument(veilleData.nom_document || "");
+      setDateFin(new Date(veilleData.date_fin));
+      setReferentiel(veilleData.referentiel);
+      // Détecter modeDocument
+      if (
+        veilleData.lien_docDonnee &&
+        veilleData.lien_docDonnee.startsWith("http")
+      ) {
+        setModeDocument("lien");
+      } else {
+        setModeDocument("fichier");
+      }
     } catch (error) {
-      console.error("Erreur lors de la récupération de la veille:", error)
+      console.error("Erreur lors de la récupération de la veille:", error);
       toast({
         variant: "destructive",
         title: "Erreur",
         description: "Impossible de récupérer les informations de la veille.",
-      })
-      router.push("/formateur/veilles")
+      });
+      router.push("/formateur/veilles");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDocumentSelect = (url: string, name: string) => {
-    setLienDocument(url)
-    setNomDocument(name)
-  }
+    setLienDocument(url);
+    setNomDocument(name);
+  };
 
   // Gérer la sélection de date en préservant l'heure
   const handleDateSelect = (date: Date | undefined) => {
     if (date && dateFin) {
-      const newDate = new Date(date)
+      const newDate = new Date(date);
       // Conserver l'heure précédemment définie
-      newDate.setHours(dateFin.getHours())
-      newDate.setMinutes(dateFin.getMinutes())
-      setDateFin(newDate)
+      newDate.setHours(dateFin.getHours());
+      newDate.setMinutes(dateFin.getMinutes());
+      setDateFin(newDate);
     } else if (date) {
       // Si pas de date précédente, définir l'heure par défaut à 23:59
-      const newDate = new Date(date)
-      newDate.setHours(23)
-      newDate.setMinutes(59)
-      setDateFin(newDate)
+      const newDate = new Date(date);
+      newDate.setHours(23);
+      newDate.setMinutes(59);
+      setDateFin(newDate);
     } else {
-      setDateFin(undefined)
+      setDateFin(undefined);
     }
-  }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFichier(file);
+      setNomDocument(file.name);
+      setLienDocument(""); // On efface le lien si on choisit un fichier
+    }
+  };
+
+  const handleLienChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLienDocument(e.target.value ?? "");
+    setFichier(null);
+    setNomDocument("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+    e.preventDefault();
     // Validation minimale - au moins un champ doit être modifié
-    if (!titre && !lienDocument && !dateFin && !referentiel && !description) {
+    if (
+      !titre &&
+      !lienDocument &&
+      !dateFin &&
+      !referentiel &&
+      !description &&
+      !fichier
+    ) {
       toast({
         variant: "destructive",
         title: "Erreur",
         description: "Veuillez modifier au moins un champ.",
-      })
-      return
+      });
+      return;
     }
-
-    setIsSubmitting(true)
-
+    setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("formateurToken") || localStorage.getItem("token")
-
+      const token =
+        localStorage.getItem("formateurToken") || localStorage.getItem("token");
       if (!token) {
-        throw new Error("Non authentifié")
+        throw new Error("Non authentifié");
       }
-
+      let lienDocFinal = lienDocument;
+      let nomDocFinal = nomDocument;
+      // Si fichier, upload d'abord
+      if (modeDocument === "fichier" && fichier) {
+        const formData = new FormData();
+        formData.append("file", fichier);
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (!uploadRes.ok) {
+          throw new Error("Erreur lors de l'upload du fichier");
+        }
+        const uploadData = await uploadRes.json();
+        lienDocFinal = uploadData.url;
+        nomDocFinal = fichier.name;
+      }
       // Construire les données à envoyer seulement avec les champs qui ont des valeurs
-      const requestData: any = {}
-
-      if (titre) requestData.titre = titre
-      if (description) requestData.description = description
-      if (lienDocument) {
-        requestData.lien_docDonnee = lienDocument
-        requestData.nom_document = nomDocument || "Document externe"
+      const requestData: any = {};
+      if (titre) requestData.titre = titre;
+      if (description) requestData.description = description;
+      if (modeDocument === "lien" && lienDocFinal) {
+        requestData.lien_docDonnee = lienDocFinal;
+        requestData.nom_document = "";
+      } else if (modeDocument === "fichier" && lienDocFinal) {
+        requestData.lien_docDonnee = lienDocFinal;
+        requestData.nom_document = nomDocFinal;
       }
-      if (dateFin) requestData.date_fin = dateFin.toISOString()
-      if (referentiel) requestData.referentiel = referentiel
-
-      console.log("Données à envoyer:", requestData)
-
+      if (dateFin) requestData.date_fin = dateFin.toISOString();
+      if (referentiel) requestData.referentiel = referentiel;
+      console.log("Données à envoyer:", requestData);
       const response = await fetch(`${API_URL}/veille/${params.id}`, {
         method: "PUT",
         headers: {
@@ -201,189 +264,234 @@ export default function ModifierVeillePage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(requestData),
-      })
-
+      });
       // Log de la réponse
-      console.log("Statut de la réponse:", response.status)
-      console.log("URL de la requête:", response.url)
+      console.log("Statut de la réponse:", response.status);
+      console.log("URL de la requête:", response.url);
 
       if (!response.ok) {
-        const errorText = await response.text()
-        console.error("Erreur API:", errorText)
-        throw new Error(`Erreur ${response.status}: ${errorText}`)
+        const errorText = await response.text();
+        console.error("Erreur API:", errorText);
+        throw new Error(`Erreur ${response.status}: ${errorText}`);
       }
 
-      const result = await response.json()
-      console.log("Réponse API:", result)
+      const result = await response.json();
+      console.log("Réponse API:", result);
 
       toast({
         title: "Veille modifiée",
         description: "La veille a été modifiée avec succès.",
-      })
+      });
 
-      router.push(`/formateur/veilles/${params.id}`)
+      router.push(`/formateur/veilles/${params.id}`);
     } catch (error) {
-      console.error("Erreur:", error)
+      console.error("Erreur:", error);
       toast({
         variant: "destructive",
         title: "Erreur",
         description:
-          error instanceof Error ? error.message : "Une erreur est survenue lors de la modification de la veille.",
-      })
+          error instanceof Error
+            ? error.message
+            : "Une erreur est survenue lors de la modification de la veille.",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
-        <div className="flex items-center justify-center h-[500px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-    )
+      <div className="flex items-center justify-center h-[500px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
-      <div className="space-y-6 w-full px-2 sm:px-4 md:px-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Modifier la veille</h1>
-            <p className="text-muted-foreground">Modifiez les informations de la veille.</p>
-          </div>
-          <Link href={`/formateur/veilles/${params.id}`}>
-            <Button variant="outline" size="sm" className="self-start sm:self-auto">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Retour
-            </Button>
-          </Link>
+    <div className="space-y-6 w-full px-2 sm:px-4 md:px-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Modifier la veille
+          </h1>
+          <p className="text-muted-foreground">
+            Modifiez les informations de la veille.
+          </p>
         </div>
-
-        <form onSubmit={handleSubmit} className="w-full">
-          <Card className="border-0 shadow-sm w-full">
-            <CardHeader>
-              <CardTitle>Informations de la veille</CardTitle>
-              <CardDescription>Modifiez les détails de la veille.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="titre">Titre de la veille *</Label>
-                <Input
-                  id="titre"
-                  value={titre}
-                  onChange={(e) => setTitre(e.target.value)}
-                  placeholder="Ex: Veille sur les frameworks JavaScript modernes"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Description détaillée de la veille"
-                  rows={3}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="lienDoc">Lien vers le document *</Label>
-                <div className="space-y-2">
-                  <GooglePicker
-                    onSelect={handleDocumentSelect}
-                    buttonText={lienDocument ? "Modifier le document" : "Ajouter un document"}
-                    initialUrl={lienDocument}
-                    initialName={nomDocument}
-                  />
-
-                  {lienDocument && (
-                    <div className="mt-2 p-3 bg-gray-50 rounded-md flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                      <div className="truncate flex-1 w-full">
-                        <p className="font-medium truncate">{nomDocument || "Document externe"}</p>
-                        <p className="text-xs text-gray-500 truncate">{lienDocument}</p>
-                      </div>
-                      <div className="flex space-x-2 self-end sm:self-auto">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => window.open(lienDocument, "_blank")}
-                        >
-                          Ouvrir
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setLienDocument("")
-                            setNomDocument("")
-                          }}
-                        >
-                          Supprimer
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="dateFin">Date limite de rendu *</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal" id="dateFin">
-                        <Calendar className="mr-2 h-4 w-4" />
-                        {dateFin ? format(dateFin, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CustomCalendar selected={dateFin} onSelect={handleDateSelect} />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                <TimePicker date={dateFin} setDate={setDateFin} label="Heure limite de rendu *" className="space-y-2" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="referentiel">Référentiel *</Label>
-                <Select value={referentiel} onValueChange={setReferentiel}>
-                  <SelectTrigger id="referentiel">
-                    <SelectValue placeholder="Sélectionner un référentiel" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DWWM">Développeur Web et Web Mobile (DWWM)</SelectItem>
-                    <SelectItem value="CDA">Concepteur Développeur d'Applications (CDA)</SelectItem>
-                    <SelectItem value="CDUI">Concepteur Designer UI (CDUI)</SelectItem>
-                    <SelectItem value="TIS">Technicien d'Infrastructure Sécurisée (TIS)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push(`/formateur/veilles/${params.id}`)}
-                disabled={isSubmitting}
-                className="w-full sm:w-auto"
-              >
-                Annuler
-              </Button>
-              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-                {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}
-              </Button>
-            </CardFooter>
-          </Card>
-        </form>
-
-        <div className="text-sm text-muted-foreground">
-          <p>* Champs obligatoires</p>
-          <p>Les apprenants pourront soumettre leur travail jusqu'à la date et l'heure limite.</p>
-        </div>
+        <Link href={`/formateur/veilles/${params.id}`}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="self-start sm:self-auto"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Retour
+          </Button>
+        </Link>
       </div>
-  )
+
+      <form onSubmit={handleSubmit} className="w-full">
+        <Card className="border-0 shadow-sm w-full">
+          <CardHeader>
+            <CardTitle>Informations de la veille</CardTitle>
+            <CardDescription>
+              Modifiez les détails de la veille.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="titre">Titre de la veille *</Label>
+              <Input
+                id="titre"
+                value={titre}
+                onChange={(e) => setTitre(e.target.value)}
+                placeholder="Ex: Veille sur les frameworks JavaScript modernes"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Description détaillée de la veille"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Document associé *</Label>
+              <Select
+                value={modeDocument}
+                onValueChange={(v) => setModeDocument(v as "lien" | "fichier")}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Choisir le mode de saisie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="lien">Saisir un lien</SelectItem>
+                  <SelectItem value="fichier">
+                    Sélectionner un fichier
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              {modeDocument === "lien" ? (
+                <Input
+                  type="url"
+                  id="lienDoc"
+                  value={lienDocument ?? ""}
+                  onChange={handleLienChange}
+                  placeholder="https://..."
+                  required={modeDocument === "lien"}
+                />
+              ) : (
+                <Input
+                  key={modeDocument}
+                  type="file"
+                  id="fichierDoc"
+                  onChange={handleFileChange}
+                  required={modeDocument === "fichier"}
+                />
+              )}
+              {modeDocument === "fichier" && nomDocument && (
+                <div className="mt-2 p-3 bg-gray-50 rounded-md flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                  <div className="truncate flex-1 w-full">
+                    <p className="font-medium truncate">{nomDocument}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="dateFin">Date limite de rendu *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start text-left font-normal"
+                      id="dateFin"
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {dateFin ? (
+                        format(dateFin, "PPP", { locale: fr })
+                      ) : (
+                        <span>Sélectionner une date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CustomCalendar
+                      selected={dateFin}
+                      onSelect={handleDateSelect}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <TimePicker
+                date={dateFin}
+                setDate={setDateFin}
+                label="Heure limite de rendu *"
+                className="space-y-2"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="referentiel">Référentiel *</Label>
+              <Select value={referentiel} onValueChange={setReferentiel}>
+                <SelectTrigger id="referentiel">
+                  <SelectValue placeholder="Sélectionner un référentiel" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DWWM">
+                    Développeur Web et Web Mobile (DWWM)
+                  </SelectItem>
+                  <SelectItem value="CDA">
+                    Concepteur Développeur d'Applications (CDA)
+                  </SelectItem>
+                  <SelectItem value="CDUI">
+                    Concepteur Designer UI (CDUI)
+                  </SelectItem>
+                  <SelectItem value="TIS">
+                    Technicien d'Infrastructure Sécurisée (TIS)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push(`/formateur/veilles/${params.id}`)}
+              disabled={isSubmitting}
+              className="w-full sm:w-auto"
+            >
+              Annuler
+            </Button>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto"
+            >
+              {isSubmitting
+                ? "Enregistrement..."
+                : "Enregistrer les modifications"}
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
+
+      <div className="text-sm text-muted-foreground">
+        <p>* Champs obligatoires</p>
+        <p>
+          Les apprenants pourront soumettre leur travail jusqu'à la date et
+          l'heure limite.
+        </p>
+      </div>
+    </div>
+  );
 }
