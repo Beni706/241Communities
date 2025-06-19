@@ -56,7 +56,7 @@ export default function Home() {
       <main className="flex-1">
         <section className="relative w-full overflow-hidden py-20 md:py-32 lg:py-40 bg-white">
           <div className="container relative z-10 px-4 md:px-6">
-            <div className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto max-w-3xl text-center ">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -101,7 +101,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="mt-20 grid gap-6 md:grid-cols-3"
+              className="mt-32 grid gap-6 md:grid-cols-3"
             >
               {/* Carte Développement Web */}
               <div className="group relative overflow-hidden rounded-xl bg-blue-400 p-6 transition-all hover:shadow-lg">
@@ -128,7 +128,7 @@ export default function Home() {
                     Devenez expert en stratégie digitale, marketing numérique, SEO et analyse de données.
                   </p>
                   <div className="mt-4 flex items-center">
-                    <Laptop className="mr-2 h-5 w-5 text-red-500" />
+                    <Laptop className="mr-2 h-5 w-5 text-black" />
                     <span className="text-sm font-medium text-black">10 cours disponibles</span>
                   </div>
                 </div>
@@ -151,7 +151,7 @@ export default function Home() {
             </motion.div>
 
             {/* Espace supplémentaire */}
-            <div className="mt-20"></div>
+            <div className="mt-16"></div>
           </div>
         </section>
 

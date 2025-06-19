@@ -11,6 +11,7 @@ type User = {
   email: string
   role: "apprenant" | "formateur" | "administrateur"
   referentiel?: "DEVELOPPEUR" | "DIGITAL_CREATOR" | "REFERENT_DIGITAL"
+  photoProfil?: string | null
 }
 
 type AuthContextType = {
@@ -18,6 +19,7 @@ type AuthContextType = {
   loading: boolean
   login: (email: string, password: string, role: string) => Promise<void>
   logout: () => void
+  setUser: (user: User | null) => void // Exposer setUser
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -48,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           typeof parsedUser.id === "number" &&
           typeof parsedUser.email === "string" &&
           typeof parsedUser.role === "string"
+          // photoProfil est optionnel, donc pas de vérification stricte ici
         ) {
           setUser(parsedUser as User)
         } else {
@@ -133,6 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: email,
         role: role as User["role"],
         referentiel: undefined,
+        photoProfil: undefined,
       }
 
       if (role === "formateur") {
@@ -149,6 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               email: userData.email,
               role: "formateur",
               referentiel: userData.referentiel,
+              photoProfil: userData.photoProfil || null,
             }
           }
         } catch (e) {
@@ -168,6 +173,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               email: userData.email,
               role: "apprenant",
               referentiel: userData.referentiel,
+              photoProfil: userData.photoProfil || null,
             }
           }
         } catch (e) {
@@ -221,7 +227,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = redirectPath
   }
 
-  return <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, loading, login, logout, setUser }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {

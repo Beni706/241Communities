@@ -3,7 +3,7 @@
 import { type ReactNode, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { BookOpen, FileText, GraduationCap, Home, LogOut, Settings, Users } from "lucide-react"
+import { BookOpen, FileText, GraduationCap, Home, LogOut, Users, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
@@ -162,7 +162,7 @@ export default function DashboardLayout({ children, userRole = "administrateur" 
         { href: "/apprenant/dashboard", label: "Tableau de bord", icon: <Home className="h-4 w-4" /> },
         { href: "/apprenant/cours", label: "Mes cours", icon: <BookOpen className="h-4 w-4" /> },
         { href: "/apprenant/veilles", label: "Mes veilles", icon: <FileText className="h-4 w-4" /> },
-        { href: "/apprenant/profil", label: "Mon profil", icon: <Settings className="h-4 w-4" /> },
+        { href: "/apprenant/profil", label: "Mon profil", icon: <User className="h-4 w-4" /> },
       ]
     }
     return []

@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
 import { ArrowLeft, GraduationCap } from "lucide-react"
+import Image from "next/image"
 
 export default function LoginApprenantPage() {
   const [email, setEmail] = useState("")
@@ -57,7 +58,7 @@ export default function LoginApprenantPage() {
 
       // Récupérer les informations de l'apprenant
       try {
-        const apprenantResponse = await fetch(`${API_URL}/apprenant/profile`, {
+        const apprenantResponse = await fetch(`${API_URL}/apprenant/${data.id}`, {
           headers: { Authorization: `Bearer ${data.token}` },
         })
 
@@ -66,12 +67,12 @@ export default function LoginApprenantPage() {
 
           // Stocker les informations utilisateur dans un format cohérent
           const userData = {
-            id: apprenantData.id_apprenant || 0,
-            nom: apprenantData.nom || "",
-            prenom: apprenantData.prenom || "",
-            email: email,
+            id: apprenantData.id_apprenant,
+            nom: apprenantData.nom,
+            prenom: apprenantData.prenom,
+            email: apprenantData.email,
             role: "apprenant",
-            referentiel: apprenantData.referentiel || "",
+            referentiel: apprenantData.referentiel,
           }
 
           localStorage.setItem("user", JSON.stringify(userData))
@@ -134,10 +135,9 @@ export default function LoginApprenantPage() {
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
-            <span className="text-2xl font-bold">école {241}</span>
+          <Link href="/" className="inline-block mb-4">
+            <Image src="/logo.png" alt="Logo Ecole 241" width={100} height={100} className="mx-auto" />
           </Link>
-          <p className="text-muted-foreground mt-2">Espace Apprenant</p>
         </div>
 
         <Card className="border-0 shadow-lg overflow-hidden">

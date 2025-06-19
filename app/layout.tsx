@@ -17,7 +17,12 @@ export const metadata: Metadata = {
   description: "Plateforme d'apprentissage en ligne",
   generator: "v0.dev",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' }
+    ],
+    // Vous pouvez également ajouter d'autres types d'icônes ici si nécessaire :
+    // apple: '/apple-icon.png', // Pour les appareils Apple
+    // shortcut: '/shortcut-icon.png', // Pour certains navigateurs plus anciens
   },
 }
 
