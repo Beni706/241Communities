@@ -17,11 +17,8 @@ export async function POST(request: NextRequest) {
         console.error("La variable d'environnement JWT_SECRET n'est pas définie.");
         return NextResponse.json({ message: "Erreur de configuration serveur critique." }, { status: 500 });
     }
-
     try {
-        const { email, password } = await request.json();
-        
-
+        const { email, password } = await request.json()
         if (!email || !password) {
             return NextResponse.json({ message: `Tous les champs sont obligatoires !` }, { status: 400 });
         }
@@ -32,21 +29,20 @@ export async function POST(request: NextRequest) {
         });
         if (!apprenant) {
             return NextResponse.json({ message: `Identifiants incorrects !` }, { status: 401 });
-        };
+        }
         // Vérification du mot de passe
         const isPasswordValid = await bcrypt.compare(password, apprenant.password);
         if (!isPasswordValid) {
             return NextResponse.json({ message: `Identifiants incorrects !` }, { status: 401 });
-        };  
-
+        }
         // Génération du token JWT
          const token = jwt.sign({ id: apprenant.id_apprenant }, JWT_SECRET, { expiresIn: '1d' });
         
         // Retourne le token et les informations de l'apprenant
-        return NextResponse.json({ message: "Connexion réussie !" , token }, { status: 200 });
+        return NextResponse.json({ message: "Connexion réussie !" , token, id: apprenant.id_apprenant }, { status: 200 });
 
     } catch (error) {
         console.log(`Erreur lors de la connexion de l'apprenant`)
         return NextResponse.json({ message: `Erreur lors de la connexion de l'apprenant` }, {status: 500})
     };
-};
+}

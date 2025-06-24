@@ -63,7 +63,7 @@ export default function Home() {
                 transition={{ duration: 0.5 }}
                 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-black"
               >
-                La plateforme tout-en-un pour les apprenants du numérique
+                La plateforme pour les apprenants du numérique
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}

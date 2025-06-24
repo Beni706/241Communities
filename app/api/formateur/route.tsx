@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Récupère tous les administrateurs de la base de données
+    // Récupère tous les formateurs de la base de données
     const formateurs = await prisma.formateur.findMany();
     return NextResponse.json(formateurs, { status: 200 });
 
