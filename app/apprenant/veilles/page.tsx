@@ -96,7 +96,7 @@ export default function ApprenantVeillesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Mes Veilles Technologiques</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Mes Veilles</h1>
         <p className="text-muted-foreground">Consultez et soumettez vos travaux de veille.</p>
       </div>
 
@@ -118,7 +118,7 @@ export default function ApprenantVeillesPage() {
                   <div className="flex items-center justify-between"><CardTitle className="text-lg">{veille.titre}</CardTitle><div className="h-8 w-8 rounded-full bg-secondary/10 flex items-center justify-center"><Eye className="h-4 w-4 text-secondary" /></div></div>
                   <CardDescription><div className="flex items-center gap-1 mb-1"><Calendar className="h-3 w-3" /><span>Date limite: {new Date(veille.date_fin).toLocaleDateString()}</span></div><Badge variant={status.variant}>{status.text}</Badge></CardDescription>
                 </CardHeader>
-                <CardContent><Link href={`/apprenant/veilles/${veille.id_veille}`} className="text-sm text-primary hover:underline">Voir les détails et soumettre</Link></CardContent>
+                <CardContent><Link href={`/apprenant/veilles/${veille.id_veille}`} className="text-sm text-primary hover:underline">Voir les détails</Link></CardContent>
               </Card>
             )
           })}
