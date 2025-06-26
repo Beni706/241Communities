@@ -92,12 +92,6 @@ export function MainNav() {
               <Link href="/formations/digital-creator" onClick={() => setIsOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">Digital Creator</Button>
               </Link>
-              <Link href="/a-propos" onClick={() => setIsOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start">À propos</Button>
-              </Link>
-              <Link href="/contact" onClick={() => setIsOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start">Contact</Button>
-              </Link>
               <Link href="/contact" onClick={() => setIsOpen(false)}>
                 <Button className="w-full text-white bg-black">Nous contacter</Button>
               </Link>

@@ -1,0 +1,101 @@
+🔐 AUTHENTIFICATION
+POST /api/auth/register
+➡️ Inscription d’un patient (Public)
+
+POST /api/auth/login
+➡️ Connexion (JWT) (Public)
+
+POST /api/auth/logout
+➡️ Déconnexion (User-only)
+
+POST /api/auth/change-password
+➡️ Modifier son mot de passe (User-only)
+
+
+👤 UTILISATEUR
+GET /api/utilisateur/me
+➡️ Récupérer son profil (User-only)
+
+PUT /api/utilisateur/me
+➡️ Modifier ses informations personnelles (User-only)
+
+
+🧑‍⚕️ MEDECINS
+POST /api/medecins/demande
+➡️ Soumettre une demande d’inscription (Public)
+
+GET /api/medecins/demandes
+➡️ Lister les demandes (filtrable) (Admin-only)
+
+GET /api/medecins/demandes/[id]
+➡️ Voir une demande (Admin-only)
+
+PUT /api/medecins/demandes/[id]
+➡️ Valider ou refuser une demande (Admin-only)
+
+GET /api/medecins
+➡️ Lister les médecins validés (Admin-only)
+
+GET /api/medecins/[id]
+➡️ Détails d’un médecin (Auth-only)
+
+👩‍⚕️ PATIENTS
+GET /api/patients
+➡️ Lister les patients (Admin-only)
+
+GET /api/patients/[id]
+➡️ Détails d’un patient (Admin-only)
+
+📋 DEMANDES DE CONSULTATION
+POST /api/demandes-consultation
+➡️ Créer une demande (Patient-only)
+
+GET /api/demandes-consultation
+➡️ Voir mes demandes / Voir disponibles (User-only)
+
+PUT /api/demandes-consultation/[id]/accepter
+➡️ Accepter une demande (Médecin-only)
+
+
+📅 RENDEZ-VOUS
+GET /api/rendezvous
+➡️ Voir mes rendez-vous (User-only)
+
+GET /api/rendezvous/[id]
+➡️ Voir un rendez-vous (User-only)
+
+POST /api/rendezvous
+➡️ Créer un rendez-vous (Médecin-only)
+
+PUT /api/rendezvous/[id]
+➡️ Modifier un rendez-vous (Médecin-only)
+
+DELETE /api/rendezvous/[id]
+➡️ Annuler un rendez-vous (Médecin-only)
+
+💊 ORDONNANCES
+POST /api/ordonnances
+➡️ Créer une ordonnance (Médecin-only)
+
+GET /api/ordonnances
+➡️ Voir mes ordonnances (Patient-only)
+
+GET /api/ordonnances/[id]
+➡️ Voir une ordonnance (Patient-only)
+
+🔔 NOTIFICATIONS
+GET /api/notifications
+➡️ Voir mes notifications (User-only)
+
+PUT /api/notifications/[id]/lu
+➡️ Marquer comme lue (User-only)
+
+🛠 ADMIN
+GET /api/admin/utilisateurs
+➡️ Lister tous les utilisateurs (Admin-only)
+
+PUT /api/admin/utilisateurs/[id]
+➡️ Modifier un utilisateur (Admin-only)
+
+DELETE /api/admin/utilisateurs/[id]
+➡️ Supprimer un utilisateur (Admin-only)

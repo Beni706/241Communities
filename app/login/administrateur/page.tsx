@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
 import { ArrowLeft, ShieldAlert } from "lucide-react"
+import Image from "next/image"
 
 export default function LoginAdminPage() {
   const [email, setEmail] = useState("")
@@ -103,10 +104,9 @@ export default function LoginAdminPage() {
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
-            <span className="text-2xl font-bold">école {241}</span>
+          <Link href="/" className="inline-block mb-4">
+            <Image src="/logo.png" alt="Logo Ecole 241" width={100} height={100} className="mx-auto" />
           </Link>
-          <p className="text-muted-foreground mt-2">Espace Administrateur</p>
         </div>
 
         <Card className="border-0 shadow-lg overflow-hidden">

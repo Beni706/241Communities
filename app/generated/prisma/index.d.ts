@@ -334,8 +334,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.8.2
-   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+   * Prisma Client JS version: 6.10.1
+   * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
    */
   export type PrismaVersion = {
     client: string
@@ -9558,6 +9558,7 @@ export namespace Prisma {
     lien_docRendu: string | null
     date_creation: Date | null
     date_fin: Date | null
+    referentiel: $Enums.Referentiel | null
     id_apprenant: number | null
     id_formateur: number | null
   }
@@ -9569,6 +9570,7 @@ export namespace Prisma {
     lien_docRendu: string | null
     date_creation: Date | null
     date_fin: Date | null
+    referentiel: $Enums.Referentiel | null
     id_apprenant: number | null
     id_formateur: number | null
   }
@@ -9580,6 +9582,7 @@ export namespace Prisma {
     lien_docRendu: number
     date_creation: number
     date_fin: number
+    referentiel: number
     id_apprenant: number
     id_formateur: number
     _all: number
@@ -9605,6 +9608,7 @@ export namespace Prisma {
     lien_docRendu?: true
     date_creation?: true
     date_fin?: true
+    referentiel?: true
     id_apprenant?: true
     id_formateur?: true
   }
@@ -9616,6 +9620,7 @@ export namespace Prisma {
     lien_docRendu?: true
     date_creation?: true
     date_fin?: true
+    referentiel?: true
     id_apprenant?: true
     id_formateur?: true
   }
@@ -9627,6 +9632,7 @@ export namespace Prisma {
     lien_docRendu?: true
     date_creation?: true
     date_fin?: true
+    referentiel?: true
     id_apprenant?: true
     id_formateur?: true
     _all?: true
@@ -9725,6 +9731,7 @@ export namespace Prisma {
     lien_docRendu: string | null
     date_creation: Date
     date_fin: Date
+    referentiel: $Enums.Referentiel
     id_apprenant: number | null
     id_formateur: number
     _count: VeilleCountAggregateOutputType | null
@@ -9755,6 +9762,7 @@ export namespace Prisma {
     lien_docRendu?: boolean
     date_creation?: boolean
     date_fin?: boolean
+    referentiel?: boolean
     id_apprenant?: boolean
     id_formateur?: boolean
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
@@ -9768,6 +9776,7 @@ export namespace Prisma {
     lien_docRendu?: boolean
     date_creation?: boolean
     date_fin?: boolean
+    referentiel?: boolean
     id_apprenant?: boolean
     id_formateur?: boolean
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
@@ -9781,6 +9790,7 @@ export namespace Prisma {
     lien_docRendu?: boolean
     date_creation?: boolean
     date_fin?: boolean
+    referentiel?: boolean
     id_apprenant?: boolean
     id_formateur?: boolean
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
@@ -9794,11 +9804,12 @@ export namespace Prisma {
     lien_docRendu?: boolean
     date_creation?: boolean
     date_fin?: boolean
+    referentiel?: boolean
     id_apprenant?: boolean
     id_formateur?: boolean
   }
 
-  export type veilleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_veille" | "titre" | "lien_docDonnee" | "lien_docRendu" | "date_creation" | "date_fin" | "id_apprenant" | "id_formateur", ExtArgs["result"]["veille"]>
+  export type veilleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_veille" | "titre" | "lien_docDonnee" | "lien_docRendu" | "date_creation" | "date_fin" | "referentiel" | "id_apprenant" | "id_formateur", ExtArgs["result"]["veille"]>
   export type veilleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
     apprenant?: boolean | veille$apprenantArgs<ExtArgs>
@@ -9825,6 +9836,7 @@ export namespace Prisma {
       lien_docRendu: string | null
       date_creation: Date
       date_fin: Date
+      referentiel: $Enums.Referentiel
       id_apprenant: number | null
       id_formateur: number
     }, ExtArgs["result"]["veille"]>
@@ -10258,6 +10270,7 @@ export namespace Prisma {
     readonly lien_docRendu: FieldRef<"veille", 'String'>
     readonly date_creation: FieldRef<"veille", 'DateTime'>
     readonly date_fin: FieldRef<"veille", 'DateTime'>
+    readonly referentiel: FieldRef<"veille", 'Referentiel'>
     readonly id_apprenant: FieldRef<"veille", 'Int'>
     readonly id_formateur: FieldRef<"veille", 'Int'>
   }
@@ -10792,6 +10805,7 @@ export namespace Prisma {
     lien_docRendu: 'lien_docRendu',
     date_creation: 'date_creation',
     date_fin: 'date_fin',
+    referentiel: 'referentiel',
     id_apprenant: 'id_apprenant',
     id_formateur: 'id_formateur'
   };
@@ -11319,6 +11333,7 @@ export namespace Prisma {
     lien_docRendu?: StringNullableFilter<"veille"> | string | null
     date_creation?: DateTimeFilter<"veille"> | Date | string
     date_fin?: DateTimeFilter<"veille"> | Date | string
+    referentiel?: EnumReferentielFilter<"veille"> | $Enums.Referentiel
     id_apprenant?: IntNullableFilter<"veille"> | number | null
     id_formateur?: IntFilter<"veille"> | number
     formateur?: XOR<FormateurScalarRelationFilter, formateurWhereInput>
@@ -11332,6 +11347,7 @@ export namespace Prisma {
     lien_docRendu?: SortOrderInput | SortOrder
     date_creation?: SortOrder
     date_fin?: SortOrder
+    referentiel?: SortOrder
     id_apprenant?: SortOrderInput | SortOrder
     id_formateur?: SortOrder
     formateur?: formateurOrderByWithRelationInput
@@ -11348,6 +11364,7 @@ export namespace Prisma {
     lien_docRendu?: StringNullableFilter<"veille"> | string | null
     date_creation?: DateTimeFilter<"veille"> | Date | string
     date_fin?: DateTimeFilter<"veille"> | Date | string
+    referentiel?: EnumReferentielFilter<"veille"> | $Enums.Referentiel
     id_apprenant?: IntNullableFilter<"veille"> | number | null
     id_formateur?: IntFilter<"veille"> | number
     formateur?: XOR<FormateurScalarRelationFilter, formateurWhereInput>
@@ -11361,6 +11378,7 @@ export namespace Prisma {
     lien_docRendu?: SortOrderInput | SortOrder
     date_creation?: SortOrder
     date_fin?: SortOrder
+    referentiel?: SortOrder
     id_apprenant?: SortOrderInput | SortOrder
     id_formateur?: SortOrder
     _count?: veilleCountOrderByAggregateInput
@@ -11380,6 +11398,7 @@ export namespace Prisma {
     lien_docRendu?: StringNullableWithAggregatesFilter<"veille"> | string | null
     date_creation?: DateTimeWithAggregatesFilter<"veille"> | Date | string
     date_fin?: DateTimeWithAggregatesFilter<"veille"> | Date | string
+    referentiel?: EnumReferentielWithAggregatesFilter<"veille"> | $Enums.Referentiel
     id_apprenant?: IntNullableWithAggregatesFilter<"veille"> | number | null
     id_formateur?: IntWithAggregatesFilter<"veille"> | number
   }
@@ -11826,6 +11845,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     formateur: formateurCreateNestedOneWithoutVeilleInput
     apprenant?: apprenantCreateNestedOneWithoutVeilleInput
   }
@@ -11837,6 +11857,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     id_apprenant?: number | null
     id_formateur: number
   }
@@ -11847,6 +11868,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     formateur?: formateurUpdateOneRequiredWithoutVeilleNestedInput
     apprenant?: apprenantUpdateOneWithoutVeilleNestedInput
   }
@@ -11858,6 +11880,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
     id_formateur?: IntFieldUpdateOperationsInput | number
   }
@@ -11869,6 +11892,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     id_apprenant?: number | null
     id_formateur: number
   }
@@ -11879,6 +11903,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
   }
 
   export type veilleUncheckedUpdateManyInput = {
@@ -11888,6 +11913,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
     id_formateur?: IntFieldUpdateOperationsInput | number
   }
@@ -12431,6 +12457,7 @@ export namespace Prisma {
     lien_docRendu?: SortOrder
     date_creation?: SortOrder
     date_fin?: SortOrder
+    referentiel?: SortOrder
     id_apprenant?: SortOrder
     id_formateur?: SortOrder
   }
@@ -12448,6 +12475,7 @@ export namespace Prisma {
     lien_docRendu?: SortOrder
     date_creation?: SortOrder
     date_fin?: SortOrder
+    referentiel?: SortOrder
     id_apprenant?: SortOrder
     id_formateur?: SortOrder
   }
@@ -12459,6 +12487,7 @@ export namespace Prisma {
     lien_docRendu?: SortOrder
     date_creation?: SortOrder
     date_fin?: SortOrder
+    referentiel?: SortOrder
     id_apprenant?: SortOrder
     id_formateur?: SortOrder
   }
@@ -13191,6 +13220,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     apprenant?: apprenantCreateNestedOneWithoutVeilleInput
   }
 
@@ -13201,6 +13231,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     id_apprenant?: number | null
   }
 
@@ -13268,6 +13299,7 @@ export namespace Prisma {
     lien_docRendu?: StringNullableFilter<"veille"> | string | null
     date_creation?: DateTimeFilter<"veille"> | Date | string
     date_fin?: DateTimeFilter<"veille"> | Date | string
+    referentiel?: EnumReferentielFilter<"veille"> | $Enums.Referentiel
     id_apprenant?: IntNullableFilter<"veille"> | number | null
     id_formateur?: IntFilter<"veille"> | number
   }
@@ -13278,6 +13310,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     formateur: formateurCreateNestedOneWithoutVeilleInput
   }
 
@@ -13288,6 +13321,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     id_formateur: number
   }
 
@@ -13906,6 +13940,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     id_apprenant?: number | null
   }
 
@@ -13945,6 +13980,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     apprenant?: apprenantUpdateOneWithoutVeilleNestedInput
   }
 
@@ -13955,6 +13991,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
@@ -13965,6 +14002,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
@@ -13975,6 +14013,7 @@ export namespace Prisma {
     lien_docRendu?: string | null
     date_creation: Date | string
     date_fin: Date | string
+    referentiel: $Enums.Referentiel
     id_formateur: number
   }
 
@@ -13992,6 +14031,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     formateur?: formateurUpdateOneRequiredWithoutVeilleNestedInput
   }
 
@@ -14002,6 +14042,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_formateur?: IntFieldUpdateOperationsInput | number
   }
 
@@ -14012,6 +14053,7 @@ export namespace Prisma {
     lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
     date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_formateur?: IntFieldUpdateOperationsInput | number
   }
 

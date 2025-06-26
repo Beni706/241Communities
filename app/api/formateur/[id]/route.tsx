@@ -3,15 +3,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@/generated/prisma";
 import bcrypt from "bcryptjs";
-import { verifyJWT } from "@/lib/auth";
-
-
-/// Lecture (GET)
-///   (GET) http://localhost:3000/api/formateur/[id]
+import { verifyJWT } from "@/lib/auth"
 
 const prisma = new PrismaClient();
 
-
+/// Lecture (GET)
+///   (GET) http://localhost:3000/api/formateur/[id]
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 
         const isAuthorized = await verifyJWT(request);
@@ -24,7 +21,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         const id = parseInt(params.id);
         const formateur = await prisma.formateur.findUnique({ where: { id_formateur: id } });
 
-        /// Si l'admin n'existe pas dans la base de donees
+        /// Si le formateur n'existe pas dans la base de donees
         if (!formateur) {
             return NextResponse.json({ error: "Formateur non trouvé" }, { status: 404 });
 
@@ -33,8 +30,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         return NextResponse.json(formateur, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
-    };
-};
+    }
+}
 
 
 

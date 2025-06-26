@@ -103,12 +103,13 @@ model lecon {
 }
 
 model veille {
-  id_veille      Int      @id @default(autoincrement())
+  id_veille      Int         @id @default(autoincrement())
   titre          String
   lien_docDonnee String
   lien_docRendu  String?
   date_creation  DateTime
   date_fin       DateTime
+  referentiel    Referentiel
 
   id_apprenant Int?
   id_formateur Int

@@ -45,7 +45,7 @@ export async function POST(request: Request) {
          const token = jwt.sign({ id: admin.id_administrateur }, JWT_SECRET, { expiresIn: '7d' });
                 
         // Retourne le token et les informations de l'apprenant
-        return NextResponse.json({ message: "Connexion réussie !" , token }, { status: 200 });
+        return NextResponse.json({ message: "Connexion réussie !" , token, id: admin.id_administrateur }, { status: 200 });
 
     } catch (error) {
         console.log("Erreur serveur", error);

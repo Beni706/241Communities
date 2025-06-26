@@ -7,45 +7,34 @@ const prisma = new PrismaClient(); // Instance de PrismaClient pour interagir av
 
 // Recuperer un apprenant par son ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-    
     const isAuthorized = await verifyJWT(request); // Vérifie l'authentification
     if (!isAuthorized) {
-        return NextResponse.json({ message: "Accès refusé !" }, {status: 401 } ); // Retourne une erreur 401 si non autorisé
+        return NextResponse.json({ message: "Accès refusé !" }, { status: 401 })
     }
-
     try {
-        const id = parseInt(params.id, 10);
-        if (isNaN(id)) {
-            return NextResponse.json({ message: "ID invalide" }, { status: 400 });
-        }
-
-
-        const apprenant = await prisma.apprenant.findUnique({
-            where: { id_apprenant: id },
-
-        });
-
+        const id = parseInt(params.id)
+        const apprenant = await prisma.apprenant.findUnique({ where: { id_apprenant: id },
+        })
         // Vérifie si l'apprenant existe
         if (!apprenant) {
             return NextResponse.json({ message: "Apprenant non trouvé" }, { status: 404 });
         }
         return NextResponse.json(apprenant, { status: 200 });
-        
+
     } catch (error) {
-        console.error('Error fetching apprenant:', error);
-        return NextResponse.json({ error: 'Failed to fetch apprenant' }, { status: 500 });  
-    };
-};
+        console.error('Error fetching apprenant:', error)
+        return NextResponse.json({ error: 'Failed to fetch apprenant' }, { status: 500 });
+    }
+}
 
 
 // Modifier un apprenant
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    
-    const isAuthorized =await verifyJWT(request);
-    if(!isAuthorized) {
+    const isAuthorized = await verifyJWT(request);
+    if (!isAuthorized) {
         return NextResponse.json({ message: "Accès refusé !" }, { status: 401 });
     };
-    
+
     try {
         const id = parseInt(params.id, 10);
 
@@ -59,7 +48,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             referentiel?: Referentiel;
             photoProfil?: string | null;
         } = {};
-        
+
         // Si un nouveau mot de passe est fourni, le hasher
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,7 +63,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             where: { id_apprenant: id },
             data: updateData,
         });
-        
+
         return NextResponse.json({ message: "Apprenant modifié avec succès.", apprenant: updatedApprenant }, { status: 200 });
     } catch (error) {
         console.error('Error updating apprenant:', error);
@@ -82,14 +71,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         if ((error as any).code === 'P2025') {
             return NextResponse.json({ message: "Apprenant non trouvé pour la mise à jour." }, { status: 404 });
         }
-        return NextResponse.json({ error: 'La mise à jour de l\'apprenant a échoué.' }, { status: 500 });        
+        return NextResponse.json({ error: 'La mise à jour de l\'apprenant a échoué.' }, { status: 500 });
     };
-};
+}
 
 
 // Supprimer un apprenant
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-
     const isAuthorized = await verifyJWT(request);
     if (!isAuthorized) {
         return NextResponse.json({ message: "Accès refusé !" }, { status: 401 });
@@ -105,7 +93,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     } catch (error) {
         console.error('Error deleting apprenant:', error);
-        return NextResponse.json({ error: 'La suppression de l\'apprenant a échoué.' }, { status: 500 });        
+        return NextResponse.json({ error: 'La suppression de l\'apprenant a échoué.' }, { status: 500 });
     };
-};
+}
 

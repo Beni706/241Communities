@@ -39,11 +39,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
 
-    // Vérification de l'authentification 
+    {/*// Vérification de l'authentification 
     const isAuthorized = await verifyJWT(request);
     if(!isAuthorized) {
         return NextResponse.json({ message: `Accès refusé !` }, {status: 401});
-    };
+    };*/}
     
   try {
     const { nom, prenom, email, password} = await request.json()
