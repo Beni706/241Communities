@@ -32,32 +32,36 @@ export default function ApprenantVeillesPage() {
 
   useEffect(() => {
     const fetchVeilles = async () => {
-      if (!user) {
-        toast({ variant: "destructive", title: "Erreur", description: "Utilisateur non authentifié." })
-        router.push("/login/apprenant")
-        return
-      }
-
       try {
         const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token")
         if (!token) {
+          toast({ variant: "destructive", title: "Erreur", description: "Session expirée. Veuillez vous reconnecter." })
           router.push("/login/apprenant")
           return
         }
 
-        const response = await fetch(`${API_BASE_URL}/veille`, {
+        const apprenantReferentiel = user?.referentiel
+        if (!apprenantReferentiel) {
+          toast({ variant: "destructive", title: "Erreur", description: "Votre compte n'a pas de référentiel assigné." })
+          setVeillesList([])
+          setFilteredVeilles([])
+          setLoading(false)
+          return
+        }
+
+        // Construire l'URL avec le paramètre de requête pour le référentiel
+        const url = new URL(`${API_BASE_URL}/veille`)
+        url.searchParams.append("referentiel", apprenantReferentiel)
+
+        const response = await fetch(url.toString(), {
           headers: { Authorization: `Bearer ${token}` },
         })
 
         if (response.ok) {
-          const allVeilles: Veille[] = await response.json()
-          const apprenantReferentiel = user?.referentiel
-          const relevantVeilles = apprenantReferentiel
-            ? allVeilles.filter((v) => v.referentiel === apprenantReferentiel || !v.referentiel)
-            : allVeilles
-          
-          setVeillesList(relevantVeilles)
-          setFilteredVeilles(relevantVeilles)
+          const veillesData: Veille[] = await response.json()
+          // Le filtrage est maintenant fait par l'API, on peut directement utiliser les données
+          setVeillesList(veillesData)
+          setFilteredVeilles(veillesData)
         } else {
           toast({ variant: "destructive", title: "Erreur", description: "Impossible de charger les veilles." })
         }
@@ -68,7 +72,10 @@ export default function ApprenantVeillesPage() {
         setLoading(false)
       }
     }
-    fetchVeilles()
+    // Lancer la récupération des données uniquement si l'utilisateur est chargé
+    if (user) {
+      fetchVeilles()
+    }
   }, [user, router, toast, API_BASE_URL])
 
   useEffect(() => {
