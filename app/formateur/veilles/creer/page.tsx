@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -197,16 +196,25 @@ export default function CreerVeillePage() {
       }
 
       // Construction de requestData selon le mode
-      let requestData: any = {
+      let requestData: {
+        titre: string;
+        description: string;
+        date_fin: string;
+        id_formateur: number;
+        referentiel: string; // Assurez-vous que le référentiel est inclus
+        lien_docDonnee?: string;
+        nom_document?: string;
+      } = {
         titre,
         description: description || titre,
         date_fin: dateFin.toISOString(),
         id_formateur: userId,
+        referentiel: referentiel, // Utiliser la valeur de l'état
       };
       if (modeDocument === "lien") {
         requestData.lien_docDonnee = lienDocFinal;
         requestData.nom_document = "";
-      } else if (modeDocument === "fichier") {
+      } else if (modeDocument === "fichier" && nomDocFinal) {
         requestData.lien_docDonnee = lienDocFinal;
         requestData.nom_document = nomDocFinal;
       }
@@ -405,17 +413,17 @@ export default function CreerVeillePage() {
             <div className="space-y-2">
               <Label htmlFor="referentiel">Référentiel *</Label>
               <Select value={referentiel} onValueChange={setReferentiel}>
-                <SelectTrigger id="referentiel">
+                <SelectTrigger id="referentiel" >
                   <SelectValue placeholder="Sélectionner un référentiel" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DEVELOPPEUR-WEB">
-                    Développeur Web{" "}
+                  <SelectItem value="DEVELOPPEUR">
+                    Développeur
                   </SelectItem>
-                  <SelectItem value="REFERENT-DIGITAL">
-                    Referent Digital
+                  <SelectItem value="REFERENT_DIGITAL">
+                    Référent Digital
                   </SelectItem>
-                  <SelectItem value="DIGITAL-CREATOR">
+                  <SelectItem value="DIGITAL_CREATOR">
                     Digital Creator
                   </SelectItem>
                 </SelectContent>

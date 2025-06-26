@@ -4,27 +4,55 @@ import { NextResponse } from "next/server"
 
 const prisma = new PrismaClient()
 
-// Recuperer toutes les veilles
-export async function GET(request: Request) {
-  console.log("GET /api/veille - Début de la requête")
 
-  const isAuthorized = await verifyJWT(request) // Vérifie l'authentification
+// GET /api/veille
+// Récupérer toutes les veilles ou filtrer par référentiel
+export async function GET(request: Request) {
+  console.log("GET /api/veille - Début de la requête");
+
+  // Vérifie l'authentification de l'utilisateur
+  const isAuthorized = await verifyJWT(request);
   if (!isAuthorized) {
-    console.log("GET /api/veille - Accès refusé")
-    return NextResponse.json({ message: `Accès refusé !` }, { status: 401 }) // Retourne une erreur 401 si non autorisé
+    console.log("GET /api/veille - Accès refusé");
+    // Retourne une erreur 401 si non autorisé
+    return NextResponse.json({ message: `Accès refusé !` }, { status: 401 });
   }
 
   try {
-    console.log("GET /api/veille - Récupération des veilles")
-    const veilles = await prisma.veille.findMany()
-    console.log("GET /api/veille - Veilles récupérées:", veilles.length)
-    return NextResponse.json(veilles)
+    const { searchParams } = new URL(request.url);
+    // Tente de récupérer le paramètre 'referentiel' de l'URL
+    const referentiel = searchParams.get("referentiel");
+
+    // Initialise un objet vide pour les conditions de filtre Prisma
+    let whereClause = {};
+
+    // Si un référentiel est fourni, ajoute-le à la clause where
+    if (referentiel) {
+      console.log(`GET /api/veille - Filtrage par référentiel: ${referentiel}`);
+      whereClause = {
+        referentiel: referentiel.toUpperCase(), // Convertit en majuscules pour correspondre à l'enum Prisma
+      };
+    } else {
+      console.log("GET /api/veille - Récupération de toutes les veilles");
+    }
+
+    // Récupère les veilles de la base de données en appliquant le filtre si présent
+    const veilles = await prisma.veille.findMany({
+      where: whereClause,
+    });
+
+    console.log(`GET /api/veille - Veilles récupérées: ${veilles.length}`);
+    // Retourne les veilles au format JSON
+    return NextResponse.json(veilles);
   } catch (error) {
-    console.log(`GET /api/veille - Erreur du serveur`, error)
-    return NextResponse.json({ message: `Erreur serveur` }, { status: 500 })
+    console.error(`GET /api/veille - Erreur du serveur:`, error);
+    // Gère les erreurs serveur et retourne une réponse 500
+    return NextResponse.json({ message: `Erreur serveur` }, { status: 500 });
   }
 }
 
+
+// POST /api/veille
 // Creer une veille
 export async function POST(request: Request) {
   console.log("POST /api/veille - Début de la requête")
@@ -41,7 +69,7 @@ export async function POST(request: Request) {
 
     const { titre, lien_docDonnee, lien_docRendu, date_fin, id_apprenant, id_formateur, referentiel } = body
 
-    if (!titre || !lien_docDonnee || !date_fin || !id_formateur) {
+    if (!titre || !lien_docDonnee || !date_fin || !id_formateur || !referentiel) {
       console.log("POST /api/veille - Champs manquants")
       return NextResponse.json({ message: `Tous les champs obligatoires sont requis` }, { status: 400 })
     }
@@ -70,7 +98,7 @@ export async function POST(request: Request) {
       date_fin: dateFin,
       id_apprenant: id_apprenant ? Number(id_apprenant) : null,
       id_formateur: Number(id_formateur),
-      referentiel: referentiel || undefined,
+      referentiel: referentiel,
     }
 
     console.log("POST /api/veille - Données à enregistrer:", veilleData)
