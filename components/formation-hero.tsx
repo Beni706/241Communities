@@ -134,15 +134,11 @@ export function FormationHero({
               </p>
               <p className="flex items-center">
                 <CheckCircle className="h-4 w-4 mr-2 text-red-500" />
-                <span>Accès sur mobile et TV</span>
+                <span>Accès sur mobile</span>
               </p>
               <p className="flex items-center">
                 <CheckCircle className="h-4 w-4 mr-2 text-red-500" />
                 <span>Certificat de réussite</span>
-              </p>
-              <p className="flex items-center">
-                <CheckCircle className="h-4 w-4 mr-2 text-red-500" />
-                <span>Garantie satisfait ou remboursé (14 jours)</span>
               </p>
             </div>
 

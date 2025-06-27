@@ -25,6 +25,6 @@ export async function verifyJWT(request: Request): Promise<boolean> {
         return true; // Token valide
     } catch (error) {
         console.error("JWT verification failed:", error);
-        return false; // Token invalide
+        return false
     }
 }

@@ -4,13 +4,11 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 
-const prisma = new PrismaClient() // Instance de PrismaClient pour interagir avec la base de données
-
-
+const prisma = new PrismaClient()
 
 // login apprenant
 export async function POST(request: NextRequest) {
-    const JWT_SECRET = process.env.JWT_SECRET;
+    const JWT_SECRET = process.env.JWT_SECRET
 
     // Vérifier si JWT_SECRET est défini
     if (!JWT_SECRET) {
@@ -44,5 +42,5 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.log(`Erreur lors de la connexion de l'apprenant`)
         return NextResponse.json({ message: `Erreur lors de la connexion de l'apprenant` }, {status: 500})
-    };
+    }
 }

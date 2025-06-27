@@ -16,6 +16,7 @@ import Header from "@/components/header"
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     nom: "",
+    prenom: "",
     email: "",
     sujet: "",
     message: "",
@@ -37,7 +38,7 @@ export default function ContactPage() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         cache: 'no-cache',
         body: JSON.stringify(formData),
@@ -53,7 +54,7 @@ export default function ContactPage() {
       }
 
       setSubmitted(true)
-      setFormData({ nom: "", email: "", sujet: "", message: "" })
+      setFormData({ nom: "", prenom: "", email: "", sujet: "", message: "" })
 
       // Reset after display
       setTimeout(() => {
@@ -106,12 +107,23 @@ export default function ContactPage() {
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="nom">Nom complet</Label>
+                          <Label htmlFor="nom">Nom</Label>
                           <Input
                             id="nom"
                             name="nom"
-                            placeholder="Votre nom complet"
+                            placeholder="Votre nom"
                             value={formData.nom}
+                            onChange={handleChange}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="nom">Prenom</Label>
+                          <Input
+                            id="prenom"
+                            name="prenom"
+                            placeholder="Votre prenom"
+                            value={formData.prenom}
                             onChange={handleChange}
                             required
                           />
@@ -155,7 +167,7 @@ export default function ContactPage() {
                             required
                           />
                         </div>
-                        <Button type="submit" className="w-full bg-primary-red hover:bg-tertiary" disabled={loading}>
+                        <Button type="submit" className="w-full bg-red-500 hover:bg-red-300" disabled={loading}>
                           {loading ? "Envoi en cours..." : "Envoyer le message"}
                         </Button>
                       </form>

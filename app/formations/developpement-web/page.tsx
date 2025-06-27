@@ -446,7 +446,6 @@ export default function DeveloppementWebPage() {
       <FormationContent
         modules={modules}
         instructors={instructors}
-        reviews={reviews}
         whatYouWillLearn={whatYouWillLearn}
         requirements={requirements}
         targetAudience={targetAudience}
