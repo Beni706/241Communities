@@ -17,7 +17,7 @@ interface ApprenantData {
   prenom: string;
   email: string;
   referentiel: "DEVELOPPEUR" | "DIGITAL_CREATOR" | "REFERENT_DIGITAL";
-  photoProfilUrl?: string; // Assurez-vous que ce nom de champ correspond à votre modèle Prisma / API
+  photoProfil?: string | null;
   // Ajoutez d'autres champs si nécessaire
 }
 
@@ -36,8 +36,8 @@ const ProfileForm = () => {
   const { toast } = useToast()
 
   const ReferentielLabels = {
-    DEVELOPPEUR: "Développeur Web et Mobile",
-    DIGITAL_CREATOR: "Créateur de Contenu Digital",
+    DEVELOPPEUR: "Développeur Web",
+    DIGITAL_CREATOR: "Digital Creator",
     REFERENT_DIGITAL: "Référent Digital",
   }
 
@@ -97,8 +97,8 @@ const ProfileForm = () => {
         setPrenom(data.prenom)
         setEmail(data.email)
         setReferentiel(data.referentiel as "DEVELOPPEUR" | "DIGITAL_CREATOR" | "REFERENT_DIGITAL")
-        if (data.photoProfilUrl) {
-          setPhotoProfilPreview(data.photoProfilUrl)
+        if (data.photoProfil) {
+          setPhotoProfilPreview(data.photoProfil)
         }
       } catch (error) {
         console.error("Error fetching apprenant:", error)
@@ -159,7 +159,7 @@ const ProfileForm = () => {
 
     try {
       const response = await fetch(`/api/apprenant/${apprenant.id_apprenant}`, {
-        method: "PUT", // Or PATCH
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -175,8 +175,8 @@ const ProfileForm = () => {
       const updatedApprenantData: ApprenantData = apiResponse.apprenant; // L'API retourne { message: "...", apprenant: ApprenantData }
       // Optionally update local state with the new data
       setApprenant(updatedApprenantData)
-      if (updatedApprenantData.photoProfilUrl) {
-        setPhotoProfilPreview(updatedApprenantData.photoProfilUrl)
+      if (updatedApprenantData.photoProfil) {
+        setPhotoProfilPreview(updatedApprenantData.photoProfil)
       }
 
       toast({
