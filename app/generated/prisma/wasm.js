@@ -114,6 +114,9 @@ Prisma.NullTypes = {
  */
 
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -191,9 +194,22 @@ exports.Prisma.VeilleScalarFieldEnum = {
   id_formateur: 'id_formateur'
 };
 
+exports.Prisma.SoumissionScalarFieldEnum = {
+  id_soumission: 'id_soumission',
+  id_veille: 'id_veille',
+  id_apprenant: 'id_apprenant',
+  lien_soumission: 'lien_soumission',
+  date_soumission: 'date_soumission'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.NullsOrder = {
@@ -214,7 +230,8 @@ exports.Prisma.ModelName = {
   cours: 'cours',
   chapitre: 'chapitre',
   lecon: 'lecon',
-  veille: 'veille'
+  veille: 'veille',
+  Soumission: 'Soumission'
 };
 
 /**

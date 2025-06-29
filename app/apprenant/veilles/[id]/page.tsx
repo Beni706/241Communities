@@ -99,7 +99,7 @@ export default function VeilleDetailPage() {
         localStorage.getItem("token");
 
       const response = await fetch(
-        `${API_BASE_URL}/soumission/apprenant/${user?.id}/veille/${params.id}`,
+        `${API_BASE_URL}/veille/soumission`,
         {
           method: "POST",
           headers: {

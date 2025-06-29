@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 
@@ -49,6 +50,8 @@ model apprenant {
 
   veille      veille[]
   suiviCours suiviCours[]
+
+  Soumission Soumission[]
 }
 
 model suiviCours {
@@ -117,4 +120,16 @@ model veille {
   id_formateur Int
   formateur    formateur @relation(fields: [id_formateur], references: [id_formateur])
   apprenant    apprenant? @relation(fields: [id_apprenant], references: [id_apprenant])
+
+  Soumission Soumission[]
+}
+
+model Soumission {
+  id_soumission   Int       @id @default(autoincrement())
+  veille          veille    @relation(fields: [id_veille], references: [id_veille])
+  id_veille       Int
+  apprenant       apprenant @relation(fields: [id_apprenant], references: [id_apprenant])
+  id_apprenant    Int
+  lien_soumission String
+  date_soumission DateTime  @default(now())
 }

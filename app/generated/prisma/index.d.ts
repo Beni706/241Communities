@@ -53,6 +53,11 @@ export type lecon = $Result.DefaultSelection<Prisma.$leconPayload>
  * 
  */
 export type veille = $Result.DefaultSelection<Prisma.$veillePayload>
+/**
+ * Model Soumission
+ * 
+ */
+export type Soumission = $Result.DefaultSelection<Prisma.$SoumissionPayload>
 
 /**
  * Enums
@@ -276,6 +281,16 @@ export class PrismaClient<
     * ```
     */
   get veille(): Prisma.veilleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.soumission`: Exposes CRUD operations for the **Soumission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Soumissions
+    * const soumissions = await prisma.soumission.findMany()
+    * ```
+    */
+  get soumission(): Prisma.SoumissionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -723,7 +738,8 @@ export namespace Prisma {
     cours: 'cours',
     chapitre: 'chapitre',
     lecon: 'lecon',
-    veille: 'veille'
+    veille: 'veille',
+    Soumission: 'Soumission'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -742,7 +758,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "formateur" | "administrateur" | "apprenant" | "suiviCours" | "cours" | "chapitre" | "lecon" | "veille"
+      modelProps: "formateur" | "administrateur" | "apprenant" | "suiviCours" | "cours" | "chapitre" | "lecon" | "veille" | "soumission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1338,6 +1354,80 @@ export namespace Prisma {
           }
         }
       }
+      Soumission: {
+        payload: Prisma.$SoumissionPayload<ExtArgs>
+        fields: Prisma.SoumissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SoumissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SoumissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>
+          }
+          findFirst: {
+            args: Prisma.SoumissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SoumissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>
+          }
+          findMany: {
+            args: Prisma.SoumissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>[]
+          }
+          create: {
+            args: Prisma.SoumissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>
+          }
+          createMany: {
+            args: Prisma.SoumissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SoumissionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>[]
+          }
+          delete: {
+            args: Prisma.SoumissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>
+          }
+          update: {
+            args: Prisma.SoumissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SoumissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SoumissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SoumissionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>[]
+          }
+          upsert: {
+            args: Prisma.SoumissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SoumissionPayload>
+          }
+          aggregate: {
+            args: Prisma.SoumissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSoumission>
+          }
+          groupBy: {
+            args: Prisma.SoumissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SoumissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SoumissionCountArgs<ExtArgs>
+            result: $Utils.Optional<SoumissionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1430,6 +1520,7 @@ export namespace Prisma {
     chapitre?: chapitreOmit
     lecon?: leconOmit
     veille?: veilleOmit
+    soumission?: SoumissionOmit
   }
 
   /* Types for Logging */
@@ -1566,11 +1657,13 @@ export namespace Prisma {
   export type ApprenantCountOutputType = {
     veille: number
     suiviCours: number
+    Soumission: number
   }
 
   export type ApprenantCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     veille?: boolean | ApprenantCountOutputTypeCountVeilleArgs
     suiviCours?: boolean | ApprenantCountOutputTypeCountSuiviCoursArgs
+    Soumission?: boolean | ApprenantCountOutputTypeCountSoumissionArgs
   }
 
   // Custom InputTypes
@@ -1596,6 +1689,13 @@ export namespace Prisma {
    */
   export type ApprenantCountOutputTypeCountSuiviCoursArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: suiviCoursWhereInput
+  }
+
+  /**
+   * ApprenantCountOutputType without action
+   */
+  export type ApprenantCountOutputTypeCountSoumissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SoumissionWhereInput
   }
 
 
@@ -1667,6 +1767,37 @@ export namespace Prisma {
    */
   export type ChapitreCountOutputTypeCountLeconArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: leconWhereInput
+  }
+
+
+  /**
+   * Count Type VeilleCountOutputType
+   */
+
+  export type VeilleCountOutputType = {
+    Soumission: number
+  }
+
+  export type VeilleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Soumission?: boolean | VeilleCountOutputTypeCountSoumissionArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * VeilleCountOutputType without action
+   */
+  export type VeilleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VeilleCountOutputType
+     */
+    select?: VeilleCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * VeilleCountOutputType without action
+   */
+  export type VeilleCountOutputTypeCountSoumissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SoumissionWhereInput
   }
 
 
@@ -2594,6 +2725,7 @@ export namespace Prisma {
      * The data used to create many formateurs.
      */
     data: formateurCreateManyInput | formateurCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -2612,6 +2744,7 @@ export namespace Prisma {
      * The data used to create many formateurs.
      */
     data: formateurCreateManyInput | formateurCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -3685,6 +3818,7 @@ export namespace Prisma {
      * The data used to create many administrateurs.
      */
     data: administrateurCreateManyInput | administrateurCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -3703,6 +3837,7 @@ export namespace Prisma {
      * The data used to create many administrateurs.
      */
     data: administrateurCreateManyInput | administrateurCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -4060,6 +4195,7 @@ export namespace Prisma {
     photoProfil?: boolean
     veille?: boolean | apprenant$veilleArgs<ExtArgs>
     suiviCours?: boolean | apprenant$suiviCoursArgs<ExtArgs>
+    Soumission?: boolean | apprenant$SoumissionArgs<ExtArgs>
     _count?: boolean | ApprenantCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["apprenant"]>
 
@@ -4097,6 +4233,7 @@ export namespace Prisma {
   export type apprenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     veille?: boolean | apprenant$veilleArgs<ExtArgs>
     suiviCours?: boolean | apprenant$suiviCoursArgs<ExtArgs>
+    Soumission?: boolean | apprenant$SoumissionArgs<ExtArgs>
     _count?: boolean | ApprenantCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type apprenantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4107,6 +4244,7 @@ export namespace Prisma {
     objects: {
       veille: Prisma.$veillePayload<ExtArgs>[]
       suiviCours: Prisma.$suiviCoursPayload<ExtArgs>[]
+      Soumission: Prisma.$SoumissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_apprenant: number
@@ -4512,6 +4650,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     veille<T extends apprenant$veilleArgs<ExtArgs> = {}>(args?: Subset<T, apprenant$veilleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$veillePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     suiviCours<T extends apprenant$suiviCoursArgs<ExtArgs> = {}>(args?: Subset<T, apprenant$suiviCoursArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$suiviCoursPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Soumission<T extends apprenant$SoumissionArgs<ExtArgs> = {}>(args?: Subset<T, apprenant$SoumissionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4777,6 +4916,7 @@ export namespace Prisma {
      * The data used to create many apprenants.
      */
     data: apprenantCreateManyInput | apprenantCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -4795,6 +4935,7 @@ export namespace Prisma {
      * The data used to create many apprenants.
      */
     data: apprenantCreateManyInput | apprenantCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -4979,6 +5120,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SuiviCoursScalarFieldEnum | SuiviCoursScalarFieldEnum[]
+  }
+
+  /**
+   * apprenant.Soumission
+   */
+  export type apprenant$SoumissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    where?: SoumissionWhereInput
+    orderBy?: SoumissionOrderByWithRelationInput | SoumissionOrderByWithRelationInput[]
+    cursor?: SoumissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SoumissionScalarFieldEnum | SoumissionScalarFieldEnum[]
   }
 
   /**
@@ -5940,6 +6105,7 @@ export namespace Prisma {
      * The data used to create many suiviCours.
      */
     data: suiviCoursCreateManyInput | suiviCoursCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -5958,6 +6124,7 @@ export namespace Prisma {
      * The data used to create many suiviCours.
      */
     data: suiviCoursCreateManyInput | suiviCoursCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -7070,6 +7237,7 @@ export namespace Prisma {
      * The data used to create many cours.
      */
     data: coursCreateManyInput | coursCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -7088,6 +7256,7 @@ export namespace Prisma {
      * The data used to create many cours.
      */
     data: coursCreateManyInput | coursCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -8209,6 +8378,7 @@ export namespace Prisma {
      * The data used to create many chapitres.
      */
     data: chapitreCreateManyInput | chapitreCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -8227,6 +8397,7 @@ export namespace Prisma {
      * The data used to create many chapitres.
      */
     data: chapitreCreateManyInput | chapitreCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -9344,6 +9515,7 @@ export namespace Prisma {
      * The data used to create many lecons.
      */
     data: leconCreateManyInput | leconCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -9362,6 +9534,7 @@ export namespace Prisma {
      * The data used to create many lecons.
      */
     data: leconCreateManyInput | leconCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -9767,6 +9940,8 @@ export namespace Prisma {
     id_formateur?: boolean
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
     apprenant?: boolean | veille$apprenantArgs<ExtArgs>
+    Soumission?: boolean | veille$SoumissionArgs<ExtArgs>
+    _count?: boolean | VeilleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["veille"]>
 
   export type veilleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9813,6 +9988,8 @@ export namespace Prisma {
   export type veilleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
     apprenant?: boolean | veille$apprenantArgs<ExtArgs>
+    Soumission?: boolean | veille$SoumissionArgs<ExtArgs>
+    _count?: boolean | VeilleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type veilleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     formateur?: boolean | formateurDefaultArgs<ExtArgs>
@@ -9828,6 +10005,7 @@ export namespace Prisma {
     objects: {
       formateur: Prisma.$formateurPayload<ExtArgs>
       apprenant: Prisma.$apprenantPayload<ExtArgs> | null
+      Soumission: Prisma.$SoumissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_veille: number
@@ -10235,6 +10413,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     formateur<T extends formateurDefaultArgs<ExtArgs> = {}>(args?: Subset<T, formateurDefaultArgs<ExtArgs>>): Prisma__formateurClient<$Result.GetResult<Prisma.$formateurPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     apprenant<T extends veille$apprenantArgs<ExtArgs> = {}>(args?: Subset<T, veille$apprenantArgs<ExtArgs>>): Prisma__apprenantClient<$Result.GetResult<Prisma.$apprenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    Soumission<T extends veille$SoumissionArgs<ExtArgs> = {}>(args?: Subset<T, veille$SoumissionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10502,6 +10681,7 @@ export namespace Prisma {
      * The data used to create many veilles.
      */
     data: veilleCreateManyInput | veilleCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -10520,6 +10700,7 @@ export namespace Prisma {
      * The data used to create many veilles.
      */
     data: veilleCreateManyInput | veilleCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -10686,6 +10867,30 @@ export namespace Prisma {
   }
 
   /**
+   * veille.Soumission
+   */
+  export type veille$SoumissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    where?: SoumissionWhereInput
+    orderBy?: SoumissionOrderByWithRelationInput | SoumissionOrderByWithRelationInput[]
+    cursor?: SoumissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SoumissionScalarFieldEnum | SoumissionScalarFieldEnum[]
+  }
+
+  /**
    * veille without action
    */
   export type veilleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10705,10 +10910,1121 @@ export namespace Prisma {
 
 
   /**
+   * Model Soumission
+   */
+
+  export type AggregateSoumission = {
+    _count: SoumissionCountAggregateOutputType | null
+    _avg: SoumissionAvgAggregateOutputType | null
+    _sum: SoumissionSumAggregateOutputType | null
+    _min: SoumissionMinAggregateOutputType | null
+    _max: SoumissionMaxAggregateOutputType | null
+  }
+
+  export type SoumissionAvgAggregateOutputType = {
+    id_soumission: number | null
+    id_veille: number | null
+    id_apprenant: number | null
+  }
+
+  export type SoumissionSumAggregateOutputType = {
+    id_soumission: number | null
+    id_veille: number | null
+    id_apprenant: number | null
+  }
+
+  export type SoumissionMinAggregateOutputType = {
+    id_soumission: number | null
+    id_veille: number | null
+    id_apprenant: number | null
+    lien_soumission: string | null
+    date_soumission: Date | null
+  }
+
+  export type SoumissionMaxAggregateOutputType = {
+    id_soumission: number | null
+    id_veille: number | null
+    id_apprenant: number | null
+    lien_soumission: string | null
+    date_soumission: Date | null
+  }
+
+  export type SoumissionCountAggregateOutputType = {
+    id_soumission: number
+    id_veille: number
+    id_apprenant: number
+    lien_soumission: number
+    date_soumission: number
+    _all: number
+  }
+
+
+  export type SoumissionAvgAggregateInputType = {
+    id_soumission?: true
+    id_veille?: true
+    id_apprenant?: true
+  }
+
+  export type SoumissionSumAggregateInputType = {
+    id_soumission?: true
+    id_veille?: true
+    id_apprenant?: true
+  }
+
+  export type SoumissionMinAggregateInputType = {
+    id_soumission?: true
+    id_veille?: true
+    id_apprenant?: true
+    lien_soumission?: true
+    date_soumission?: true
+  }
+
+  export type SoumissionMaxAggregateInputType = {
+    id_soumission?: true
+    id_veille?: true
+    id_apprenant?: true
+    lien_soumission?: true
+    date_soumission?: true
+  }
+
+  export type SoumissionCountAggregateInputType = {
+    id_soumission?: true
+    id_veille?: true
+    id_apprenant?: true
+    lien_soumission?: true
+    date_soumission?: true
+    _all?: true
+  }
+
+  export type SoumissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Soumission to aggregate.
+     */
+    where?: SoumissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Soumissions to fetch.
+     */
+    orderBy?: SoumissionOrderByWithRelationInput | SoumissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SoumissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Soumissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Soumissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Soumissions
+    **/
+    _count?: true | SoumissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SoumissionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SoumissionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SoumissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SoumissionMaxAggregateInputType
+  }
+
+  export type GetSoumissionAggregateType<T extends SoumissionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSoumission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSoumission[P]>
+      : GetScalarType<T[P], AggregateSoumission[P]>
+  }
+
+
+
+
+  export type SoumissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SoumissionWhereInput
+    orderBy?: SoumissionOrderByWithAggregationInput | SoumissionOrderByWithAggregationInput[]
+    by: SoumissionScalarFieldEnum[] | SoumissionScalarFieldEnum
+    having?: SoumissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SoumissionCountAggregateInputType | true
+    _avg?: SoumissionAvgAggregateInputType
+    _sum?: SoumissionSumAggregateInputType
+    _min?: SoumissionMinAggregateInputType
+    _max?: SoumissionMaxAggregateInputType
+  }
+
+  export type SoumissionGroupByOutputType = {
+    id_soumission: number
+    id_veille: number
+    id_apprenant: number
+    lien_soumission: string
+    date_soumission: Date
+    _count: SoumissionCountAggregateOutputType | null
+    _avg: SoumissionAvgAggregateOutputType | null
+    _sum: SoumissionSumAggregateOutputType | null
+    _min: SoumissionMinAggregateOutputType | null
+    _max: SoumissionMaxAggregateOutputType | null
+  }
+
+  type GetSoumissionGroupByPayload<T extends SoumissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SoumissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SoumissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SoumissionGroupByOutputType[P]>
+            : GetScalarType<T[P], SoumissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SoumissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_soumission?: boolean
+    id_veille?: boolean
+    id_apprenant?: boolean
+    lien_soumission?: boolean
+    date_soumission?: boolean
+    veille?: boolean | veilleDefaultArgs<ExtArgs>
+    apprenant?: boolean | apprenantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["soumission"]>
+
+  export type SoumissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_soumission?: boolean
+    id_veille?: boolean
+    id_apprenant?: boolean
+    lien_soumission?: boolean
+    date_soumission?: boolean
+    veille?: boolean | veilleDefaultArgs<ExtArgs>
+    apprenant?: boolean | apprenantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["soumission"]>
+
+  export type SoumissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_soumission?: boolean
+    id_veille?: boolean
+    id_apprenant?: boolean
+    lien_soumission?: boolean
+    date_soumission?: boolean
+    veille?: boolean | veilleDefaultArgs<ExtArgs>
+    apprenant?: boolean | apprenantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["soumission"]>
+
+  export type SoumissionSelectScalar = {
+    id_soumission?: boolean
+    id_veille?: boolean
+    id_apprenant?: boolean
+    lien_soumission?: boolean
+    date_soumission?: boolean
+  }
+
+  export type SoumissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_soumission" | "id_veille" | "id_apprenant" | "lien_soumission" | "date_soumission", ExtArgs["result"]["soumission"]>
+  export type SoumissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    veille?: boolean | veilleDefaultArgs<ExtArgs>
+    apprenant?: boolean | apprenantDefaultArgs<ExtArgs>
+  }
+  export type SoumissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    veille?: boolean | veilleDefaultArgs<ExtArgs>
+    apprenant?: boolean | apprenantDefaultArgs<ExtArgs>
+  }
+  export type SoumissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    veille?: boolean | veilleDefaultArgs<ExtArgs>
+    apprenant?: boolean | apprenantDefaultArgs<ExtArgs>
+  }
+
+  export type $SoumissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Soumission"
+    objects: {
+      veille: Prisma.$veillePayload<ExtArgs>
+      apprenant: Prisma.$apprenantPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id_soumission: number
+      id_veille: number
+      id_apprenant: number
+      lien_soumission: string
+      date_soumission: Date
+    }, ExtArgs["result"]["soumission"]>
+    composites: {}
+  }
+
+  type SoumissionGetPayload<S extends boolean | null | undefined | SoumissionDefaultArgs> = $Result.GetResult<Prisma.$SoumissionPayload, S>
+
+  type SoumissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SoumissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SoumissionCountAggregateInputType | true
+    }
+
+  export interface SoumissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Soumission'], meta: { name: 'Soumission' } }
+    /**
+     * Find zero or one Soumission that matches the filter.
+     * @param {SoumissionFindUniqueArgs} args - Arguments to find a Soumission
+     * @example
+     * // Get one Soumission
+     * const soumission = await prisma.soumission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SoumissionFindUniqueArgs>(args: SelectSubset<T, SoumissionFindUniqueArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Soumission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SoumissionFindUniqueOrThrowArgs} args - Arguments to find a Soumission
+     * @example
+     * // Get one Soumission
+     * const soumission = await prisma.soumission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SoumissionFindUniqueOrThrowArgs>(args: SelectSubset<T, SoumissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Soumission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionFindFirstArgs} args - Arguments to find a Soumission
+     * @example
+     * // Get one Soumission
+     * const soumission = await prisma.soumission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SoumissionFindFirstArgs>(args?: SelectSubset<T, SoumissionFindFirstArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Soumission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionFindFirstOrThrowArgs} args - Arguments to find a Soumission
+     * @example
+     * // Get one Soumission
+     * const soumission = await prisma.soumission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SoumissionFindFirstOrThrowArgs>(args?: SelectSubset<T, SoumissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Soumissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Soumissions
+     * const soumissions = await prisma.soumission.findMany()
+     * 
+     * // Get first 10 Soumissions
+     * const soumissions = await prisma.soumission.findMany({ take: 10 })
+     * 
+     * // Only select the `id_soumission`
+     * const soumissionWithId_soumissionOnly = await prisma.soumission.findMany({ select: { id_soumission: true } })
+     * 
+     */
+    findMany<T extends SoumissionFindManyArgs>(args?: SelectSubset<T, SoumissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Soumission.
+     * @param {SoumissionCreateArgs} args - Arguments to create a Soumission.
+     * @example
+     * // Create one Soumission
+     * const Soumission = await prisma.soumission.create({
+     *   data: {
+     *     // ... data to create a Soumission
+     *   }
+     * })
+     * 
+     */
+    create<T extends SoumissionCreateArgs>(args: SelectSubset<T, SoumissionCreateArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Soumissions.
+     * @param {SoumissionCreateManyArgs} args - Arguments to create many Soumissions.
+     * @example
+     * // Create many Soumissions
+     * const soumission = await prisma.soumission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SoumissionCreateManyArgs>(args?: SelectSubset<T, SoumissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Soumissions and returns the data saved in the database.
+     * @param {SoumissionCreateManyAndReturnArgs} args - Arguments to create many Soumissions.
+     * @example
+     * // Create many Soumissions
+     * const soumission = await prisma.soumission.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Soumissions and only return the `id_soumission`
+     * const soumissionWithId_soumissionOnly = await prisma.soumission.createManyAndReturn({
+     *   select: { id_soumission: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SoumissionCreateManyAndReturnArgs>(args?: SelectSubset<T, SoumissionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Soumission.
+     * @param {SoumissionDeleteArgs} args - Arguments to delete one Soumission.
+     * @example
+     * // Delete one Soumission
+     * const Soumission = await prisma.soumission.delete({
+     *   where: {
+     *     // ... filter to delete one Soumission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SoumissionDeleteArgs>(args: SelectSubset<T, SoumissionDeleteArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Soumission.
+     * @param {SoumissionUpdateArgs} args - Arguments to update one Soumission.
+     * @example
+     * // Update one Soumission
+     * const soumission = await prisma.soumission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SoumissionUpdateArgs>(args: SelectSubset<T, SoumissionUpdateArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Soumissions.
+     * @param {SoumissionDeleteManyArgs} args - Arguments to filter Soumissions to delete.
+     * @example
+     * // Delete a few Soumissions
+     * const { count } = await prisma.soumission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SoumissionDeleteManyArgs>(args?: SelectSubset<T, SoumissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Soumissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Soumissions
+     * const soumission = await prisma.soumission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SoumissionUpdateManyArgs>(args: SelectSubset<T, SoumissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Soumissions and returns the data updated in the database.
+     * @param {SoumissionUpdateManyAndReturnArgs} args - Arguments to update many Soumissions.
+     * @example
+     * // Update many Soumissions
+     * const soumission = await prisma.soumission.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Soumissions and only return the `id_soumission`
+     * const soumissionWithId_soumissionOnly = await prisma.soumission.updateManyAndReturn({
+     *   select: { id_soumission: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SoumissionUpdateManyAndReturnArgs>(args: SelectSubset<T, SoumissionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Soumission.
+     * @param {SoumissionUpsertArgs} args - Arguments to update or create a Soumission.
+     * @example
+     * // Update or create a Soumission
+     * const soumission = await prisma.soumission.upsert({
+     *   create: {
+     *     // ... data to create a Soumission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Soumission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SoumissionUpsertArgs>(args: SelectSubset<T, SoumissionUpsertArgs<ExtArgs>>): Prisma__SoumissionClient<$Result.GetResult<Prisma.$SoumissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Soumissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionCountArgs} args - Arguments to filter Soumissions to count.
+     * @example
+     * // Count the number of Soumissions
+     * const count = await prisma.soumission.count({
+     *   where: {
+     *     // ... the filter for the Soumissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends SoumissionCountArgs>(
+      args?: Subset<T, SoumissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SoumissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Soumission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SoumissionAggregateArgs>(args: Subset<T, SoumissionAggregateArgs>): Prisma.PrismaPromise<GetSoumissionAggregateType<T>>
+
+    /**
+     * Group by Soumission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SoumissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SoumissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SoumissionGroupByArgs['orderBy'] }
+        : { orderBy?: SoumissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SoumissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSoumissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Soumission model
+   */
+  readonly fields: SoumissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Soumission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SoumissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    veille<T extends veilleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, veilleDefaultArgs<ExtArgs>>): Prisma__veilleClient<$Result.GetResult<Prisma.$veillePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    apprenant<T extends apprenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, apprenantDefaultArgs<ExtArgs>>): Prisma__apprenantClient<$Result.GetResult<Prisma.$apprenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Soumission model
+   */
+  interface SoumissionFieldRefs {
+    readonly id_soumission: FieldRef<"Soumission", 'Int'>
+    readonly id_veille: FieldRef<"Soumission", 'Int'>
+    readonly id_apprenant: FieldRef<"Soumission", 'Int'>
+    readonly lien_soumission: FieldRef<"Soumission", 'String'>
+    readonly date_soumission: FieldRef<"Soumission", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Soumission findUnique
+   */
+  export type SoumissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Soumission to fetch.
+     */
+    where: SoumissionWhereUniqueInput
+  }
+
+  /**
+   * Soumission findUniqueOrThrow
+   */
+  export type SoumissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Soumission to fetch.
+     */
+    where: SoumissionWhereUniqueInput
+  }
+
+  /**
+   * Soumission findFirst
+   */
+  export type SoumissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Soumission to fetch.
+     */
+    where?: SoumissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Soumissions to fetch.
+     */
+    orderBy?: SoumissionOrderByWithRelationInput | SoumissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Soumissions.
+     */
+    cursor?: SoumissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Soumissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Soumissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Soumissions.
+     */
+    distinct?: SoumissionScalarFieldEnum | SoumissionScalarFieldEnum[]
+  }
+
+  /**
+   * Soumission findFirstOrThrow
+   */
+  export type SoumissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Soumission to fetch.
+     */
+    where?: SoumissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Soumissions to fetch.
+     */
+    orderBy?: SoumissionOrderByWithRelationInput | SoumissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Soumissions.
+     */
+    cursor?: SoumissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Soumissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Soumissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Soumissions.
+     */
+    distinct?: SoumissionScalarFieldEnum | SoumissionScalarFieldEnum[]
+  }
+
+  /**
+   * Soumission findMany
+   */
+  export type SoumissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Soumissions to fetch.
+     */
+    where?: SoumissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Soumissions to fetch.
+     */
+    orderBy?: SoumissionOrderByWithRelationInput | SoumissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Soumissions.
+     */
+    cursor?: SoumissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Soumissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Soumissions.
+     */
+    skip?: number
+    distinct?: SoumissionScalarFieldEnum | SoumissionScalarFieldEnum[]
+  }
+
+  /**
+   * Soumission create
+   */
+  export type SoumissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Soumission.
+     */
+    data: XOR<SoumissionCreateInput, SoumissionUncheckedCreateInput>
+  }
+
+  /**
+   * Soumission createMany
+   */
+  export type SoumissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Soumissions.
+     */
+    data: SoumissionCreateManyInput | SoumissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Soumission createManyAndReturn
+   */
+  export type SoumissionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Soumissions.
+     */
+    data: SoumissionCreateManyInput | SoumissionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Soumission update
+   */
+  export type SoumissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Soumission.
+     */
+    data: XOR<SoumissionUpdateInput, SoumissionUncheckedUpdateInput>
+    /**
+     * Choose, which Soumission to update.
+     */
+    where: SoumissionWhereUniqueInput
+  }
+
+  /**
+   * Soumission updateMany
+   */
+  export type SoumissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Soumissions.
+     */
+    data: XOR<SoumissionUpdateManyMutationInput, SoumissionUncheckedUpdateManyInput>
+    /**
+     * Filter which Soumissions to update
+     */
+    where?: SoumissionWhereInput
+    /**
+     * Limit how many Soumissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Soumission updateManyAndReturn
+   */
+  export type SoumissionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * The data used to update Soumissions.
+     */
+    data: XOR<SoumissionUpdateManyMutationInput, SoumissionUncheckedUpdateManyInput>
+    /**
+     * Filter which Soumissions to update
+     */
+    where?: SoumissionWhereInput
+    /**
+     * Limit how many Soumissions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Soumission upsert
+   */
+  export type SoumissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Soumission to update in case it exists.
+     */
+    where: SoumissionWhereUniqueInput
+    /**
+     * In case the Soumission found by the `where` argument doesn't exist, create a new Soumission with this data.
+     */
+    create: XOR<SoumissionCreateInput, SoumissionUncheckedCreateInput>
+    /**
+     * In case the Soumission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SoumissionUpdateInput, SoumissionUncheckedUpdateInput>
+  }
+
+  /**
+   * Soumission delete
+   */
+  export type SoumissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+    /**
+     * Filter which Soumission to delete.
+     */
+    where: SoumissionWhereUniqueInput
+  }
+
+  /**
+   * Soumission deleteMany
+   */
+  export type SoumissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Soumissions to delete
+     */
+    where?: SoumissionWhereInput
+    /**
+     * Limit how many Soumissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Soumission without action
+   */
+  export type SoumissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Soumission
+     */
+    select?: SoumissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Soumission
+     */
+    omit?: SoumissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SoumissionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
   export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
   };
 
@@ -10813,12 +12129,31 @@ export namespace Prisma {
   export type VeilleScalarFieldEnum = (typeof VeilleScalarFieldEnum)[keyof typeof VeilleScalarFieldEnum]
 
 
+  export const SoumissionScalarFieldEnum: {
+    id_soumission: 'id_soumission',
+    id_veille: 'id_veille',
+    id_apprenant: 'id_apprenant',
+    lien_soumission: 'lien_soumission',
+    date_soumission: 'date_soumission'
+  };
+
+  export type SoumissionScalarFieldEnum = (typeof SoumissionScalarFieldEnum)[keyof typeof SoumissionScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
+  };
+
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   export const NullsOrder: {
@@ -10842,9 +12177,23 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'String[]'
+   */
+  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
     
 
 
@@ -10856,9 +12205,23 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Referentiel[]'
+   */
+  export type ListEnumReferentielFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Referentiel[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -10870,9 +12233,23 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -11011,6 +12388,7 @@ export namespace Prisma {
     photoProfil?: StringNullableFilter<"apprenant"> | string | null
     veille?: VeilleListRelationFilter
     suiviCours?: SuiviCoursListRelationFilter
+    Soumission?: SoumissionListRelationFilter
   }
 
   export type apprenantOrderByWithRelationInput = {
@@ -11023,6 +12401,7 @@ export namespace Prisma {
     photoProfil?: SortOrderInput | SortOrder
     veille?: veilleOrderByRelationAggregateInput
     suiviCours?: suiviCoursOrderByRelationAggregateInput
+    Soumission?: SoumissionOrderByRelationAggregateInput
   }
 
   export type apprenantWhereUniqueInput = Prisma.AtLeast<{
@@ -11038,6 +12417,7 @@ export namespace Prisma {
     photoProfil?: StringNullableFilter<"apprenant"> | string | null
     veille?: VeilleListRelationFilter
     suiviCours?: SuiviCoursListRelationFilter
+    Soumission?: SoumissionListRelationFilter
   }, "id_apprenant" | "email">
 
   export type apprenantOrderByWithAggregationInput = {
@@ -11338,6 +12718,7 @@ export namespace Prisma {
     id_formateur?: IntFilter<"veille"> | number
     formateur?: XOR<FormateurScalarRelationFilter, formateurWhereInput>
     apprenant?: XOR<ApprenantNullableScalarRelationFilter, apprenantWhereInput> | null
+    Soumission?: SoumissionListRelationFilter
   }
 
   export type veilleOrderByWithRelationInput = {
@@ -11352,6 +12733,7 @@ export namespace Prisma {
     id_formateur?: SortOrder
     formateur?: formateurOrderByWithRelationInput
     apprenant?: apprenantOrderByWithRelationInput
+    Soumission?: SoumissionOrderByRelationAggregateInput
   }
 
   export type veilleWhereUniqueInput = Prisma.AtLeast<{
@@ -11369,6 +12751,7 @@ export namespace Prisma {
     id_formateur?: IntFilter<"veille"> | number
     formateur?: XOR<FormateurScalarRelationFilter, formateurWhereInput>
     apprenant?: XOR<ApprenantNullableScalarRelationFilter, apprenantWhereInput> | null
+    Soumission?: SoumissionListRelationFilter
   }, "id_veille">
 
   export type veilleOrderByWithAggregationInput = {
@@ -11401,6 +12784,66 @@ export namespace Prisma {
     referentiel?: EnumReferentielWithAggregatesFilter<"veille"> | $Enums.Referentiel
     id_apprenant?: IntNullableWithAggregatesFilter<"veille"> | number | null
     id_formateur?: IntWithAggregatesFilter<"veille"> | number
+  }
+
+  export type SoumissionWhereInput = {
+    AND?: SoumissionWhereInput | SoumissionWhereInput[]
+    OR?: SoumissionWhereInput[]
+    NOT?: SoumissionWhereInput | SoumissionWhereInput[]
+    id_soumission?: IntFilter<"Soumission"> | number
+    id_veille?: IntFilter<"Soumission"> | number
+    id_apprenant?: IntFilter<"Soumission"> | number
+    lien_soumission?: StringFilter<"Soumission"> | string
+    date_soumission?: DateTimeFilter<"Soumission"> | Date | string
+    veille?: XOR<VeilleScalarRelationFilter, veilleWhereInput>
+    apprenant?: XOR<ApprenantScalarRelationFilter, apprenantWhereInput>
+  }
+
+  export type SoumissionOrderByWithRelationInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
+    lien_soumission?: SortOrder
+    date_soumission?: SortOrder
+    veille?: veilleOrderByWithRelationInput
+    apprenant?: apprenantOrderByWithRelationInput
+  }
+
+  export type SoumissionWhereUniqueInput = Prisma.AtLeast<{
+    id_soumission?: number
+    AND?: SoumissionWhereInput | SoumissionWhereInput[]
+    OR?: SoumissionWhereInput[]
+    NOT?: SoumissionWhereInput | SoumissionWhereInput[]
+    id_veille?: IntFilter<"Soumission"> | number
+    id_apprenant?: IntFilter<"Soumission"> | number
+    lien_soumission?: StringFilter<"Soumission"> | string
+    date_soumission?: DateTimeFilter<"Soumission"> | Date | string
+    veille?: XOR<VeilleScalarRelationFilter, veilleWhereInput>
+    apprenant?: XOR<ApprenantScalarRelationFilter, apprenantWhereInput>
+  }, "id_soumission">
+
+  export type SoumissionOrderByWithAggregationInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
+    lien_soumission?: SortOrder
+    date_soumission?: SortOrder
+    _count?: SoumissionCountOrderByAggregateInput
+    _avg?: SoumissionAvgOrderByAggregateInput
+    _max?: SoumissionMaxOrderByAggregateInput
+    _min?: SoumissionMinOrderByAggregateInput
+    _sum?: SoumissionSumOrderByAggregateInput
+  }
+
+  export type SoumissionScalarWhereWithAggregatesInput = {
+    AND?: SoumissionScalarWhereWithAggregatesInput | SoumissionScalarWhereWithAggregatesInput[]
+    OR?: SoumissionScalarWhereWithAggregatesInput[]
+    NOT?: SoumissionScalarWhereWithAggregatesInput | SoumissionScalarWhereWithAggregatesInput[]
+    id_soumission?: IntWithAggregatesFilter<"Soumission"> | number
+    id_veille?: IntWithAggregatesFilter<"Soumission"> | number
+    id_apprenant?: IntWithAggregatesFilter<"Soumission"> | number
+    lien_soumission?: StringWithAggregatesFilter<"Soumission"> | string
+    date_soumission?: DateTimeWithAggregatesFilter<"Soumission"> | Date | string
   }
 
   export type formateurCreateInput = {
@@ -11533,6 +12976,7 @@ export namespace Prisma {
     photoProfil?: string | null
     veille?: veilleCreateNestedManyWithoutApprenantInput
     suiviCours?: suiviCoursCreateNestedManyWithoutApprenantInput
+    Soumission?: SoumissionCreateNestedManyWithoutApprenantInput
   }
 
   export type apprenantUncheckedCreateInput = {
@@ -11545,6 +12989,7 @@ export namespace Prisma {
     photoProfil?: string | null
     veille?: veilleUncheckedCreateNestedManyWithoutApprenantInput
     suiviCours?: suiviCoursUncheckedCreateNestedManyWithoutApprenantInput
+    Soumission?: SoumissionUncheckedCreateNestedManyWithoutApprenantInput
   }
 
   export type apprenantUpdateInput = {
@@ -11556,6 +13001,7 @@ export namespace Prisma {
     photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
     veille?: veilleUpdateManyWithoutApprenantNestedInput
     suiviCours?: suiviCoursUpdateManyWithoutApprenantNestedInput
+    Soumission?: SoumissionUpdateManyWithoutApprenantNestedInput
   }
 
   export type apprenantUncheckedUpdateInput = {
@@ -11568,6 +13014,7 @@ export namespace Prisma {
     photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
     veille?: veilleUncheckedUpdateManyWithoutApprenantNestedInput
     suiviCours?: suiviCoursUncheckedUpdateManyWithoutApprenantNestedInput
+    Soumission?: SoumissionUncheckedUpdateManyWithoutApprenantNestedInput
   }
 
   export type apprenantCreateManyInput = {
@@ -11848,6 +13295,7 @@ export namespace Prisma {
     referentiel: $Enums.Referentiel
     formateur: formateurCreateNestedOneWithoutVeilleInput
     apprenant?: apprenantCreateNestedOneWithoutVeilleInput
+    Soumission?: SoumissionCreateNestedManyWithoutVeilleInput
   }
 
   export type veilleUncheckedCreateInput = {
@@ -11860,6 +13308,7 @@ export namespace Prisma {
     referentiel: $Enums.Referentiel
     id_apprenant?: number | null
     id_formateur: number
+    Soumission?: SoumissionUncheckedCreateNestedManyWithoutVeilleInput
   }
 
   export type veilleUpdateInput = {
@@ -11871,6 +13320,7 @@ export namespace Prisma {
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     formateur?: formateurUpdateOneRequiredWithoutVeilleNestedInput
     apprenant?: apprenantUpdateOneWithoutVeilleNestedInput
+    Soumission?: SoumissionUpdateManyWithoutVeilleNestedInput
   }
 
   export type veilleUncheckedUpdateInput = {
@@ -11883,6 +13333,7 @@ export namespace Prisma {
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
     id_formateur?: IntFieldUpdateOperationsInput | number
+    Soumission?: SoumissionUncheckedUpdateManyWithoutVeilleNestedInput
   }
 
   export type veilleCreateManyInput = {
@@ -11918,10 +13369,61 @@ export namespace Prisma {
     id_formateur?: IntFieldUpdateOperationsInput | number
   }
 
+  export type SoumissionCreateInput = {
+    lien_soumission: string
+    date_soumission?: Date | string
+    veille: veilleCreateNestedOneWithoutSoumissionInput
+    apprenant: apprenantCreateNestedOneWithoutSoumissionInput
+  }
+
+  export type SoumissionUncheckedCreateInput = {
+    id_soumission?: number
+    id_veille: number
+    id_apprenant: number
+    lien_soumission: string
+    date_soumission?: Date | string
+  }
+
+  export type SoumissionUpdateInput = {
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+    veille?: veilleUpdateOneRequiredWithoutSoumissionNestedInput
+    apprenant?: apprenantUpdateOneRequiredWithoutSoumissionNestedInput
+  }
+
+  export type SoumissionUncheckedUpdateInput = {
+    id_soumission?: IntFieldUpdateOperationsInput | number
+    id_veille?: IntFieldUpdateOperationsInput | number
+    id_apprenant?: IntFieldUpdateOperationsInput | number
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SoumissionCreateManyInput = {
+    id_soumission?: number
+    id_veille: number
+    id_apprenant: number
+    lien_soumission: string
+    date_soumission?: Date | string
+  }
+
+  export type SoumissionUpdateManyMutationInput = {
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SoumissionUncheckedUpdateManyInput = {
+    id_soumission?: IntFieldUpdateOperationsInput | number
+    id_veille?: IntFieldUpdateOperationsInput | number
+    id_apprenant?: IntFieldUpdateOperationsInput | number
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -11931,8 +13433,8 @@ export namespace Prisma {
 
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -11940,13 +13442,14 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
   export type EnumReferentielFilter<$PrismaModel = never> = {
     equals?: $Enums.Referentiel | EnumReferentielFieldRefInput<$PrismaModel>
-    in?: $Enums.Referentiel[]
-    notIn?: $Enums.Referentiel[]
+    in?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
     not?: NestedEnumReferentielFilter<$PrismaModel> | $Enums.Referentiel
   }
 
@@ -12007,8 +13510,8 @@ export namespace Prisma {
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -12023,8 +13526,8 @@ export namespace Prisma {
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -12032,6 +13535,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -12040,8 +13544,8 @@ export namespace Prisma {
 
   export type EnumReferentielWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Referentiel | EnumReferentielFieldRefInput<$PrismaModel>
-    in?: $Enums.Referentiel[]
-    notIn?: $Enums.Referentiel[]
+    in?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
     not?: NestedEnumReferentielWithAggregatesFilter<$PrismaModel> | $Enums.Referentiel
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReferentielFilter<$PrismaModel>
@@ -12082,8 +13586,8 @@ export namespace Prisma {
 
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -12091,6 +13595,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
@@ -12100,12 +13605,22 @@ export namespace Prisma {
     none?: suiviCoursWhereInput
   }
 
+  export type SoumissionListRelationFilter = {
+    every?: SoumissionWhereInput
+    some?: SoumissionWhereInput
+    none?: SoumissionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type suiviCoursOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SoumissionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12149,8 +13664,8 @@ export namespace Prisma {
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -12158,6 +13673,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
@@ -12166,8 +13682,8 @@ export namespace Prisma {
 
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -12177,8 +13693,8 @@ export namespace Prisma {
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -12188,8 +13704,8 @@ export namespace Prisma {
 
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
@@ -12250,8 +13766,8 @@ export namespace Prisma {
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -12264,8 +13780,8 @@ export namespace Prisma {
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -12278,8 +13794,8 @@ export namespace Prisma {
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
@@ -12436,8 +13952,8 @@ export namespace Prisma {
 
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -12500,8 +14016,8 @@ export namespace Prisma {
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -12512,6 +14028,47 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type VeilleScalarRelationFilter = {
+    is?: veilleWhereInput
+    isNot?: veilleWhereInput
+  }
+
+  export type SoumissionCountOrderByAggregateInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
+    lien_soumission?: SortOrder
+    date_soumission?: SortOrder
+  }
+
+  export type SoumissionAvgOrderByAggregateInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
+  }
+
+  export type SoumissionMaxOrderByAggregateInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
+    lien_soumission?: SortOrder
+    date_soumission?: SortOrder
+  }
+
+  export type SoumissionMinOrderByAggregateInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
+    lien_soumission?: SortOrder
+    date_soumission?: SortOrder
+  }
+
+  export type SoumissionSumOrderByAggregateInput = {
+    id_soumission?: SortOrder
+    id_veille?: SortOrder
+    id_apprenant?: SortOrder
   }
 
   export type coursCreateNestedManyWithoutFormateurInput = {
@@ -12628,6 +14185,13 @@ export namespace Prisma {
     connect?: suiviCoursWhereUniqueInput | suiviCoursWhereUniqueInput[]
   }
 
+  export type SoumissionCreateNestedManyWithoutApprenantInput = {
+    create?: XOR<SoumissionCreateWithoutApprenantInput, SoumissionUncheckedCreateWithoutApprenantInput> | SoumissionCreateWithoutApprenantInput[] | SoumissionUncheckedCreateWithoutApprenantInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutApprenantInput | SoumissionCreateOrConnectWithoutApprenantInput[]
+    createMany?: SoumissionCreateManyApprenantInputEnvelope
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+  }
+
   export type veilleUncheckedCreateNestedManyWithoutApprenantInput = {
     create?: XOR<veilleCreateWithoutApprenantInput, veilleUncheckedCreateWithoutApprenantInput> | veilleCreateWithoutApprenantInput[] | veilleUncheckedCreateWithoutApprenantInput[]
     connectOrCreate?: veilleCreateOrConnectWithoutApprenantInput | veilleCreateOrConnectWithoutApprenantInput[]
@@ -12640,6 +14204,13 @@ export namespace Prisma {
     connectOrCreate?: suiviCoursCreateOrConnectWithoutApprenantInput | suiviCoursCreateOrConnectWithoutApprenantInput[]
     createMany?: suiviCoursCreateManyApprenantInputEnvelope
     connect?: suiviCoursWhereUniqueInput | suiviCoursWhereUniqueInput[]
+  }
+
+  export type SoumissionUncheckedCreateNestedManyWithoutApprenantInput = {
+    create?: XOR<SoumissionCreateWithoutApprenantInput, SoumissionUncheckedCreateWithoutApprenantInput> | SoumissionCreateWithoutApprenantInput[] | SoumissionUncheckedCreateWithoutApprenantInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutApprenantInput | SoumissionCreateOrConnectWithoutApprenantInput[]
+    createMany?: SoumissionCreateManyApprenantInputEnvelope
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -12674,6 +14245,20 @@ export namespace Prisma {
     deleteMany?: suiviCoursScalarWhereInput | suiviCoursScalarWhereInput[]
   }
 
+  export type SoumissionUpdateManyWithoutApprenantNestedInput = {
+    create?: XOR<SoumissionCreateWithoutApprenantInput, SoumissionUncheckedCreateWithoutApprenantInput> | SoumissionCreateWithoutApprenantInput[] | SoumissionUncheckedCreateWithoutApprenantInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutApprenantInput | SoumissionCreateOrConnectWithoutApprenantInput[]
+    upsert?: SoumissionUpsertWithWhereUniqueWithoutApprenantInput | SoumissionUpsertWithWhereUniqueWithoutApprenantInput[]
+    createMany?: SoumissionCreateManyApprenantInputEnvelope
+    set?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    disconnect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    delete?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    update?: SoumissionUpdateWithWhereUniqueWithoutApprenantInput | SoumissionUpdateWithWhereUniqueWithoutApprenantInput[]
+    updateMany?: SoumissionUpdateManyWithWhereWithoutApprenantInput | SoumissionUpdateManyWithWhereWithoutApprenantInput[]
+    deleteMany?: SoumissionScalarWhereInput | SoumissionScalarWhereInput[]
+  }
+
   export type veilleUncheckedUpdateManyWithoutApprenantNestedInput = {
     create?: XOR<veilleCreateWithoutApprenantInput, veilleUncheckedCreateWithoutApprenantInput> | veilleCreateWithoutApprenantInput[] | veilleUncheckedCreateWithoutApprenantInput[]
     connectOrCreate?: veilleCreateOrConnectWithoutApprenantInput | veilleCreateOrConnectWithoutApprenantInput[]
@@ -12700,6 +14285,20 @@ export namespace Prisma {
     update?: suiviCoursUpdateWithWhereUniqueWithoutApprenantInput | suiviCoursUpdateWithWhereUniqueWithoutApprenantInput[]
     updateMany?: suiviCoursUpdateManyWithWhereWithoutApprenantInput | suiviCoursUpdateManyWithWhereWithoutApprenantInput[]
     deleteMany?: suiviCoursScalarWhereInput | suiviCoursScalarWhereInput[]
+  }
+
+  export type SoumissionUncheckedUpdateManyWithoutApprenantNestedInput = {
+    create?: XOR<SoumissionCreateWithoutApprenantInput, SoumissionUncheckedCreateWithoutApprenantInput> | SoumissionCreateWithoutApprenantInput[] | SoumissionUncheckedCreateWithoutApprenantInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutApprenantInput | SoumissionCreateOrConnectWithoutApprenantInput[]
+    upsert?: SoumissionUpsertWithWhereUniqueWithoutApprenantInput | SoumissionUpsertWithWhereUniqueWithoutApprenantInput[]
+    createMany?: SoumissionCreateManyApprenantInputEnvelope
+    set?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    disconnect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    delete?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    update?: SoumissionUpdateWithWhereUniqueWithoutApprenantInput | SoumissionUpdateWithWhereUniqueWithoutApprenantInput[]
+    updateMany?: SoumissionUpdateManyWithWhereWithoutApprenantInput | SoumissionUpdateManyWithWhereWithoutApprenantInput[]
+    deleteMany?: SoumissionScalarWhereInput | SoumissionScalarWhereInput[]
   }
 
   export type apprenantCreateNestedOneWithoutSuiviCoursInput = {
@@ -12926,6 +14525,20 @@ export namespace Prisma {
     connect?: apprenantWhereUniqueInput
   }
 
+  export type SoumissionCreateNestedManyWithoutVeilleInput = {
+    create?: XOR<SoumissionCreateWithoutVeilleInput, SoumissionUncheckedCreateWithoutVeilleInput> | SoumissionCreateWithoutVeilleInput[] | SoumissionUncheckedCreateWithoutVeilleInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutVeilleInput | SoumissionCreateOrConnectWithoutVeilleInput[]
+    createMany?: SoumissionCreateManyVeilleInputEnvelope
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+  }
+
+  export type SoumissionUncheckedCreateNestedManyWithoutVeilleInput = {
+    create?: XOR<SoumissionCreateWithoutVeilleInput, SoumissionUncheckedCreateWithoutVeilleInput> | SoumissionCreateWithoutVeilleInput[] | SoumissionUncheckedCreateWithoutVeilleInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutVeilleInput | SoumissionCreateOrConnectWithoutVeilleInput[]
+    createMany?: SoumissionCreateManyVeilleInputEnvelope
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+  }
+
   export type formateurUpdateOneRequiredWithoutVeilleNestedInput = {
     create?: XOR<formateurCreateWithoutVeilleInput, formateurUncheckedCreateWithoutVeilleInput>
     connectOrCreate?: formateurCreateOrConnectWithoutVeilleInput
@@ -12944,6 +14557,20 @@ export namespace Prisma {
     update?: XOR<XOR<apprenantUpdateToOneWithWhereWithoutVeilleInput, apprenantUpdateWithoutVeilleInput>, apprenantUncheckedUpdateWithoutVeilleInput>
   }
 
+  export type SoumissionUpdateManyWithoutVeilleNestedInput = {
+    create?: XOR<SoumissionCreateWithoutVeilleInput, SoumissionUncheckedCreateWithoutVeilleInput> | SoumissionCreateWithoutVeilleInput[] | SoumissionUncheckedCreateWithoutVeilleInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutVeilleInput | SoumissionCreateOrConnectWithoutVeilleInput[]
+    upsert?: SoumissionUpsertWithWhereUniqueWithoutVeilleInput | SoumissionUpsertWithWhereUniqueWithoutVeilleInput[]
+    createMany?: SoumissionCreateManyVeilleInputEnvelope
+    set?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    disconnect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    delete?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    update?: SoumissionUpdateWithWhereUniqueWithoutVeilleInput | SoumissionUpdateWithWhereUniqueWithoutVeilleInput[]
+    updateMany?: SoumissionUpdateManyWithWhereWithoutVeilleInput | SoumissionUpdateManyWithWhereWithoutVeilleInput[]
+    deleteMany?: SoumissionScalarWhereInput | SoumissionScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -12952,10 +14579,52 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type SoumissionUncheckedUpdateManyWithoutVeilleNestedInput = {
+    create?: XOR<SoumissionCreateWithoutVeilleInput, SoumissionUncheckedCreateWithoutVeilleInput> | SoumissionCreateWithoutVeilleInput[] | SoumissionUncheckedCreateWithoutVeilleInput[]
+    connectOrCreate?: SoumissionCreateOrConnectWithoutVeilleInput | SoumissionCreateOrConnectWithoutVeilleInput[]
+    upsert?: SoumissionUpsertWithWhereUniqueWithoutVeilleInput | SoumissionUpsertWithWhereUniqueWithoutVeilleInput[]
+    createMany?: SoumissionCreateManyVeilleInputEnvelope
+    set?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    disconnect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    delete?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    connect?: SoumissionWhereUniqueInput | SoumissionWhereUniqueInput[]
+    update?: SoumissionUpdateWithWhereUniqueWithoutVeilleInput | SoumissionUpdateWithWhereUniqueWithoutVeilleInput[]
+    updateMany?: SoumissionUpdateManyWithWhereWithoutVeilleInput | SoumissionUpdateManyWithWhereWithoutVeilleInput[]
+    deleteMany?: SoumissionScalarWhereInput | SoumissionScalarWhereInput[]
+  }
+
+  export type veilleCreateNestedOneWithoutSoumissionInput = {
+    create?: XOR<veilleCreateWithoutSoumissionInput, veilleUncheckedCreateWithoutSoumissionInput>
+    connectOrCreate?: veilleCreateOrConnectWithoutSoumissionInput
+    connect?: veilleWhereUniqueInput
+  }
+
+  export type apprenantCreateNestedOneWithoutSoumissionInput = {
+    create?: XOR<apprenantCreateWithoutSoumissionInput, apprenantUncheckedCreateWithoutSoumissionInput>
+    connectOrCreate?: apprenantCreateOrConnectWithoutSoumissionInput
+    connect?: apprenantWhereUniqueInput
+  }
+
+  export type veilleUpdateOneRequiredWithoutSoumissionNestedInput = {
+    create?: XOR<veilleCreateWithoutSoumissionInput, veilleUncheckedCreateWithoutSoumissionInput>
+    connectOrCreate?: veilleCreateOrConnectWithoutSoumissionInput
+    upsert?: veilleUpsertWithoutSoumissionInput
+    connect?: veilleWhereUniqueInput
+    update?: XOR<XOR<veilleUpdateToOneWithWhereWithoutSoumissionInput, veilleUpdateWithoutSoumissionInput>, veilleUncheckedUpdateWithoutSoumissionInput>
+  }
+
+  export type apprenantUpdateOneRequiredWithoutSoumissionNestedInput = {
+    create?: XOR<apprenantCreateWithoutSoumissionInput, apprenantUncheckedCreateWithoutSoumissionInput>
+    connectOrCreate?: apprenantCreateOrConnectWithoutSoumissionInput
+    upsert?: apprenantUpsertWithoutSoumissionInput
+    connect?: apprenantWhereUniqueInput
+    update?: XOR<XOR<apprenantUpdateToOneWithWhereWithoutSoumissionInput, apprenantUpdateWithoutSoumissionInput>, apprenantUncheckedUpdateWithoutSoumissionInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -12965,8 +14634,8 @@ export namespace Prisma {
 
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -12979,15 +14648,15 @@ export namespace Prisma {
 
   export type NestedEnumReferentielFilter<$PrismaModel = never> = {
     equals?: $Enums.Referentiel | EnumReferentielFieldRefInput<$PrismaModel>
-    in?: $Enums.Referentiel[]
-    notIn?: $Enums.Referentiel[]
+    in?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
     not?: NestedEnumReferentielFilter<$PrismaModel> | $Enums.Referentiel
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -13002,8 +14671,8 @@ export namespace Prisma {
 
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -13013,8 +14682,8 @@ export namespace Prisma {
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -13030,8 +14699,8 @@ export namespace Prisma {
 
   export type NestedEnumReferentielWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Referentiel | EnumReferentielFieldRefInput<$PrismaModel>
-    in?: $Enums.Referentiel[]
-    notIn?: $Enums.Referentiel[]
+    in?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Referentiel[] | ListEnumReferentielFieldRefInput<$PrismaModel>
     not?: NestedEnumReferentielWithAggregatesFilter<$PrismaModel> | $Enums.Referentiel
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReferentielFilter<$PrismaModel>
@@ -13040,8 +14709,8 @@ export namespace Prisma {
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -13054,8 +14723,8 @@ export namespace Prisma {
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -13071,8 +14740,8 @@ export namespace Prisma {
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -13082,8 +14751,8 @@ export namespace Prisma {
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -13093,8 +14762,8 @@ export namespace Prisma {
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -13104,8 +14773,8 @@ export namespace Prisma {
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
@@ -13115,8 +14784,8 @@ export namespace Prisma {
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -13129,8 +14798,8 @@ export namespace Prisma {
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -13143,8 +14812,8 @@ export namespace Prisma {
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
@@ -13159,8 +14828,8 @@ export namespace Prisma {
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -13175,8 +14844,8 @@ export namespace Prisma {
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -13212,6 +14881,7 @@ export namespace Prisma {
 
   export type coursCreateManyFormateurInputEnvelope = {
     data: coursCreateManyFormateurInput | coursCreateManyFormateurInput[]
+    skipDuplicates?: boolean
   }
 
   export type veilleCreateWithoutFormateurInput = {
@@ -13222,6 +14892,7 @@ export namespace Prisma {
     date_fin: Date | string
     referentiel: $Enums.Referentiel
     apprenant?: apprenantCreateNestedOneWithoutVeilleInput
+    Soumission?: SoumissionCreateNestedManyWithoutVeilleInput
   }
 
   export type veilleUncheckedCreateWithoutFormateurInput = {
@@ -13233,6 +14904,7 @@ export namespace Prisma {
     date_fin: Date | string
     referentiel: $Enums.Referentiel
     id_apprenant?: number | null
+    Soumission?: SoumissionUncheckedCreateNestedManyWithoutVeilleInput
   }
 
   export type veilleCreateOrConnectWithoutFormateurInput = {
@@ -13242,6 +14914,7 @@ export namespace Prisma {
 
   export type veilleCreateManyFormateurInputEnvelope = {
     data: veilleCreateManyFormateurInput | veilleCreateManyFormateurInput[]
+    skipDuplicates?: boolean
   }
 
   export type coursUpsertWithWhereUniqueWithoutFormateurInput = {
@@ -13312,6 +14985,7 @@ export namespace Prisma {
     date_fin: Date | string
     referentiel: $Enums.Referentiel
     formateur: formateurCreateNestedOneWithoutVeilleInput
+    Soumission?: SoumissionCreateNestedManyWithoutVeilleInput
   }
 
   export type veilleUncheckedCreateWithoutApprenantInput = {
@@ -13323,6 +14997,7 @@ export namespace Prisma {
     date_fin: Date | string
     referentiel: $Enums.Referentiel
     id_formateur: number
+    Soumission?: SoumissionUncheckedCreateNestedManyWithoutVeilleInput
   }
 
   export type veilleCreateOrConnectWithoutApprenantInput = {
@@ -13332,6 +15007,7 @@ export namespace Prisma {
 
   export type veilleCreateManyApprenantInputEnvelope = {
     data: veilleCreateManyApprenantInput | veilleCreateManyApprenantInput[]
+    skipDuplicates?: boolean
   }
 
   export type suiviCoursCreateWithoutApprenantInput = {
@@ -13356,6 +15032,30 @@ export namespace Prisma {
 
   export type suiviCoursCreateManyApprenantInputEnvelope = {
     data: suiviCoursCreateManyApprenantInput | suiviCoursCreateManyApprenantInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SoumissionCreateWithoutApprenantInput = {
+    lien_soumission: string
+    date_soumission?: Date | string
+    veille: veilleCreateNestedOneWithoutSoumissionInput
+  }
+
+  export type SoumissionUncheckedCreateWithoutApprenantInput = {
+    id_soumission?: number
+    id_veille: number
+    lien_soumission: string
+    date_soumission?: Date | string
+  }
+
+  export type SoumissionCreateOrConnectWithoutApprenantInput = {
+    where: SoumissionWhereUniqueInput
+    create: XOR<SoumissionCreateWithoutApprenantInput, SoumissionUncheckedCreateWithoutApprenantInput>
+  }
+
+  export type SoumissionCreateManyApprenantInputEnvelope = {
+    data: SoumissionCreateManyApprenantInput | SoumissionCreateManyApprenantInput[]
+    skipDuplicates?: boolean
   }
 
   export type veilleUpsertWithWhereUniqueWithoutApprenantInput = {
@@ -13402,6 +15102,33 @@ export namespace Prisma {
     id_cours?: IntFilter<"suiviCours"> | number
   }
 
+  export type SoumissionUpsertWithWhereUniqueWithoutApprenantInput = {
+    where: SoumissionWhereUniqueInput
+    update: XOR<SoumissionUpdateWithoutApprenantInput, SoumissionUncheckedUpdateWithoutApprenantInput>
+    create: XOR<SoumissionCreateWithoutApprenantInput, SoumissionUncheckedCreateWithoutApprenantInput>
+  }
+
+  export type SoumissionUpdateWithWhereUniqueWithoutApprenantInput = {
+    where: SoumissionWhereUniqueInput
+    data: XOR<SoumissionUpdateWithoutApprenantInput, SoumissionUncheckedUpdateWithoutApprenantInput>
+  }
+
+  export type SoumissionUpdateManyWithWhereWithoutApprenantInput = {
+    where: SoumissionScalarWhereInput
+    data: XOR<SoumissionUpdateManyMutationInput, SoumissionUncheckedUpdateManyWithoutApprenantInput>
+  }
+
+  export type SoumissionScalarWhereInput = {
+    AND?: SoumissionScalarWhereInput | SoumissionScalarWhereInput[]
+    OR?: SoumissionScalarWhereInput[]
+    NOT?: SoumissionScalarWhereInput | SoumissionScalarWhereInput[]
+    id_soumission?: IntFilter<"Soumission"> | number
+    id_veille?: IntFilter<"Soumission"> | number
+    id_apprenant?: IntFilter<"Soumission"> | number
+    lien_soumission?: StringFilter<"Soumission"> | string
+    date_soumission?: DateTimeFilter<"Soumission"> | Date | string
+  }
+
   export type apprenantCreateWithoutSuiviCoursInput = {
     nom: string
     prenom: string
@@ -13410,6 +15137,7 @@ export namespace Prisma {
     referentiel: $Enums.Referentiel
     photoProfil?: string | null
     veille?: veilleCreateNestedManyWithoutApprenantInput
+    Soumission?: SoumissionCreateNestedManyWithoutApprenantInput
   }
 
   export type apprenantUncheckedCreateWithoutSuiviCoursInput = {
@@ -13421,6 +15149,7 @@ export namespace Prisma {
     referentiel: $Enums.Referentiel
     photoProfil?: string | null
     veille?: veilleUncheckedCreateNestedManyWithoutApprenantInput
+    Soumission?: SoumissionUncheckedCreateNestedManyWithoutApprenantInput
   }
 
   export type apprenantCreateOrConnectWithoutSuiviCoursInput = {
@@ -13473,6 +15202,7 @@ export namespace Prisma {
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
     veille?: veilleUpdateManyWithoutApprenantNestedInput
+    Soumission?: SoumissionUpdateManyWithoutApprenantNestedInput
   }
 
   export type apprenantUncheckedUpdateWithoutSuiviCoursInput = {
@@ -13484,6 +15214,7 @@ export namespace Prisma {
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
     veille?: veilleUncheckedUpdateManyWithoutApprenantNestedInput
+    Soumission?: SoumissionUncheckedUpdateManyWithoutApprenantNestedInput
   }
 
   export type coursUpsertWithoutSuiviCoursInput = {
@@ -13564,6 +15295,7 @@ export namespace Prisma {
 
   export type suiviCoursCreateManyCoursInputEnvelope = {
     data: suiviCoursCreateManyCoursInput | suiviCoursCreateManyCoursInput[]
+    skipDuplicates?: boolean
   }
 
   export type chapitreCreateWithoutCoursInput = {
@@ -13586,6 +15318,7 @@ export namespace Prisma {
 
   export type chapitreCreateManyCoursInputEnvelope = {
     data: chapitreCreateManyCoursInput | chapitreCreateManyCoursInput[]
+    skipDuplicates?: boolean
   }
 
   export type formateurUpsertWithoutCoursInput = {
@@ -13708,6 +15441,7 @@ export namespace Prisma {
 
   export type leconCreateManyChapitreInputEnvelope = {
     data: leconCreateManyChapitreInput | leconCreateManyChapitreInput[]
+    skipDuplicates?: boolean
   }
 
   export type coursUpsertWithoutChapitreInput = {
@@ -13844,6 +15578,7 @@ export namespace Prisma {
     referentiel: $Enums.Referentiel
     photoProfil?: string | null
     suiviCours?: suiviCoursCreateNestedManyWithoutApprenantInput
+    Soumission?: SoumissionCreateNestedManyWithoutApprenantInput
   }
 
   export type apprenantUncheckedCreateWithoutVeilleInput = {
@@ -13855,11 +15590,35 @@ export namespace Prisma {
     referentiel: $Enums.Referentiel
     photoProfil?: string | null
     suiviCours?: suiviCoursUncheckedCreateNestedManyWithoutApprenantInput
+    Soumission?: SoumissionUncheckedCreateNestedManyWithoutApprenantInput
   }
 
   export type apprenantCreateOrConnectWithoutVeilleInput = {
     where: apprenantWhereUniqueInput
     create: XOR<apprenantCreateWithoutVeilleInput, apprenantUncheckedCreateWithoutVeilleInput>
+  }
+
+  export type SoumissionCreateWithoutVeilleInput = {
+    lien_soumission: string
+    date_soumission?: Date | string
+    apprenant: apprenantCreateNestedOneWithoutSoumissionInput
+  }
+
+  export type SoumissionUncheckedCreateWithoutVeilleInput = {
+    id_soumission?: number
+    id_apprenant: number
+    lien_soumission: string
+    date_soumission?: Date | string
+  }
+
+  export type SoumissionCreateOrConnectWithoutVeilleInput = {
+    where: SoumissionWhereUniqueInput
+    create: XOR<SoumissionCreateWithoutVeilleInput, SoumissionUncheckedCreateWithoutVeilleInput>
+  }
+
+  export type SoumissionCreateManyVeilleInputEnvelope = {
+    data: SoumissionCreateManyVeilleInput | SoumissionCreateManyVeilleInput[]
+    skipDuplicates?: boolean
   }
 
   export type formateurUpsertWithoutVeilleInput = {
@@ -13911,6 +15670,7 @@ export namespace Prisma {
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
     suiviCours?: suiviCoursUpdateManyWithoutApprenantNestedInput
+    Soumission?: SoumissionUpdateManyWithoutApprenantNestedInput
   }
 
   export type apprenantUncheckedUpdateWithoutVeilleInput = {
@@ -13921,6 +15681,147 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
+    suiviCours?: suiviCoursUncheckedUpdateManyWithoutApprenantNestedInput
+    Soumission?: SoumissionUncheckedUpdateManyWithoutApprenantNestedInput
+  }
+
+  export type SoumissionUpsertWithWhereUniqueWithoutVeilleInput = {
+    where: SoumissionWhereUniqueInput
+    update: XOR<SoumissionUpdateWithoutVeilleInput, SoumissionUncheckedUpdateWithoutVeilleInput>
+    create: XOR<SoumissionCreateWithoutVeilleInput, SoumissionUncheckedCreateWithoutVeilleInput>
+  }
+
+  export type SoumissionUpdateWithWhereUniqueWithoutVeilleInput = {
+    where: SoumissionWhereUniqueInput
+    data: XOR<SoumissionUpdateWithoutVeilleInput, SoumissionUncheckedUpdateWithoutVeilleInput>
+  }
+
+  export type SoumissionUpdateManyWithWhereWithoutVeilleInput = {
+    where: SoumissionScalarWhereInput
+    data: XOR<SoumissionUpdateManyMutationInput, SoumissionUncheckedUpdateManyWithoutVeilleInput>
+  }
+
+  export type veilleCreateWithoutSoumissionInput = {
+    titre: string
+    lien_docDonnee: string
+    lien_docRendu?: string | null
+    date_creation: Date | string
+    date_fin: Date | string
+    referentiel: $Enums.Referentiel
+    formateur: formateurCreateNestedOneWithoutVeilleInput
+    apprenant?: apprenantCreateNestedOneWithoutVeilleInput
+  }
+
+  export type veilleUncheckedCreateWithoutSoumissionInput = {
+    id_veille?: number
+    titre: string
+    lien_docDonnee: string
+    lien_docRendu?: string | null
+    date_creation: Date | string
+    date_fin: Date | string
+    referentiel: $Enums.Referentiel
+    id_apprenant?: number | null
+    id_formateur: number
+  }
+
+  export type veilleCreateOrConnectWithoutSoumissionInput = {
+    where: veilleWhereUniqueInput
+    create: XOR<veilleCreateWithoutSoumissionInput, veilleUncheckedCreateWithoutSoumissionInput>
+  }
+
+  export type apprenantCreateWithoutSoumissionInput = {
+    nom: string
+    prenom: string
+    email: string
+    password?: string
+    referentiel: $Enums.Referentiel
+    photoProfil?: string | null
+    veille?: veilleCreateNestedManyWithoutApprenantInput
+    suiviCours?: suiviCoursCreateNestedManyWithoutApprenantInput
+  }
+
+  export type apprenantUncheckedCreateWithoutSoumissionInput = {
+    id_apprenant?: number
+    nom: string
+    prenom: string
+    email: string
+    password?: string
+    referentiel: $Enums.Referentiel
+    photoProfil?: string | null
+    veille?: veilleUncheckedCreateNestedManyWithoutApprenantInput
+    suiviCours?: suiviCoursUncheckedCreateNestedManyWithoutApprenantInput
+  }
+
+  export type apprenantCreateOrConnectWithoutSoumissionInput = {
+    where: apprenantWhereUniqueInput
+    create: XOR<apprenantCreateWithoutSoumissionInput, apprenantUncheckedCreateWithoutSoumissionInput>
+  }
+
+  export type veilleUpsertWithoutSoumissionInput = {
+    update: XOR<veilleUpdateWithoutSoumissionInput, veilleUncheckedUpdateWithoutSoumissionInput>
+    create: XOR<veilleCreateWithoutSoumissionInput, veilleUncheckedCreateWithoutSoumissionInput>
+    where?: veilleWhereInput
+  }
+
+  export type veilleUpdateToOneWithWhereWithoutSoumissionInput = {
+    where?: veilleWhereInput
+    data: XOR<veilleUpdateWithoutSoumissionInput, veilleUncheckedUpdateWithoutSoumissionInput>
+  }
+
+  export type veilleUpdateWithoutSoumissionInput = {
+    titre?: StringFieldUpdateOperationsInput | string
+    lien_docDonnee?: StringFieldUpdateOperationsInput | string
+    lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
+    date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
+    date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
+    formateur?: formateurUpdateOneRequiredWithoutVeilleNestedInput
+    apprenant?: apprenantUpdateOneWithoutVeilleNestedInput
+  }
+
+  export type veilleUncheckedUpdateWithoutSoumissionInput = {
+    id_veille?: IntFieldUpdateOperationsInput | number
+    titre?: StringFieldUpdateOperationsInput | string
+    lien_docDonnee?: StringFieldUpdateOperationsInput | string
+    lien_docRendu?: NullableStringFieldUpdateOperationsInput | string | null
+    date_creation?: DateTimeFieldUpdateOperationsInput | Date | string
+    date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
+    id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
+    id_formateur?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type apprenantUpsertWithoutSoumissionInput = {
+    update: XOR<apprenantUpdateWithoutSoumissionInput, apprenantUncheckedUpdateWithoutSoumissionInput>
+    create: XOR<apprenantCreateWithoutSoumissionInput, apprenantUncheckedCreateWithoutSoumissionInput>
+    where?: apprenantWhereInput
+  }
+
+  export type apprenantUpdateToOneWithWhereWithoutSoumissionInput = {
+    where?: apprenantWhereInput
+    data: XOR<apprenantUpdateWithoutSoumissionInput, apprenantUncheckedUpdateWithoutSoumissionInput>
+  }
+
+  export type apprenantUpdateWithoutSoumissionInput = {
+    nom?: StringFieldUpdateOperationsInput | string
+    prenom?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
+    photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
+    veille?: veilleUpdateManyWithoutApprenantNestedInput
+    suiviCours?: suiviCoursUpdateManyWithoutApprenantNestedInput
+  }
+
+  export type apprenantUncheckedUpdateWithoutSoumissionInput = {
+    id_apprenant?: IntFieldUpdateOperationsInput | number
+    nom?: StringFieldUpdateOperationsInput | string
+    prenom?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
+    photoProfil?: NullableStringFieldUpdateOperationsInput | string | null
+    veille?: veilleUncheckedUpdateManyWithoutApprenantNestedInput
     suiviCours?: suiviCoursUncheckedUpdateManyWithoutApprenantNestedInput
   }
 
@@ -13982,6 +15883,7 @@ export namespace Prisma {
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     apprenant?: apprenantUpdateOneWithoutVeilleNestedInput
+    Soumission?: SoumissionUpdateManyWithoutVeilleNestedInput
   }
 
   export type veilleUncheckedUpdateWithoutFormateurInput = {
@@ -13993,6 +15895,7 @@ export namespace Prisma {
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_apprenant?: NullableIntFieldUpdateOperationsInput | number | null
+    Soumission?: SoumissionUncheckedUpdateManyWithoutVeilleNestedInput
   }
 
   export type veilleUncheckedUpdateManyWithoutFormateurInput = {
@@ -14025,6 +15928,13 @@ export namespace Prisma {
     id_cours: number
   }
 
+  export type SoumissionCreateManyApprenantInput = {
+    id_soumission?: number
+    id_veille: number
+    lien_soumission: string
+    date_soumission?: Date | string
+  }
+
   export type veilleUpdateWithoutApprenantInput = {
     titre?: StringFieldUpdateOperationsInput | string
     lien_docDonnee?: StringFieldUpdateOperationsInput | string
@@ -14033,6 +15943,7 @@ export namespace Prisma {
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     formateur?: formateurUpdateOneRequiredWithoutVeilleNestedInput
+    Soumission?: SoumissionUpdateManyWithoutVeilleNestedInput
   }
 
   export type veilleUncheckedUpdateWithoutApprenantInput = {
@@ -14044,6 +15955,7 @@ export namespace Prisma {
     date_fin?: DateTimeFieldUpdateOperationsInput | Date | string
     referentiel?: EnumReferentielFieldUpdateOperationsInput | $Enums.Referentiel
     id_formateur?: IntFieldUpdateOperationsInput | number
+    Soumission?: SoumissionUncheckedUpdateManyWithoutVeilleNestedInput
   }
 
   export type veilleUncheckedUpdateManyWithoutApprenantInput = {
@@ -14078,6 +15990,26 @@ export namespace Prisma {
     dateFin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pourcentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_cours?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SoumissionUpdateWithoutApprenantInput = {
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+    veille?: veilleUpdateOneRequiredWithoutSoumissionNestedInput
+  }
+
+  export type SoumissionUncheckedUpdateWithoutApprenantInput = {
+    id_soumission?: IntFieldUpdateOperationsInput | number
+    id_veille?: IntFieldUpdateOperationsInput | number
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SoumissionUncheckedUpdateManyWithoutApprenantInput = {
+    id_soumission?: IntFieldUpdateOperationsInput | number
+    id_veille?: IntFieldUpdateOperationsInput | number
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type suiviCoursCreateManyCoursInput = {
@@ -14165,6 +16097,33 @@ export namespace Prisma {
     contenuTextuel?: NullableStringFieldUpdateOperationsInput | string | null
     contenuVideo?: NullableStringFieldUpdateOperationsInput | string | null
     numeroOrdre?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SoumissionCreateManyVeilleInput = {
+    id_soumission?: number
+    id_apprenant: number
+    lien_soumission: string
+    date_soumission?: Date | string
+  }
+
+  export type SoumissionUpdateWithoutVeilleInput = {
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+    apprenant?: apprenantUpdateOneRequiredWithoutSoumissionNestedInput
+  }
+
+  export type SoumissionUncheckedUpdateWithoutVeilleInput = {
+    id_soumission?: IntFieldUpdateOperationsInput | number
+    id_apprenant?: IntFieldUpdateOperationsInput | number
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SoumissionUncheckedUpdateManyWithoutVeilleInput = {
+    id_soumission?: IntFieldUpdateOperationsInput | number
+    id_apprenant?: IntFieldUpdateOperationsInput | number
+    lien_soumission?: StringFieldUpdateOperationsInput | string
+    date_soumission?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
