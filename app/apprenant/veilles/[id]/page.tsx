@@ -86,52 +86,91 @@ export default function VeilleDetailPage() {
     }
   }, [params.id, user?.id, API_BASE_URL, router, toast]);
 
- // page.tsx
 const handleSubmit = async () => {
-    if (!file || !veille || !user?.id) return;
+  if (!file || !veille || !user?.id) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("id_veille", veille.id_veille.toString());
-    formData.append("id_apprenant", user.id.toString());
+  // Vérification de la date limite
+  const now = new Date();
+  const dateFin = new Date(veille.date_fin);
+  
+  if (now > dateFin) {
+    toast({
+      variant: "destructive",
+      title: "Soumission refusée",
+      description: "La date limite de soumission est dépassée",
+    });
+    return;
+  }
 
-    try {
-        setIsSubmitting(true);
-        const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token");
+  // Validation du fichier
+  const allowedTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain'
+  ];
+  
+  const maxSize = 5 * 1024 * 1024; // 5MB
 
-        const response = await fetch(`${API_BASE_URL}/veille/soumission`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-        });
+  if (!allowedTypes.includes(file.type)) {
+    toast({
+      variant: "destructive",
+      title: "Format invalide",
+      description: "Seuls les fichiers PDF, DOC, DOCX et TXT sont acceptés",
+    });
+    return;
+  }
 
-        if (response.ok) {
-            const data = await response.json();
-            setVeille(prev => prev ? {...prev, lien_docRendu: data.soumission.lien_soumission} : null);
-            toast({
-                title: "Soumission réussie",
-                description: "Votre document a bien été soumis.",
-            });
-        } else {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
-                description: "La soumission a échoué.",
-            });
-        }
-    } catch (error) {
-        console.error(error);
-        toast({
-            variant: "destructive",
-            title: "Erreur",
-            description: "Une erreur est survenue lors de la soumission.",
-        });
-    } finally {
-        setIsSubmitting(false);
+  if (file.size > maxSize) {
+    toast({
+      variant: "destructive",
+      title: "Fichier trop volumineux",
+      description: `La taille maximale autorisée est ${maxSize / 1024 / 1024}MB`,
+    });
+    return;
+  }
+
+  // Préparation des données
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("id_veille", veille.id_veille.toString());
+  formData.append("id_apprenant", user.id.toString());
+
+  try {
+    setIsSubmitting(true);
+    const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token");
+
+    const response = await fetch(`${API_BASE_URL}/veille/soumission`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Échec de la soumission");
     }
-}
+
+    const data = await response.json();
+    setVeille(prev => prev ? {...prev, lien_docRendu: data.lien_soumission} : null);
+    
+    toast({
+      title: "Soumission réussie",
+      description: "Votre document a bien été enregistré",
+    });
+  } catch (error) {
+    console.error(error);
+    toast({
+      variant: "destructive",
+      title: "Erreur",
+      description: error instanceof Error ? error.message : "Une erreur est survenue",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   if (loading) {
     return <div>Chargement...</div>;

@@ -123,7 +123,7 @@ export default function VeilleDetailPage() {
 
           // Récupère les soumissions pour cette veille
           const soumissionsResponse = await fetch(
-            `${API_BASE_URL}/soumission/veille/${params.id}`,
+            `${API_BASE_URL}/veille/soumission/${params.id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ export default function VeilleDetailPage() {
 
           if (soumissionsResponse.ok) {
             const soumissionsData = await soumissionsResponse.json();
-            setSoumissions(soumissionsData);
+            setSoumissions(soumissionsData)
           }
         } else {
           // Si la veille n'existe pas, redirige
@@ -142,12 +142,12 @@ export default function VeilleDetailPage() {
         }
       } catch (error) {
         // Gestion d'erreur globale
-        console.error("Error fetching veille:", error);
-        router.push("/formateur/veilles");
+        console.error("Error fetching veille:", error)
+        router.push("/formateur/veilles")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     fetchVeille();
   }, [params.id, router, API_BASE_URL]);
@@ -456,48 +456,69 @@ export default function VeilleDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {apprenants.length > 0 ? (
-                <div className="space-y-2">
-                  {apprenants.map((apprenant) => {
-                    const hasSoumission = soumissions.some(
-                      (s) => s.id_apprenant === apprenant.id_apprenant
-                    );
-                    return (
-                      <div
-                        key={apprenant.id_apprenant}
-                        className="flex items-center justify-between p-2 rounded-md hover:bg-muted"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="font-bold text-primary text-xs">
-                              {apprenant.prenom.charAt(0)}
-                              {apprenant.nom.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium">
-                              {apprenant.prenom} {apprenant.nom}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {apprenant.email}
-                            </p>
-                          </div>
-                        </div>
-                        {hasSoumission ? (
-                          <Badge variant="secondary">Soumis</Badge>
-                        ) : (
-                          <Badge variant="outline">En attente</Badge>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-muted-foreground">
-                  Aucun apprenant dans ce référentiel.
+  {apprenants.length > 0 ? (
+    <div className="space-y-2">
+      {apprenants.map((apprenant) => {
+        const soumission = soumissions.find(
+          (s) => s.id_apprenant === apprenant.id_apprenant
+        );
+        
+        return (
+          <div
+            key={apprenant.id_apprenant}
+            className="flex items-center justify-between p-3 rounded-md border hover:bg-muted/50"
+          >
+            <div className="flex items-center gap-3 flex-1">
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="font-bold text-primary">
+                  {apprenant.prenom.charAt(0)}{apprenant.nom.charAt(0)}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate">
+                  {apprenant.prenom} {apprenant.nom}
                 </p>
+                <p className="text-sm text-muted-foreground truncate">
+                  {apprenant.email}
+                </p>
+                {soumission && (
+                  <p className="text-xs text-green-600 mt-1">
+                    Soumis le {new Date(soumission.date_soumission).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {soumission ? (
+                <>
+                  <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                    <FileText className="h-3 w-3 mr-1" />
+                    Soumis
+                  </Badge>
+                  <a
+                    href={soumission.lien_soumission}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    Voir
+                  </a>
+                </>
+              ) : (
+                <Badge variant="outline">En attente</Badge>
               )}
-            </CardContent>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <p className="text-muted-foreground">
+      Aucun apprenant dans ce référentiel.
+    </p>
+  )}
+</CardContent>
           </Card>
         </div>
       </div>
