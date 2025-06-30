@@ -21,35 +21,29 @@ export default function Home() {
   }
 
   const testimonials = [
+
     {
-      name: "Marie Dupont",
-      role: "Développeuse Web",
+      name: "Kévin Mba",
+      role: "Entrepreneur Digital",
       content:
-        "La formation en développement web m'a permis d'acquérir les compétences nécessaires pour décrocher mon premier emploi dans le domaine. Les formateurs sont exceptionnels et le contenu est parfaitement adapté au marché du travail actuel.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Marie",
+          "Grâce à la formation en marketing digital, j'ai lancé ma plateforme e-commerce spécialisée dans les produits forestiers non-ligneux du Gabon. J'exporte désormais le moabi et l'okoumé vers l'Europe grâce aux compétences acquises.",
+      avatarSrc: "/sourire-elegant-homme-d-affaires.jpg",
     },
     {
-      name: "Jean Martin",
-      role: "Référent Digital",
+      name: "Naomie Nkoghe",
+      role: "Créatrice de Contenu",
       content:
-        "Grâce à École {241} Communities, j'ai pu me reconvertir professionnellement et trouver un emploi passionnant dans le marketing digital. L'accompagnement personnalisé et les projets concrets m'ont donné confiance en mes capacités.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Jean",
+          "En tant qu'influenceuse spécialisée dans la culture gabonaise, la formation Digital Creator m'a donné les outils pour professionnaliser mon activité. J'anime maintenant des campagnes pour des marques comme Canal+ Gabon et TotalEnergies.",
+      avatarSrc: "/femme-souriante-a-coup-moyen-s-enregistrant.jpg",
     },
     {
-      name: "Sophie Leclerc",
-      role: "Digital Creator",
+      name: "Marc Ondo",
+      role: "Responsable Cybersécurité",
       content:
-        "La formation Digital Creator m'a donné tous les outils pour lancer ma carrière de créatrice de contenu et développer ma communauté. Je recommande vivement cette formation à tous ceux qui souhaitent se démarquer sur les réseaux sociaux.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Sophie",
+          "La certification en sécurité informatique m'a permis de sécuriser les systèmes de la Caisse Nationale de Sécurité Sociale. Les cas pratiques adaptés au contexte africain sont inestimables pour protéger nos infrastructures critiques.",
+      avatarSrc: "/homme-au-travail-parlant-dans-des-ecouteurs-microphone-avec-des-techniciens-sur-le-terrain.jpg",
     },
-    {
-      name: "Thomas Dubois",
-      role: "Entrepreneur Tech",
-      content:
-        "J'ai suivi plusieurs formations chez École {241} Communities et chacune d'entre elles m'a apporté des compétences précieuses pour développer mon entreprise. Le rapport qualité-prix est imbattable !",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Thomas",
-    },
-  ]
+  ];
   return (
     <>
       <Header />

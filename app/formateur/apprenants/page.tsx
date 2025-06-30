@@ -137,12 +137,6 @@ export default function ApprenantsPage() {
                     <CardContent>
                       <div className="flex items-center justify-between">
                         <Badge variant="outline">{apprenant.referentiel}</Badge>
-                        <Link
-                          href={`/formateur/apprenants/${apprenant.id_apprenant}`}
-                          className="text-sm text-primary hover:underline"
-                        >
-                          Voir le profil
-                        </Link>
                       </div>
                     </CardContent>
                   </Card>

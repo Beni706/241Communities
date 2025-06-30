@@ -189,17 +189,17 @@ export default function ContactPage() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="rounded-full bg-primary-red/10 p-3">
-                        <Mail className="h-6 w-6 text-primary-red" />
+                      <div className="rounded-full bg-primary/10 p-3">
+                        <Mail className="h-6 w-6 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-medium">Email</h3>
-                        <p className="text-muted-foreground">exemple@email.com</p>
+                        <p className="text-muted-foreground">241communities@email.com</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="rounded-full bg-tertiary/10 p-3">
-                        <Phone className="h-6 w-6 text-tertiary" />
+                      <div className="rounded-full bg-primary/10 p-3">
+                        <Phone className="h-6 w-6 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-medium">Téléphone</h3>
@@ -213,7 +213,7 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-medium">Adresse</h3>
                         <p className="text-muted-foreground">
-                          Adresse à renseigner<br />Ville, Pays
+                          Ancienne Sobraga<br />Libreville, Gabon
                         </p>
                       </div>
                     </div>

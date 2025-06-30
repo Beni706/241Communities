@@ -5,7 +5,7 @@ import Link from "next/link"
 const Header = () => {
   return (
     <div>
-      <header className="sticky top-0 z-50 w-full backdrop-blur">
+      <header className="sticky top-0 z-50 w-full backdrop-blur border-b">
         <div className="container max-w-screen-2xl mx-auto flex h-24 items-center px-4 md:px-6">
           <MainNav />
           <div className="ml-auto flex items-center space-x-4 md:space-x-6">

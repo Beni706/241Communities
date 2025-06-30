@@ -469,30 +469,6 @@ export default function DigitalCreatorPage() {
     },
   ]
 
-  // Témoignages spécifiques à cette formation
-  const testimonials = [
-    {
-      name: "Sarah Ndiaye",
-      role: "Créatrice de contenu lifestyle",
-      content:
-        "Cette formation a été un véritable accélérateur pour ma carrière de créatrice de contenu. En 6 mois, j'ai pu atteindre 10K abonnés sur Instagram et commencer à collaborer avec des marques. Les techniques enseignées sont concrètes et immédiatement applicables.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Sarah",
-    },
-    {
-      name: "Antoine Lefebvre",
-      role: "YouTubeur Tech",
-      content:
-        "Grâce à cette formation, j'ai pu professionnaliser ma chaîne YouTube et multiplier par trois mon nombre d'abonnés. Les modules sur le montage vidéo et la stratégie de contenu m'ont particulièrement aidé à me démarquer dans un secteur très concurrentiel.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Antoine",
-    },
-    {
-      name: "Camille Durand",
-      role: "Entrepreneuse & Créatrice de contenu",
-      content:
-        "En tant qu'entrepreneuse, cette formation m'a permis de développer ma visibilité en ligne et d'attirer de nouveaux clients. J'ai particulièrement apprécié l'approche pragmatique et les conseils basés sur l'expérience réelle des formateurs.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Camille",
-    },
-  ]
 
   return (
     <>
@@ -505,15 +481,6 @@ export default function DigitalCreatorPage() {
         requirements={requirements}
         targetAudience={targetAudience}
       />
-
-      <section className="w-full py-12 bg-background">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-bold text-center mb-8">Témoignages de nos apprenants</h2>
-          <div className="max-w-5xl mx-auto">
-            <AceternityTestimonials testimonials={testimonials} />
-          </div>
-        </div>
-      </section>
 
       <RelatedFormations formations={relatedFormations} />
     </>
