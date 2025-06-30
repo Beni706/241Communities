@@ -86,9 +86,6 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -179,11 +176,6 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
@@ -243,7 +235,8 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "postgresql",
+  "activeProvider": "sqlite",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -252,8 +245,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nenum Referentiel {\n  DEVELOPPEUR\n  DIGITAL_CREATOR\n  REFERENT_DIGITAL\n}\n\nmodel formateur {\n  id_formateur Int         @id @default(autoincrement())\n  nom          String\n  prenom       String\n  email        String      @unique\n  password     String      @default(\"Formateur\")\n  referentiel  Referentiel\n\n  cours  cours[]\n  veille veille[]\n}\n\nmodel administrateur {\n  id_administrateur Int    @id @default(autoincrement())\n  nom               String\n  prenom            String\n  email             String @unique\n  password          String\n}\n\nmodel apprenant {\n  id_apprenant Int         @id @default(autoincrement())\n  nom          String\n  prenom       String\n  email        String      @unique\n  password     String      @default(\"1234\")\n  referentiel  Referentiel\n  photoProfil  String?\n\n  veille     veille[]\n  suiviCours suiviCours[]\n\n  Soumission Soumission[]\n}\n\nmodel suiviCours {\n  id_suiviCours Int       @id @default(autoincrement())\n  dateDebut     DateTime\n  dateFin       DateTime?\n  pourcentage   Decimal\n\n  // Foreign keys\n  id_apprenant Int\n  id_cours     Int\n\n  // Relations\n  apprenant apprenant @relation(fields: [id_apprenant], references: [id_apprenant])\n  cours     cours     @relation(fields: [id_cours], references: [id_cours])\n}\n\nmodel cours {\n  id_cours     Int          @id @default(autoincrement())\n  categorie    String\n  titre        String\n  description  String\n  photoCours   String?\n  dateCreation DateTime\n  // Foreign keys\n  id_formateur Int\n  formateur    formateur    @relation(fields: [id_formateur], references: [id_formateur])\n  suiviCours   suiviCours[]\n  chapitre     chapitre[]\n}\n\nmodel chapitre {\n  id_chapitre Int    @id @default(autoincrement())\n  titre       String\n  numeroOrdre Int\n\n  // Foreign keys\n  id_cours Int\n  cours    cours   @relation(fields: [id_cours], references: [id_cours])\n  lecon    lecon[]\n}\n\nmodel lecon {\n  id_lecon       Int     @id @default(autoincrement())\n  titre          String\n  contenuTextuel String?\n  contenuVideo   String?\n  numeroOrdre    Int\n\n  // Foreign keys\n  id_chapitre Int\n  chapitre    chapitre @relation(fields: [id_chapitre], references: [id_chapitre])\n}\n\nmodel veille {\n  id_veille      Int         @id @default(autoincrement())\n  titre          String\n  lien_docDonnee String\n  lien_docRendu  String?\n  date_creation  DateTime\n  date_fin       DateTime\n  referentiel    Referentiel\n\n  id_apprenant Int?\n  id_formateur Int\n  formateur    formateur  @relation(fields: [id_formateur], references: [id_formateur])\n  apprenant    apprenant? @relation(fields: [id_apprenant], references: [id_apprenant])\n\n  Soumission Soumission[]\n}\n\nmodel Soumission {\n  id_soumission   Int       @id @default(autoincrement())\n  veille          veille    @relation(fields: [id_veille], references: [id_veille])\n  id_veille       Int\n  apprenant       apprenant @relation(fields: [id_apprenant], references: [id_apprenant])\n  id_apprenant    Int\n  lien_soumission String\n  date_soumission DateTime  @default(now())\n}\n",
-  "inlineSchemaHash": "5f8b0d218009fd640f7781132b511b64931677e9f00823a522acb3231250b186",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"sqlite\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nenum Referentiel {\n  DEVELOPPEUR\n  DIGITAL_CREATOR\n  REFERENT_DIGITAL\n}\n\nmodel formateur {\n  id_formateur Int         @id @default(autoincrement())\n  nom          String\n  prenom       String\n  email        String      @unique\n  password     String      @default(\"Formateur\")\n  referentiel  Referentiel\n\n  cours  cours[]\n  veille veille[]\n}\n\nmodel administrateur {\n  id_administrateur Int    @id @default(autoincrement())\n  nom               String\n  prenom            String\n  email             String @unique\n  password          String\n}\n\nmodel apprenant {\n  id_apprenant Int         @id @default(autoincrement())\n  nom          String\n  prenom       String\n  email        String      @unique\n  password     String      @default(\"1234\")\n  referentiel  Referentiel\n  photoProfil  String?\n\n  veille     veille[]\n  suiviCours suiviCours[]\n\n  Soumission Soumission[]\n}\n\nmodel suiviCours {\n  id_suiviCours Int       @id @default(autoincrement())\n  dateDebut     DateTime\n  dateFin       DateTime?\n  pourcentage   Decimal\n\n  // Foreign keys\n  id_apprenant Int\n  id_cours     Int\n\n  // Relations\n  apprenant apprenant @relation(fields: [id_apprenant], references: [id_apprenant])\n  cours     cours     @relation(fields: [id_cours], references: [id_cours])\n}\n\nmodel cours {\n  id_cours     Int          @id @default(autoincrement())\n  categorie    String\n  titre        String\n  description  String\n  photoCours   String?\n  dateCreation DateTime\n  // Foreign keys\n  id_formateur Int\n  formateur    formateur    @relation(fields: [id_formateur], references: [id_formateur])\n  suiviCours   suiviCours[]\n  chapitre     chapitre[]\n}\n\nmodel chapitre {\n  id_chapitre Int    @id @default(autoincrement())\n  titre       String\n  numeroOrdre Int\n\n  // Foreign keys\n  id_cours Int\n  cours    cours   @relation(fields: [id_cours], references: [id_cours])\n  lecon    lecon[]\n}\n\nmodel lecon {\n  id_lecon       Int     @id @default(autoincrement())\n  titre          String\n  contenuTextuel String?\n  contenuVideo   String?\n  numeroOrdre    Int\n\n  // Foreign keys\n  id_chapitre Int\n  chapitre    chapitre @relation(fields: [id_chapitre], references: [id_chapitre])\n}\n\nmodel veille {\n  id_veille      Int         @id @default(autoincrement())\n  titre          String\n  lien_docDonnee String\n  lien_docRendu  String?\n  date_creation  DateTime\n  date_fin       DateTime\n  referentiel    Referentiel\n\n  id_apprenant Int?\n  id_formateur Int\n  formateur    formateur  @relation(fields: [id_formateur], references: [id_formateur])\n  apprenant    apprenant? @relation(fields: [id_apprenant], references: [id_apprenant])\n\n  Soumission Soumission[]\n}\n\nmodel Soumission {\n  id_soumission   Int       @id @default(autoincrement())\n  veille          veille    @relation(fields: [id_veille], references: [id_veille])\n  id_veille       Int\n  apprenant       apprenant @relation(fields: [id_apprenant], references: [id_apprenant])\n  id_apprenant    Int\n  lien_soumission String\n  date_soumission DateTime  @default(now())\n}\n",
+  "inlineSchemaHash": "119f54e225d2daa3f5b39450d2d92438dc441402c5227292eb8e971cb1a55be9",
   "copyEngine": true
 }
 config.dirname = '/'

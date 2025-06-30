@@ -86,53 +86,52 @@ export default function VeilleDetailPage() {
     }
   }, [params.id, user?.id, API_BASE_URL, router, toast]);
 
-  const handleSubmit = async () => {
-    if (!file) return;
+ // page.tsx
+const handleSubmit = async () => {
+    if (!file || !veille || !user?.id) return;
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("id_veille", veille.id_veille.toString());
+    formData.append("id_apprenant", user.id.toString());
 
     try {
-      setIsSubmitting(true);
-      const token =
-        localStorage.getItem("apprenantToken") ||
-        localStorage.getItem("token");
+        setIsSubmitting(true);
+        const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token");
 
-      const response = await fetch(
-        `${API_BASE_URL}/veille/soumission`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
+        const response = await fetch(`${API_BASE_URL}/veille/soumission`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setVeille(prev => prev ? {...prev, lien_docRendu: data.soumission.lien_soumission} : null);
+            toast({
+                title: "Soumission réussie",
+                description: "Votre document a bien été soumis.",
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Erreur",
+                description: "La soumission a échoué.",
+            });
         }
-      );
-
-      if (response.ok) {
-        toast({
-          title: "Soumission réussie",
-          description: "Votre document a bien été soumis.",
-        });
-        router.refresh();
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: "La soumission a échoué.",
-        });
-      }
     } catch (error) {
-      console.error(error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la soumission.",
-      });
+        console.error(error);
+        toast({
+            variant: "destructive",
+            title: "Erreur",
+            description: "Une erreur est survenue lors de la soumission.",
+        });
     } finally {
-      setIsSubmitting(false);
+        setIsSubmitting(false);
     }
-  };
+}
 
   if (loading) {
     return <div>Chargement...</div>;
