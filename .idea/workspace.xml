@@ -5,23 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d6d45bb1-a5b6-4883-8c5c-b3bf2f1740e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/241Communities.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/veille/soumission/apprenant/[id]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/femme-souriante-a-coup-moyen-s-enregistrant.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/homme-au-travail-parlant-dans-des-ecouteurs-microphone-avec-des-techniciens-sur-le-terrain.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/sourire-elegant-homme-d-affaires.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/contact/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/contact/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/formateur/apprenants/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/formateur/apprenants/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/formateur/apprenants/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/formateur/apprenants/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/formations/developpement-web/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/formations/developpement-web/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/formations/digital-creator/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/formations/digital-creator/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/formations/referent-digital/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/formations/referent-digital/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/admin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/apprenant.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/chapitre.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/contact.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/cours.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/formateur.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/lecon.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/swaggerConfig.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/upload.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swagger/veille.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/login/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/login/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/api-docs/docs.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/api-docs/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/auth/[...nextauth].ts" beforeDir="false" afterPath="$PROJECT_DIR$/swagger-server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/formateur/login/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/formateur/login/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prisma/dev.db" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/dev.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,15 +34,34 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="glenn" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2zEijZs8CPWRppcoCrx0FJitV9I" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -51,32 +71,32 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "glenn",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "settings.editor.selected.configurable": "editor.preferences.import",
-    "ts.external.directory.path": "C:\\Users\\Glenn\\Desktop\\MyWorkspace\\Dev\\241Communities\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;glenn&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Glenn\\Desktop\\MyWorkspace\\Dev\\241Communities\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlite"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Glenn\Desktop\MyWorkspace\Dev\241Communities\public" />
@@ -112,7 +132,8 @@
       <option name="presentableId" value="Default" />
       <updated>1751302770542</updated>
       <workItem from="1751302773404" duration="327000" />
-      <workItem from="1751303125434" duration="9445000" />
+      <workItem from="1751303125434" duration="12135000" />
+      <workItem from="1751353810472" duration="10153000" />
     </task>
     <servers />
   </component>
@@ -136,7 +157,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app/api/apprenant/[id]/route.tsx</url>
           <line>3</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
