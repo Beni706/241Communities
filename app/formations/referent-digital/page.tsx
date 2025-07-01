@@ -462,30 +462,7 @@ export default function ReferentDigitalPage() {
     },
   ]
 
-  // Témoignages spécifiques à cette formation
-  const testimonials = [
-    {
-      name: "Émilie Rousseau",
-      role: "Responsable Marketing Digital",
-      content:
-        "Cette formation a été un véritable tremplin pour ma carrière. J'ai pu acquérir toutes les compétences nécessaires pour gérer la stratégie digitale d'une entreprise. Les modules sont complets et les formateurs très pédagogues.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Émilie",
-    },
-    {
-      name: "Karim Benali",
-      role: "Entrepreneur",
-      content:
-        "En tant qu'entrepreneur, cette formation m'a permis de prendre en main ma communication digitale sans dépendre d'une agence. J'ai particulièrement apprécié les modules sur le SEO et les réseaux sociaux qui m'ont donné des résultats concrets.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Karim",
-    },
-    {
-      name: "Julie Martin",
-      role: "Chargée de Communication",
-      content:
-        "J'ai suivi cette formation pour compléter mes compétences en communication traditionnelle. Le contenu est riche et accessible, même pour quelqu'un qui débute dans le digital. Je recommande vivement !",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Julie",
-    },
-  ]
+
 
   return (
     <>
@@ -498,15 +475,6 @@ export default function ReferentDigitalPage() {
         requirements={requirements}
         targetAudience={targetAudience}
       />
-
-      <section className="w-full py-12 bg-background">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-bold text-center mb-8">Témoignages de nos apprenants</h2>
-          <div className="max-w-5xl mx-auto">
-            <AceternityTestimonials testimonials={testimonials} />
-          </div>
-        </div>
-      </section>
 
       <RelatedFormations formations={relatedFormations} />
     </>

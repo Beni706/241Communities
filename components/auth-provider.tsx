@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const data = await loginResponse.json()
 
-      if (!data.token || !data.id) {
+      if (!data.token || !data.user || !data.user.id_apprenant && !data.user.id_formateur && !data.user.id_administrateur) {
         throw new Error("Réponse de l'API de connexion invalide: token ou ID manquant.")
       }
 
@@ -128,57 +128,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("apprenantToken", data.token)
       }
 
-      // Créer l'objet userInfo directement à partir des données de la réponse
-      let userInfo: User = {
-        id: data.id,
-        nom: "",
-        prenom: "",
-        email: email,
+      // Utiliser directement les données utilisateur reçues de l'API de connexion
+      const userInfo: User = {
+        id: data.user.id_apprenant || data.user.id_formateur || data.user.id_administrateur,
+        nom: data.user.nom,
+        prenom: data.user.prenom,
+        email: data.user.email,
         role: role as User["role"],
-        referentiel: undefined,
-        photoProfil: undefined,
-      }
-
-      if (role === "formateur") {
-        try {
-          const userResponse = await fetch(`${API_BASE_URL}/formateur/${data.id}`, {
-            headers: { Authorization: `Bearer ${data.token}` },
-          })
-          if (userResponse.ok) {
-            const userData = await userResponse.json()
-            userInfo = {
-              id: userData.id_formateur,
-              nom: userData.nom,
-              prenom: userData.prenom,
-              email: userData.email,
-              role: "formateur",
-              referentiel: userData.referentiel,
-              photoProfil: userData.photoProfil || null,
-            }
-          }
-        } catch (e) {
-          // fallback: garder userInfo minimal
-        }
-      } else if (role === "apprenant") {
-        try {
-          const userResponse = await fetch(`${API_BASE_URL}/apprenant/${data.id}`, {
-            headers: { Authorization: `Bearer ${data.token}` },
-          })
-          if (userResponse.ok) {
-            const userData = await userResponse.json()
-            userInfo = {
-              id: userData.id_apprenant,
-              nom: userData.nom,
-              prenom: userData.prenom,
-              email: userData.email,
-              role: "apprenant",
-              referentiel: userData.referentiel,
-              photoProfil: userData.photoProfil || null,
-            }
-          }
-        } catch (e) {
-          // fallback: garder userInfo minimal
-        }
+        referentiel: data.user.referentiel,
+        photoProfil: data.user.photoProfil || null,
       }
 
       // Stockage des informations utilisateur

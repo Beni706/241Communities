@@ -1,0 +1,3 @@
+- refaire un peu le design general de la plateforme en unifiant les element, arranger les positons, ajouter le logo, etc.
+- faire le dashboard des apprennants avec toutes les pages(dashboard avec les stats lier a sa progression, page de cours pour voir ses cours, page veilles pour voir ses veilles et page profil pour son profil);
+- arranger les beug d'affichage et d'envoie de mail dans le formulaire de contact;

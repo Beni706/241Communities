@@ -1,0 +1,27 @@
+Initialisation d'un projet ExpressJS: 
+
+pnpx express-generator nom
+pnpm install --save-dev nodemon
+# Installer ESLint et le CLI en dépendance de développement
+pnpm install --save-dev eslint @eslint/create-config
+
+# Lancer l'initialisation interactive
+pnpm eslint --init
+Creer le serveur ExpressJS
+
+import express from 'express'
+
+const app = express()
+
+app.get('/', (req, res) =>{
+  res.send("Bienvenue sur l'API de Tasky")
+})
+
+app.listen(3000, () => {
+  console.log('Le server tourne sur http://localhost:3000')
+})
+
+export default app
+
+Config
+pnpm install dotenv

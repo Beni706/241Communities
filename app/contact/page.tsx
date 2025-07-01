@@ -16,6 +16,7 @@ import Header from "@/components/header"
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     nom: "",
+    prenom: "",
     email: "",
     sujet: "",
     message: "",
@@ -37,7 +38,7 @@ export default function ContactPage() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         cache: 'no-cache',
         body: JSON.stringify(formData),
@@ -53,7 +54,7 @@ export default function ContactPage() {
       }
 
       setSubmitted(true)
-      setFormData({ nom: "", email: "", sujet: "", message: "" })
+      setFormData({ nom: "", prenom: "", email: "", sujet: "", message: "" })
 
       // Reset after display
       setTimeout(() => {
@@ -106,12 +107,23 @@ export default function ContactPage() {
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="nom">Nom complet</Label>
+                          <Label htmlFor="nom">Nom</Label>
                           <Input
                             id="nom"
                             name="nom"
-                            placeholder="Votre nom complet"
+                            placeholder="Votre nom"
                             value={formData.nom}
+                            onChange={handleChange}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="nom">Prenom</Label>
+                          <Input
+                            id="prenom"
+                            name="prenom"
+                            placeholder="Votre prenom"
+                            value={formData.prenom}
                             onChange={handleChange}
                             required
                           />
@@ -155,7 +167,7 @@ export default function ContactPage() {
                             required
                           />
                         </div>
-                        <Button type="submit" className="w-full bg-primary-red hover:bg-tertiary" disabled={loading}>
+                        <Button type="submit" className="w-full bg-red-500 hover:bg-red-300" disabled={loading}>
                           {loading ? "Envoi en cours..." : "Envoyer le message"}
                         </Button>
                       </form>
@@ -177,17 +189,17 @@ export default function ContactPage() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="rounded-full bg-primary-red/10 p-3">
-                        <Mail className="h-6 w-6 text-primary-red" />
+                      <div className="rounded-full bg-primary/10 p-3">
+                        <Mail className="h-6 w-6 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-medium">Email</h3>
-                        <p className="text-muted-foreground">exemple@email.com</p>
+                        <p className="text-muted-foreground">241communities@email.com</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="rounded-full bg-tertiary/10 p-3">
-                        <Phone className="h-6 w-6 text-tertiary" />
+                      <div className="rounded-full bg-primary/10 p-3">
+                        <Phone className="h-6 w-6 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-medium">Téléphone</h3>
@@ -201,7 +213,7 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-medium">Adresse</h3>
                         <p className="text-muted-foreground">
-                          Adresse à renseigner<br />Ville, Pays
+                          Ancienne Sobraga<br />Libreville, Gabon
                         </p>
                       </div>
                     </div>

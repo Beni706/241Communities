@@ -3,11 +3,6 @@ import { PrismaClient } from "@/generated/prisma";
 import { verifyJWT } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-/// Lecture (GET)
-///   (GET) http://localhost:3000/api/admin/login
-console.log("test")
-
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {

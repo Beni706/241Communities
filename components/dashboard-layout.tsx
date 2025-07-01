@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { BookOpen, FileText, GraduationCap, Home, LogOut, Users, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type UserInfo = {
   id: number
@@ -14,6 +14,7 @@ type UserInfo = {
   email: string
   role: string
   referentiel?: string
+  photoProfil?: string | null
 }
 
 interface DashboardLayoutProps {
@@ -198,6 +199,7 @@ export default function DashboardLayout({ children, userRole = "administrateur" 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.photoProfil || undefined} />
               <AvatarFallback className={roleInfo.color}>
                 {user?.prenom?.charAt(0) || "U"}
                 {user?.nom?.charAt(0) || ""}

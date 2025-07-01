@@ -109,7 +109,7 @@ export default function ApprenantDashboard() {
         <p className="text-muted-foreground">Bienvenue sur votre espace apprenant</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Cours inscrits</CardTitle>
@@ -118,26 +118,6 @@ export default function ApprenantDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.coursInscrits}</div>
             <p className="text-xs text-muted-foreground">Cours auxquels vous êtes inscrit</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cours terminés</CardTitle>
-            <GraduationCap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.coursTermines}</div>
-            <p className="text-xs text-muted-foreground">Cours que vous avez complétés</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Progression Moyenne</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.progressionMoyenne}%</div>
-            <p className="text-xs text-muted-foreground">Sur les cours commencés</p>
           </CardContent>
         </Card>
         <Card>

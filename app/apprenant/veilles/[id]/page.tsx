@@ -1,268 +1,270 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import DashboardLayout from "@/components/dashboard-layout"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useToast } from "@/components/ui/use-toast"
-import { useAuth } from "@/components/auth-provider"
-import { ExternalLink } from "lucide-react"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Calendar, FileText, Upload } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/components/auth-provider";
+import { Input } from "@/components/ui/input";
 
 type Veille = {
-  id_veille: number
-  titre: string
-  lien_docDonnee: string
-  lien_docRendu: string | null
-  date_creation: string
-  date_fin: string
-  formateur: {
-    nom: string
-    prenom: string
-  }
+  id_veille: number;
+  titre: string;
+  date_creation: string;
+  date_fin: string;
+  lien_docDonnee: string;
+  referentiel: string;
+  lien_docRendu: string | null;
 }
 
-export default function VeilleDetail() {
-  const { id } = useParams()
-  const { user } = useAuth()
-  const router = useRouter()
-  const { toast } = useToast()
-
-  const [veille, setVeille] = useState<Veille | null>(null)
-  const [lienDocRendu, setLienDocRendu] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export default function VeilleDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const [veille, setVeille] = useState<Veille | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchVeille = async () => {
       try {
-        const token = localStorage.getItem("token")
-
+        const token =
+          localStorage.getItem("apprenantToken") ||
+          localStorage.getItem("token");
         if (!token) {
-          router.push("/login")
-          return
+          router.push("/login/apprenant");
+          return;
         }
 
-        const response = await fetch(`/api/veille/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await fetch(
+          `${API_BASE_URL}/veille/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        if (!response.ok) {
-          throw new Error("Erreur lors de la récupération de la veille")
-        }
-
-        const data = await response.json()
-        setVeille(data)
-
-        if (data.lien_docRendu) {
-          setLienDocRendu(data.lien_docRendu)
+        if (response.ok) {
+          const data = await response.json();
+          setVeille(data);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Erreur",
+            description: "Impossible de récupérer la veille.",
+          });
         }
       } catch (error) {
-        console.error("Error fetching veille:", error)
+        console.error("Erreur :", error);
         toast({
           variant: "destructive",
           title: "Erreur",
-          description: "Impossible de charger les détails de la veille.",
-        })
+          description: "Une erreur est survenue.",
+        });
       } finally {
-        setIsLoading(false)
+        setLoading(false);
       }
+    };
+
+    if (user?.id) {
+      fetchVeille();
     }
+  }, [params.id, user?.id, API_BASE_URL, router, toast]);
 
-    fetchVeille()
-  }, [id, router, toast])
+const handleSubmit = async () => {
+  if (!file || !veille || !user?.id) return;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!lienDocRendu) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Veuillez fournir un lien vers votre document.",
-      })
-      return
-    }
-
-    setIsSubmitting(true)
-
-    try {
-      const token = localStorage.getItem("token")
-
-      if (!token) {
-        throw new Error("Non authentifié")
-      }
-
-      const response = await fetch(`/api/veille/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...veille,
-          lien_docRendu: lienDocRendu,
-          id_apprenant: user?.id,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Erreur lors de la soumission de la veille")
-      }
-
-      toast({
-        title: "Veille soumise",
-        description: "Votre travail a été soumis avec succès.",
-      })
-
-      // Refresh veille data
-      const updatedVeille = await response.json()
-      setVeille(updatedVeille.veille)
-    } catch (error) {
-      console.error("Error submitting veille:", error)
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la soumission de votre travail.",
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
+  // Vérification de la date limite
+  const now = new Date();
+  const dateFin = new Date(veille.date_fin);
+  
+  if (now > dateFin) {
+    toast({
+      variant: "destructive",
+      title: "Soumission refusée",
+      description: "La date limite de soumission est dépassée",
+    });
+    return;
   }
 
-  const isExpired = veille ? new Date(veille.date_fin) < new Date() : false
-  const canSubmit = veille && !isExpired && (!veille.lien_docRendu || veille.lien_docRendu === "")
+  // Validation du fichier
+  const allowedTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain'
+  ];
+  
+  const maxSize = 5 * 1024 * 1024; // 5MB
+
+  if (!allowedTypes.includes(file.type)) {
+    toast({
+      variant: "destructive",
+      title: "Format invalide",
+      description: "Seuls les fichiers PDF, DOC, DOCX et TXT sont acceptés",
+    });
+    return;
+  }
+
+  if (file.size > maxSize) {
+    toast({
+      variant: "destructive",
+      title: "Fichier trop volumineux",
+      description: `La taille maximale autorisée est ${maxSize / 1024 / 1024}MB`,
+    });
+    return;
+  }
+
+  // Préparation des données
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("id_veille", veille.id_veille.toString());
+  formData.append("id_apprenant", user.id.toString());
+
+  try {
+    setIsSubmitting(true);
+    const token = localStorage.getItem("apprenantToken") || localStorage.getItem("token");
+
+    const response = await fetch(`${API_BASE_URL}/veille/soumission`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Échec de la soumission");
+    }
+
+    const data = await response.json();
+    setVeille(prev => prev ? {...prev, lien_docRendu: data.lien_soumission} : null);
+    
+    toast({
+      title: "Soumission réussie",
+      description: "Votre document a bien été enregistré",
+    });
+  } catch (error) {
+    console.error(error);
+    toast({
+      variant: "destructive",
+      title: "Erreur",
+      description: error instanceof Error ? error.message : "Une erreur est survenue",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
+  if (!veille) {
+    return <div>Veille non trouvée.</div>;
+  }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <Button variant="outline" onClick={() => router.back()} className="mb-4">
-          Retour
-        </Button>
-
-        {isLoading ? (
-          <Card className="animate-pulse border-0 shadow-sm">
-            <CardHeader>
-              <div className="h-6 bg-muted rounded w-1/3 mb-2"></div>
-              <div className="h-4 bg-muted rounded w-1/4"></div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="h-4 bg-muted rounded w-full"></div>
-                <div className="h-4 bg-muted rounded w-full"></div>
-                <div className="h-4 bg-muted rounded w-2/3"></div>
-              </div>
-            </CardContent>
-          </Card>
-        ) : veille ? (
-          <>
-            <Card className="border-0 shadow-sm overflow-hidden">
-              <div className="h-2 bg-secondary"></div>
-              <CardHeader>
-                <CardTitle className="text-2xl">{veille.titre}</CardTitle>
-                <CardDescription>
-                  Créée par {veille.formateur?.prenom} {veille.formateur?.nom} le{" "}
-                  {new Date(veille.date_creation).toLocaleDateString()}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="font-medium mb-1">Document à consulter</h3>
-                  <Link
-                    href={veille.lien_docDonnee}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-primary hover:underline"
-                  >
-                    Ouvrir le document <ExternalLink className="h-4 w-4" />
-                  </Link>
-                </div>
-
-                <div>
-                  <h3 className="font-medium mb-1">Date limite de rendu</h3>
-                  <p className={`${isExpired ? "text-destructive" : ""}`}>
-                    {new Date(veille.date_fin).toLocaleDateString()} à {new Date(veille.date_fin).toLocaleTimeString()}
-                    {isExpired && " (Expirée)"}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-medium mb-1">Statut</h3>
-                  {veille.lien_docRendu ? (
-                    <div className="flex flex-col gap-2">
-                      <p className="text-green-600 font-medium">Travail soumis</p>
-                      <Link
-                        href={veille.lien_docRendu}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-primary hover:underline"
-                      >
-                        Voir votre document <ExternalLink className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  ) : (
-                    <p className={`${isExpired ? "text-destructive" : "text-amber-600"} font-medium`}>
-                      {isExpired ? "Non soumis (délai dépassé)" : "En attente de soumission"}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {canSubmit && (
-              <form onSubmit={handleSubmit}>
-                <Card className="border-0 shadow-sm">
-                  <CardHeader>
-                    <CardTitle>Soumettre votre travail</CardTitle>
-                    <CardDescription>Fournissez le lien vers votre document Google Doc ou Slide.</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <Label htmlFor="lien_docRendu">Lien vers votre document</Label>
-                      <Input
-                        id="lien_docRendu"
-                        value={lienDocRendu}
-                        onChange={(e) => setLienDocRendu(e.target.value)}
-                        placeholder="https://docs.google.com/document/d/..."
-                        required
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Assurez-vous que le document est accessible en lecture.
-                      </p>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? "Soumission en cours..." : "Soumettre le travail"}
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </form>
-            )}
-          </>
-        ) : (
-          <Card className="border-0 shadow-sm">
-            <CardHeader>
-              <CardTitle>Veille non trouvée</CardTitle>
-              <CardDescription>
-                La veille que vous recherchez n'existe pas ou vous n'avez pas les droits pour y accéder.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" onClick={() => router.push("/apprenant/veilles")}>
-                Retour aux veilles
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+    <div className="space-y-6">
+      <div className="flex items-center gap-2">
+        <Link href="/apprenant/veilles">
+          <Button variant="outline" size="sm">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Retour aux veilles
+          </Button>
+        </Link>
       </div>
-    </DashboardLayout>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>{veille.titre}</CardTitle>
+            <Badge>{new Date(veille.date_fin) > new Date() ? "En cours" : "Terminée"}</Badge>
+          </div>
+          <CardDescription className="flex items-center gap-2">
+            <span>{veille.referentiel}</span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              Créée le {new Date(veille.date_creation).toLocaleDateString()}
+            </span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h3 className="font-medium mb-2">Date limite</h3>
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              {new Date(veille.date_fin).toLocaleDateString()} à{" "}
+              {new Date(veille.date_fin).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+          </div>
+
+          <Separator />
+
+          <div>
+            <h3 className="font-medium mb-2">Document de la veille</h3>
+            <a
+              href={veille.lien_docDonnee}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-primary hover:underline"
+            >
+              <FileText className="h-4 w-4" />
+              Télécharger le document
+            </a>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <h3 className="font-medium">Soumettre mon document</h3>
+            <Input
+              type="file"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+            />
+            <Button
+              disabled={!file || isSubmitting}
+              onClick={handleSubmit}
+              className="flex items-center gap-2"
+            >
+              <Upload className="h-4 w-4" />
+              {isSubmitting ? "Envoi en cours..." : "Soumettre"}
+            </Button>
+            {veille.lien_docRendu && (
+              <div className="text-sm text-muted-foreground">
+                Vous avez déjà soumis un document :{" "}
+                <a
+                  href={veille.lien_docRendu}
+                  target="_blank"
+                  className="underline"
+                >
+                  Voir ma soumission
+                </a>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

@@ -328,37 +328,6 @@ export default function DeveloppementWebPage() {
     },
   ]
 
-  // Avis
-  const reviews = [
-    {
-      id: "review-1",
-      author: "Thomas Dubois",
-      avatar: "/placeholder.svg?height=50&width=50&text=TD",
-      rating: 5,
-      date: "15 mars 2025",
-      comment:
-        "Formation exceptionnelle ! Le contenu est très bien structuré et les explications sont claires. J'ai pu créer mon premier site web professionnel après seulement quelques semaines. Les projets pratiques sont particulièrement utiles pour consolider les connaissances.",
-    },
-    {
-      id: "review-2",
-      author: "Sophie Leclerc",
-      avatar: "/placeholder.svg?height=50&width=50&text=SL",
-      rating: 4,
-      date: "2 février 2025",
-      comment:
-        "Très bonne formation pour débuter dans le développement web. Les modules sur JavaScript et React sont particulièrement bien faits. J'aurais aimé un peu plus de contenu sur l'optimisation et le déploiement, mais dans l'ensemble, je suis très satisfaite.",
-    },
-    {
-      id: "review-3",
-      author: "Lucas Moreau",
-      avatar: "/placeholder.svg?height=50&width=50&text=LM",
-      rating: 5,
-      date: "20 janvier 2025",
-      comment:
-        "Cette formation m'a permis de me reconvertir professionnellement. J'étais comptable et maintenant je travaille comme développeur front-end junior. Les formateurs sont très réactifs et le support est excellent. Je recommande vivement !",
-    },
-  ]
-
   // Ce que vous allez apprendre
   const whatYouWillLearn = [
     "Maîtriser HTML5, CSS3 et JavaScript pour créer des sites web interactifs",
@@ -414,30 +383,6 @@ export default function DeveloppementWebPage() {
     },
   ]
 
-  // Témoignages spécifiques à cette formation
-  const testimonials = [
-    {
-      name: "Thomas Dubois",
-      role: "Ancien comptable, maintenant Développeur Front-End",
-      content:
-        "Grâce à cette formation, j'ai pu me reconvertir professionnellement. Les explications claires et les projets pratiques m'ont permis d'acquérir rapidement les compétences nécessaires pour décrocher mon premier emploi en tant que développeur.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Thomas",
-    },
-    {
-      name: "Amina Koné",
-      role: "Étudiante en informatique",
-      content:
-        "Cette formation a parfaitement complété mon cursus universitaire en informatique. J'ai particulièrement apprécié les modules sur React et Node.js qui m'ont donné un avantage certain pour mon stage de fin d'études.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Amina",
-    },
-    {
-      name: "Pierre Lefebvre",
-      role: "Entrepreneur",
-      content:
-        "En tant qu'entrepreneur, je voulais comprendre le développement web pour mieux communiquer avec mes équipes techniques. Cette formation m'a donné une vision claire et des compétences pratiques que j'utilise quotidiennement.",
-      avatarSrc: "/placeholder.svg?height=400&width=400&text=Pierre",
-    },
-  ]
 
   return (
     <>
@@ -446,20 +391,10 @@ export default function DeveloppementWebPage() {
       <FormationContent
         modules={modules}
         instructors={instructors}
-        reviews={reviews}
         whatYouWillLearn={whatYouWillLearn}
         requirements={requirements}
         targetAudience={targetAudience}
       />
-
-      <section className="w-full py-12 bg-background">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-bold text-center mb-8">Témoignages de nos apprenants</h2>
-          <div className="max-w-5xl mx-auto">
-            <AceternityTestimonials testimonials={testimonials} />
-          </div>
-        </div>
-      </section>
 
       <RelatedFormations formations={relatedFormations} />
     </>

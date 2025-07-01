@@ -4,8 +4,8 @@ import { verifyJWT } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-/// Lecture (GET)
-///   (GET) http://localhost:3000/api/administrateur/login
+/// Lecture (POST)
+///   (POST) http://localhost:3000/api/formateur/login
 
 const prisma = new PrismaClient();
 
