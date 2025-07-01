@@ -5,25 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d6d45bb1-a5b6-4883-8c5c-b3bf2f1740e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/swagger/admin.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/apprenant.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/chapitre.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/contact.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/cours.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/formateur.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/lecon.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/swaggerConfig.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/upload.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger/veille.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/login/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/login/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/api-docs/docs.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/api-docs/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/auth/[...nextauth].ts" beforeDir="false" afterPath="$PROJECT_DIR$/swagger-server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/formateur/login/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/formateur/login/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/dev.db" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/dev.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/edge.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/edge.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/index-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/index-browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/query_engine-windows.dll.node" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/query_engine-windows.dll.node" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generated/prisma/wasm.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/generated/prisma/wasm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +124,7 @@
       <updated>1751302770542</updated>
       <workItem from="1751302773404" duration="327000" />
       <workItem from="1751303125434" duration="12135000" />
-      <workItem from="1751353810472" duration="10153000" />
+      <workItem from="1751353810472" duration="15714000" />
     </task>
     <servers />
   </component>
